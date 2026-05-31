@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eid Celebration Portal</title>
+     <link rel="icon" type="image/x-icon" href="EIDCT.png">
+
+    <style>
+        :root {
+            --gold: #D4AF37;
+            --dark: #0a0e14;
+            --glass: rgba(255, 255, 255, 0.05);
+        }
+
+        body {
+            background: radial-gradient(circle at center, #1a1a2e 0%, #0a0e14 100%);
+            color: #fff;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .container {
+            text-align: center;
+            padding: 40px;
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+
+        h1 { font-size: 2.5rem; color: var(--gold); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 3px; }
+        p { opacity: 0.7; margin-bottom: 30px; }
+
+        .timer { display: flex; justify-content: center; gap: 20px; }
+        .box { background: rgba(0,0,0,0.3); padding: 15px; border-radius: 15px; width: 70px; border: 1px solid var(--gold); }
+        .val { font-size: 1.8rem; font-weight: bold; color: var(--gold); }
+        .unit { font-size: 0.7rem; text-transform: uppercase; display: block; opacity: 0.6; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Eid Mubarak</h1>
+        <p>The celebration awaits...</p>
+        
+        <div class="timer">
+            <div class="box"><span class="val" id="d">00</span><span class="unit">Days</span></div>
+            <div class="box"><span class="val" id="h">00</span><span class="unit">Hrs</span></div>
+            <div class="box"><span class="val" id="m">00</span><span class="unit">Mins</span></div>
+            <div class="box"><span class="val" id="s">00</span><span class="unit">Secs</span></div>
+        </div>
+    </div>
+
+    <script>
+        // Set your target date here
+        const target = new Date("2026-06-16T00:00:00").getTime();
+
+        const x = setInterval(() => {
+            const now = new Date().getTime();
+            const diff = target - now;
+
+            if (diff <= 0) {
+                clearInterval(x);
+                window.location.href = 'portal.html';
+                return;
+            }
+
+            document.getElementById("d").innerText = Math.floor(diff / (1000 * 60 * 60 * 24)).toString().padStart(2, '0');
+            document.getElementById("h").innerText = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
+            document.getElementById("m").innerText = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
+            document.getElementById("s").innerText = Math.floor((diff % (1000 * 60)) / 1000).toString().padStart(2, '0');
+        }, 1000);
+    </script>
+</body>
+</html>

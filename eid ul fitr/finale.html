@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eid al-Fitr 2027 — Finale</title>
+ <link rel="icon" type="image/x-icon" href="EIDCT.png">
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Amiri:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+<style>
+:root{--void:#020008;--gold:#D4AF37;--gold-l:#FFE566;--dim:rgba(255,255,255,0.45);}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--void);}
+#fw{position:fixed;inset:0;z-index:0;}
+#ui{position:fixed;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;padding:20px;}
+
+/* Pulsing halo ring */
+.halo{position:absolute;width:min(80vw,80vh);height:min(80vw,80vh);border-radius:50%;border:1px solid rgba(212,175,55,0.12);animation:halo 3s ease-in-out infinite;}
+.halo:nth-child(2){width:min(65vw,65vh);height:min(65vw,65vh);animation-delay:0.5s;border-color:rgba(212,175,55,0.08);}
+.halo:nth-child(3){width:min(50vw,50vh);height:min(50vw,50vh);animation-delay:1s;border-color:rgba(212,175,55,0.06);}
+@keyframes halo{0%,100%{transform:scale(1);opacity:0.6;}50%{transform:scale(1.04);opacity:1;}}
+
+.eyebrow{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(0.75rem,2vw,0.9rem);letter-spacing:5px;color:var(--dim);text-transform:uppercase;opacity:0;animation:rise 1.2s ease 0.5s forwards;margin-bottom:20px;}
+.mega-arabic{font-family:'Amiri',serif;font-size:clamp(3.5rem,14vw,8rem);color:var(--gold-l);direction:rtl;text-align:center;line-height:1.2;text-shadow:0 0 80px rgba(255,229,102,0.7),0 0 160px rgba(212,175,55,0.3);opacity:0;animation:blast 1.4s cubic-bezier(0.34,1.56,0.64,1) 0.8s forwards;position:relative;z-index:2;}
+.mega-english{font-family:'Cinzel Decorative',serif;font-size:clamp(1rem,4.5vw,2.8rem);background:linear-gradient(135deg,#ffffff,var(--gold-l),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:4px;text-align:center;filter:drop-shadow(0 0 25px rgba(212,175,55,0.6));opacity:0;animation:rise 1.2s ease 1.8s forwards;}
+.mega-year{font-family:'Cinzel Decorative',serif;font-size:clamp(0.7rem,2vw,1rem);color:var(--dim);letter-spacing:8px;margin-top:10px;opacity:0;animation:rise 1.2s ease 2.3s forwards;}
+.taqabbal{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(0.85rem,2.5vw,1.1rem);color:rgba(255,255,255,0.6);letter-spacing:3px;margin-top:18px;opacity:0;animation:rise 1.2s ease 2.8s forwards;}
+
+.gems{display:flex;gap:clamp(15px,4vw,40px);margin-top:35px;opacity:0;animation:rise 1.2s ease 3.2s forwards;}
+.gem{display:flex;flex-direction:column;align-items:center;gap:8px;}
+.gem-icon{font-size:clamp(1.6rem,4vw,2.5rem);}
+.gem-label{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(0.65rem,1.5vw,0.8rem);color:var(--gold);letter-spacing:2px;text-align:center;white-space:nowrap;}
+
+.replay-btn{pointer-events:all;margin-top:45px;padding:14px 40px;border:1px solid var(--gold);background:rgba(212,175,55,0.1);color:var(--gold-l);font-family:'Cinzel Decorative',serif;font-size:0.7rem;letter-spacing:3px;cursor:pointer;border-radius:40px;transition:all 0.3s;opacity:0;animation:rise 1.2s ease 4s forwards;}
+.replay-btn:hover{background:rgba(212,175,55,0.25);box-shadow:0 0 35px rgba(212,175,55,0.4);transform:scale(1.04);}
+
+.bottom-bar{position:fixed;bottom:0;left:0;right:0;padding:18px 30px;display:flex;justify-content:space-between;align-items:center;z-index:20;background:linear-gradient(0deg,rgba(2,0,8,0.9),transparent);}
+.bb-arabic{font-family:'Amiri',serif;font-size:1rem;color:var(--gold);direction:rtl;opacity:0.7;}
+.bb-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.75rem;color:var(--dim);letter-spacing:3px;}
+.progress-bar{position:fixed;bottom:0;left:0;height:2px;background:linear-gradient(90deg,var(--gold-l),var(--gold));width:0%;z-index:30;}
+
+@keyframes rise{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+@keyframes blast{from{opacity:0;transform:scale(0.15) rotate(-8deg);}to{opacity:1;transform:scale(1) rotate(0deg);}}
+</style>
+</head>
+<body>
+<canvas id="fw"></canvas>
+
+<div id="ui">
+  <div class="halo"></div><div class="halo"></div><div class="halo"></div>
+  <div class="eyebrow">✦ The Grand Finale · 1448 AH ✦</div>
+  <div class="mega-arabic">عيد الفطر<br>مُبَارَك</div>
+  <div class="mega-english">Eid al-Fitr Mubarak</div>
+  <div class="mega-year">March 2027 · 1 Shawwal 1448 AH</div>
+  <div class="taqabbal">Taqabbal Allahu Minna wa Minkum</div>
+
+  <div class="gems">
+    <div class="gem"><span class="gem-icon">🌙</span><span class="gem-label">Shawwal<br>Has Begun</span></div>
+    <div class="gem"><span class="gem-icon">🕌</span><span class="gem-label">Eid Salah<br>at Sunrise</span></div>
+    <div class="gem"><span class="gem-icon">☪️</span><span class="gem-label">Ummah<br>United</span></div>
+    <div class="gem"><span class="gem-icon">⭐</span><span class="gem-label">Laylatul Qadr<br>Accepted</span></div>
+    <div class="gem"><span class="gem-icon">🤲</span><span class="gem-label">All Sins<br>Forgiven</span></div>
+  </div>
+
+  <button class="replay-btn" onclick="replay()">↩ Experience Again</button>
+</div>
+
+<div class="bottom-bar">
+  <div class="bb-arabic">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</div>
+  <div class="bb-text">Eid al-Fitr 2027 · eidfitr2027.vercel.app</div>
+</div>
+<div class="progress-bar" id="pb"></div>
+
+<script>
+// Fireworks — dual-canvas approach (trail + burst)
+const fw=document.getElementById('fw'),fctx=fw.getContext('2d');
+let FW,FH;function rs(){FW=fw.width=innerWidth;FH=fw.height=innerHeight;}rs();window.addEventListener('resize',rs);
+
+let rockets=[],particles=[];
+function mkRocket(){
+  const targetX=FW*(0.1+Math.random()*0.8),targetY=FH*(0.05+Math.random()*0.45);
+  return{x:FW*(0.2+Math.random()*0.6),y:FH,tx:targetX,ty:targetY,vx:0,vy:0,color:`hsl(${Math.random()*60+20},100%,${60+Math.random()*20}%)`,trail:[],launched:false,exploded:false};
+}
+function explode(x,y,color){
+  const count=80+Math.floor(Math.random()*40);
+  for(let i=0;i<count;i++){
+    const a=Math.random()*Math.PI*2,v=Math.random()*7+1;
+    particles.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,life:1,color,r:Math.random()*2.5+0.5,g:Math.random()*0.08+0.01});
+  }
+}
+// Auto-launch rockets
+let rocketTimer=0;
+function animFW(){
+  fctx.fillStyle='rgba(2,0,8,0.2)';fctx.fillRect(0,0,FW,FH);
+  rocketTimer++;if(rocketTimer>18){rockets.push(mkRocket());rocketTimer=0;}
+  rockets=rockets.filter(rk=>{
+    if(!rk.launched){
+      const dx=rk.tx-rk.x,dy=rk.ty-rk.y,dist=Math.sqrt(dx*dx+dy*dy);
+      const spd=dist/35;rk.vx=dx/dist*spd;rk.vy=dy/dist*spd;rk.launched=true;
+    }
+    rk.x+=rk.vx;rk.y+=rk.vy;
+    rk.trail.push({x:rk.x,y:rk.y});if(rk.trail.length>12)rk.trail.shift();
+    rk.trail.forEach((pt,i)=>{fctx.fillStyle=rk.color;fctx.globalAlpha=i/rk.trail.length*0.5;fctx.beginPath();fctx.arc(pt.x,pt.y,1.5,0,Math.PI*2);fctx.fill();});
+    fctx.globalAlpha=1;
+    const dx=rk.tx-rk.x,dy=rk.ty-rk.y;
+    if(Math.sqrt(dx*dx+dy*dy)<8){explode(rk.x,rk.y,rk.color);return false;}
+    return true;
+  });
+  particles=particles.filter(p=>{
+    p.x+=p.vx;p.y+=p.vy;p.vy+=0.06;p.vx*=0.98;p.life-=p.g;
+    fctx.save();fctx.globalAlpha=p.life;fctx.fillStyle=p.color;fctx.shadowColor=p.color;fctx.shadowBlur=4;
+    fctx.beginPath();fctx.arc(p.x,p.y,p.r*p.life,0,Math.PI*2);fctx.fill();fctx.restore();
+    return p.life>0;
+  });
+  requestAnimationFrame(animFW);
+}
+animFW();
+
+// Confetti waves
+function bigBurst(){
+  const colors=['#D4AF37','#FFE566','#ffffff','#00a86b','#a855f7','#3b82f6'];
+  [0.2,0.5,0.8].forEach((x,i)=>setTimeout(()=>{
+    confetti({particleCount:100,spread:90,origin:{x,y:0.15+i*0.05},colors,shapes:['star','circle'],scalar:1.4,ticks:250});
+  },i*250));
+}
+bigBurst();
+setTimeout(bigBurst,4000);
+setTimeout(bigBurst,9000);
+setInterval(bigBurst,15000);
+
+// Grand speech
+setTimeout(()=>{
+  const synth=window.speechSynthesis;
+  const speeches=[
+    "Eid al-Fitr Mubarak! May Allah accept your fasting, your prayers, and all your good deeds.",
+    "Thirty days of Ramadan have come to an end. The night of power has passed. And now — it is time to celebrate!",
+    "Taqabbal Allahu Minna wa Minkum. May Allah accept from all of us.",
+    "May this blessed Eid fill your heart with joy, your home with love, and your life with barakah.",
+    "From all of us — Eid Mubarak two thousand and twenty seven!"
+  ];
+  let i=0;
+  function speak(){
+    if(i>=speeches.length)return;
+    const u=new SpeechSynthesisUtterance(speeches[i++]);
+    u.rate=0.82;u.pitch=1.05;u.volume=0.95;
+    const voices=synth.getVoices();
+    const v=voices.find(v=>v.lang.startsWith('en-GB'))||voices.find(v=>v.lang.startsWith('en-US'))||voices[0];
+    if(v)u.voice=v;
+    u.onend=()=>setTimeout(speak,1200);
+    synth.speak(u);
+  }
+  if(synth.getVoices().length)speak();
+  else synth.onvoiceschanged=speak;
+},700);
+
+function replay(){
+  speechSynthesis.cancel();
+  window.location.href='index.html';
+}
+
+const DUR=10000;
+const pb=document.getElementById('pb');
+pb.style.transition=`width ${DUR}ms linear`;
+setTimeout(()=>pb.style.width='100%',50);
+// Loop back to index after finale
+setTimeout(()=>{speechSynthesis.cancel();window.location.href='index.html';},DUR);
+</script>
+</body>
+</html>

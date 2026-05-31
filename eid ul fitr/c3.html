@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3</title>
+ <link rel="icon" type="image/x-icon" href="EIDCT.png">
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@900&family=Amiri:wght@700&family=Cormorant+Garamond:ital@1&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{width:100%;height:100%;overflow:hidden;background:#000d1a;}
+#c{position:fixed;inset:0;}
+#ui{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:10;pointer-events:none;}
+.num{font-family:'Cinzel Decorative',serif;font-size:clamp(12rem,30vw,22rem);font-weight:900;-webkit-text-stroke:2px #4fc3f7;color:transparent;filter:drop-shadow(0 0 40px rgba(79,195,247,0.8));animation:pop 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards;opacity:0;}
+.sub{font-family:'Cormorant Garamond',serif;font-style:italic;color:rgba(255,255,255,0.5);letter-spacing:6px;font-size:0.9rem;text-transform:uppercase;margin-top:-20px;}
+.arabic-sub{font-family:'Amiri',serif;font-size:2rem;color:#4fc3f7;direction:rtl;margin-top:15px;opacity:0;animation:rise 0.8s ease 0.5s forwards;}
+@keyframes pop{from{opacity:0;transform:scale(0.3);}to{opacity:1;transform:scale(1);}}
+@keyframes rise{from{opacity:0;transform:translateY(15px);}to{opacity:1;transform:translateY(0);}}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="ui">
+  <div class="num">3</div>
+  <div class="sub">Last Nights of Ramadan (Odd Nights)</div>
+  <div class="arabic-sub">لَيْلَةُ الْقَدْرِ خَيْرٌ مِّنْ أَلْفِ شَهْرٍ</div>
+</div>
+<script>
+const c=document.getElementById('c'),ctx=c.getContext('2d');
+let W,H;function r(){W=c.width=innerWidth;H=c.height=innerHeight;}r();window.addEventListener('resize',r);
+let angle=0;
+function draw(){
+  ctx.fillStyle='rgba(0,13,26,0.18)';ctx.fillRect(0,0,W,H);
+  angle+=0.002;
+  ctx.save();ctx.translate(W/2,H/2);ctx.rotate(angle);
+  for(let i=0;i<8;i++){
+    ctx.save();ctx.rotate(i*Math.PI/4);
+    ctx.strokeStyle=`rgba(79,195,247,${0.06+Math.sin(angle*3+i)*0.03})`;
+    ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(0,-Math.min(W,H)*0.48);ctx.stroke();
+    for(let r=80;r<Math.min(W,H)*0.5;r+=80){
+      ctx.beginPath();ctx.arc(0,0,r,i*Math.PI/4,(i+1)*Math.PI/4);ctx.stroke();
+    }
+    ctx.restore();
+  }
+  ctx.restore();
+  const t=Date.now()/1000;
+  for(let i=0;i<5;i++){
+    const x=W*(0.1+i*0.2),y=H*0.15+Math.sin(t+i)*20;
+    const b=0.4+Math.sin(t*2+i)*0.3;
+    ctx.fillStyle=`rgba(79,195,247,${b})`;
+    ctx.beginPath();ctx.arc(x,y,1.5,0,Math.PI*2);ctx.fill();
+    const g=ctx.createRadialGradient(x,y,0,x,y,15);
+    g.addColorStop(0,`rgba(79,195,247,${b*0.4})`);g.addColorStop(1,'transparent');
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,15,0,Math.PI*2);ctx.fill();
+  }
+  requestAnimationFrame(draw);
+}
+draw();
+setTimeout(()=>window.location.href='c2.html',5000);
+</script>
+</body>
+</html>

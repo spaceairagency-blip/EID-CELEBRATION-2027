@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eid al-Fitr Mubarak!</title>
+ <link rel="icon" type="image/x-icon" href="EIDCT.png">
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Amiri:wght@400;700&family=Cormorant+Garamond:ital,wght@0,300;1,300&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{width:100%;height:100%;overflow:hidden;background:#020008;}
+#fw{position:fixed;inset:0;z-index:1;}
+#ui{position:fixed;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;}
+.big-arabic{font-family:'Amiri',serif;font-size:clamp(3rem,14vw,9rem);color:#FFE566;direction:rtl;text-align:center;text-shadow:0 0 60px rgba(255,229,102,0.6),0 0 120px rgba(212,175,55,0.3);line-height:1.2;opacity:0;animation:explode 1.2s cubic-bezier(0.34,1.56,0.64,1) 0.5s forwards;}
+.big-english{font-family:'Cinzel Decorative',serif;font-size:clamp(1.4rem,6vw,3.5rem);background:linear-gradient(135deg,#fff,#FFE566,#D4AF37);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:4px;text-align:center;margin-top:15px;opacity:0;animation:rise 1s ease 1.5s forwards;filter:drop-shadow(0 0 20px rgba(212,175,55,0.5));}
+.year-line{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(0.85rem,2.5vw,1.1rem);color:rgba(255,255,255,0.55);letter-spacing:6px;margin-top:12px;opacity:0;animation:rise 1s ease 2s forwards;}
+.date-badge{display:inline-block;margin-top:25px;padding:10px 30px;border:1px solid rgba(212,175,55,0.5);border-radius:40px;font-family:'Cormorant Garamond',serif;font-size:0.85rem;color:#D4AF37;letter-spacing:4px;opacity:0;animation:rise 1s ease 2.5s forwards;}
+.btn-next{pointer-events:all;margin-top:40px;padding:14px 40px;border:1px solid #D4AF37;background:rgba(212,175,55,0.1);color:#FFE566;font-family:'Cinzel Decorative',serif;font-size:0.75rem;letter-spacing:3px;cursor:pointer;border-radius:40px;transition:all 0.3s;opacity:0;animation:rise 1s ease 3s forwards;}
+.btn-next:hover{background:rgba(212,175,55,0.25);box-shadow:0 0 30px rgba(212,175,55,0.3);}
+.progress-bar{position:fixed;bottom:0;left:0;height:3px;background:linear-gradient(90deg,#FFE566,#D4AF37);width:0%;z-index:30;}
+@keyframes explode{from{opacity:0;transform:scale(0.2) rotate(-5deg);}to{opacity:1;transform:scale(1) rotate(0deg);}}
+@keyframes rise{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+</style>
+</head>
+<body>
+<canvas id="fw"></canvas>
+<div id="ui">
+  <div class="big-arabic">عيد الفطر<br>مبارك</div>
+  <div class="big-english">Eid al-Fitr Mubarak</div>
+  <div class="year-line">1448 AH · March 2027 · Taqabbal Allahu Minna wa Minkum</div>
+  <div class="date-badge"><i>Ramadan 2027 has ended — celebrate!</i></div>
+  <button class="btn-next" onclick="go()">Continue the Journey ✦</button>
+</div>
+<div class="progress-bar" id="pb"></div>
+
+<script>
+// Fireworks canvas
+const fw=document.getElementById('fw'),fctx=fw.getContext('2d');
+let FW,FH;function r(){FW=fw.width=innerWidth;FH=fw.height=innerHeight;}r();window.addEventListener('resize',r);
+let rockets=[],particles2=[];
+function Rocket(){return{x:Math.random()*FW,y:FH,vx:(Math.random()-0.5)*4,vy:-(Math.random()*10+8),life:1,color:`hsl(${Math.random()*360},100%,70%)`};}
+function boom(x,y,color){for(let i=0;i<100;i++){const a=Math.random()*Math.PI*2,v=Math.random()*8+1;particles2.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,life:1,color,r:Math.random()*2+0.5});}}
+setInterval(()=>{rockets.push(Rocket());},350);
+function animFW(){
+  fctx.fillStyle='rgba(2,0,8,0.18)';fctx.fillRect(0,0,FW,FH);
+  rockets=rockets.filter(rk=>{
+    rk.x+=rk.vx;rk.y+=rk.vy;rk.vy+=0.15;rk.life-=0.025;
+    fctx.fillStyle=rk.color;fctx.shadowColor=rk.color;fctx.shadowBlur=8;
+    fctx.beginPath();fctx.arc(rk.x,rk.y,3,0,Math.PI*2);fctx.fill();
+    if(rk.life<=0||rk.vy>-1){boom(rk.x,rk.y,rk.color);return false;}
+    return true;
+  });
+  particles2=particles2.filter(p=>{
+    p.x+=p.vx;p.y+=p.vy;p.vy+=0.06;p.life-=0.015;
+    fctx.save();fctx.globalAlpha=p.life;fctx.fillStyle=p.color;fctx.shadowColor=p.color;fctx.shadowBlur=4;
+    fctx.beginPath();fctx.arc(p.x,p.y,p.r,0,Math.PI*2);fctx.fill();fctx.restore();
+    return p.life>0;
+  });
+  requestAnimationFrame(animFW);
+}
+animFW();
+
+// confetti bursts
+function burst(){
+  confetti({particleCount:80,spread:100,origin:{x:Math.random(),y:Math.random()*0.4+0.1},colors:['#D4AF37','#FFE566','#ffffff','#00a86b','#a855f7'],shapes:['star','circle'],scalar:1.3,ticks:200});
+}
+setTimeout(burst,500);setTimeout(burst,1200);setTimeout(burst,2000);setTimeout(burst,3500);
+setInterval(burst,6000);
+
+// Speech
+setTimeout(()=>{
+  const msg=new SpeechSynthesisUtterance("Eid al Fitr Mubarak! May Allah accept our fasts and prayers. Taqabbal Allahu Minna wa Minkum!");
+  msg.rate=0.8;msg.pitch=1.05;msg.volume=1;
+  speechSynthesis.speak(msg);
+},800);
+
+const DUR=10000;
+const pb=document.getElementById('pb');
+pb.style.transition=`width ${DUR}ms linear`;
+setTimeout(()=>pb.style.width='100%',50);
+function go(){speechSynthesis.cancel();window.location.href='moon.html';}
+setTimeout(go,DUR);
+</script>
+</body>
+</html>
