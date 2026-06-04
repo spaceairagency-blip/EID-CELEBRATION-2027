@@ -1,69 +1,331 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eid Celebration Portal</title>
-    <meta name="google-site-verification" content="LnXVbd4h3yCBrLO1EVGuRnFj4w3ldBm86SV491UwQNs" />
+    <title>Eid Celebration Portal</title> 
+     <meta name="google-site-verification" content="LnXVbd4h3yCBrLO1EVGuRnFj4w3ldBm86SV491UwQNs" />
       <meta name="keywords" content="eidct, eid celebration, eidct - eid celebration, eid celebration 2027, eid 2027 ">
-     <link rel="icon" type="image/x-icon" href="EIDCT.png">
-
+    <link rel="icon" type="image/x-icon" href="EIDCT.png">
     <style>
         :root {
-            --gold: #D4AF37;
-            --dark: #0a0e14;
-            --glass: rgba(255, 255, 255, 0.05);
+            --pink-dark: #ff6b8b;
+            --pink-light: #ffb6c1;
+            --pink-pastel: #fff0f3;
+            --white: #ffffff;
+            --text-main: #4a4a4a;
+            --text-muted: #8a8a8a;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, sans-serif;
         }
 
         body {
-            background: radial-gradient(circle at center, #1a1a2e 0%, #0a0e14 100%);
-            color: #fff;
-            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--pink-pastel);
+            color: var(--text-main);
             display: flex;
-            align-items: center;
-            justify-content: center;
             height: 100vh;
-            margin: 0;
             overflow: hidden;
         }
 
-        .container {
-            text-align: center;
-            padding: 40px;
-            background: var(--glass);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 30px;
-            width: 90%;
-            max-width: 500px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: 260px;
+            background: var(--white);
+            border-right: 2px solid rgba(255, 107, 139, 0.1);
+            display: flex;
+            flex-direction: column;
+            padding: 30px 20px;
+            box-shadow: 4px 0 15px rgba(255, 107, 139, 0.05);
         }
 
-        h1 { font-size: 2.5rem; color: var(--gold); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 3px; }
-        p { opacity: 0.7; margin-bottom: 30px; }
+        .sidebar-brand {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--pink-dark);
+            text-align: center;
+            margin-bottom: 40px;
+            letter-spacing: 1px;
+        }
 
-        .timer { display: flex; justify-content: center; gap: 20px; }
-        .box { background: rgba(0,0,0,0.3); padding: 15px; border-radius: 15px; width: 70px; border: 1px solid var(--gold); }
-        .val { font-size: 1.8rem; font-weight: bold; color: var(--gold); }
-        .unit { font-size: 0.7rem; text-transform: uppercase; display: block; opacity: 0.6; }
+        .menu-btn {
+            background: none;
+            border: none;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            text-align: left;
+            font-size: 1rem;
+            color: var(--text-main);
+            cursor: pointer;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .menu-btn:hover {
+            background: var(--pink-pastel);
+            color: var(--pink-dark);
+        }
+
+        .menu-btn.active {
+            background: var(--pink-dark);
+            color: var(--white);
+            box-shadow: 0 4px 10px rgba(255, 107, 139, 0.3);
+        }
+
+        /* --- MAIN CONTENT --- */
+        .main-content {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card {
+            background: var(--white);
+            padding: 40px;
+            border-radius: 30px;
+            width: 100%;
+            max-width: 600px;
+            box-shadow: 0 10px 30px rgba(255, 107, 139, 0.1);
+            border: 2px solid rgba(255, 107, 139, 0.05);
+            text-align: center;
+            display: none; /* Hidden by default, toggled via JS */
+            animation: fadeIn 0.4s ease;
+        }
+
+        .card.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            font-size: 2.2rem;
+            color: var(--pink-dark);
+            margin-bottom: 15px;
+        }
+
+        p {
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        /* --- TIMER COMPONENT --- */
+        .timer {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .box {
+            background: var(--pink-pastel);
+            padding: 15px;
+            border-radius: 18px;
+            width: 85px;
+            border: 2px solid var(--pink-light);
+        }
+
+        .val {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--pink-dark);
+            display: block;
+        }
+
+        .unit {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            font-weight: bold;
+            color: var(--text-muted);
+            margin-top: 5px;
+        }
+
+        /* --- TASK MANAGER COMPONENT --- */
+        .todo-input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid var(--pink-light);
+            border-radius: 12px;
+            outline: none;
+            font-size: 1rem;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--pink-dark);
+        }
+
+        .btn {
+            background: var(--pink-dark);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        .btn:hover {
+            background: #ff4f73;
+        }
+
+        .task-list {
+            list-style: none;
+            text-align: left;
+            max-height: 250px;
+            overflow-y: auto;
+        }
+
+        .task-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            background: var(--pink-pastel);
+            margin-bottom: 8px;
+            border-radius: 10px;
+            font-weight: 500;
+        }
+
+        .delete-btn {
+            background: none;
+            border: none;
+            color: var(--pink-dark);
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* --- CONTACT COMPONENT --- */
+        .email-link {
+            display: inline-block;
+            margin-top: 15px;
+            color: var(--pink-dark);
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.2rem;
+            background: var(--pink-pastel);
+            padding: 12px 25px;
+            border-radius: 50px;
+            border: 2px dashed var(--pink-light);
+            transition: transform 0.2s;
+        }
+
+        .email-link:hover {
+            transform: scale(1.05);
+        }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>Eid Mubarak</h1>
-        <p>The celebration awaits...</p>
-        
-        <div class="timer">
-            <div class="box"><span class="val" id="d">00</span><span class="unit">Days</span></div>
-            <div class="box"><span class="val" id="h">00</span><span class="unit">Hrs</span></div>
-            <div class="box"><span class="val" id="m">00</span><span class="unit">Mins</span></div>
-            <div class="box"><span class="val" id="s">00</span><span class="unit">Secs</span></div>
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div class="sidebar-brand">🌸 Eid Portal</div>
+        <button class="menu-btn active" onclick="switchTab('countdown')">✨ Countdown</button>
+        <button class="menu-btn" onclick="switchTab('about')">📖 What Is Eid</button>
+        <button class="menu-btn" onclick="switchTab('tasks')">✅ Eid Tasks</button>
+        <button class="menu-btn" onclick="switchTab('contact')">💌 Contact Us</button>
+    </div>
+
+    <!-- MAIN DASHBOARD CONTENT -->
+    <div class="main-content">
+
+        <!-- TAB 1: COUNTDOWN -->
+        <div id="countdown" class="card active">
+            <h2>Eid Mubarak</h2>
+            <p>The beautiful celebration is just around the corner! Get ready for joy, family, and endless treats.</p>
+            <div class="timer">
+                <div class="box"><span class="val" id="d">00</span><span class="unit">Days</span></div>
+                <div class="box"><span class="val" id="h">00</span><span class="unit">Hrs</span></div>
+                <div class="box"><span class="val" id="m">00</span><span class="unit">Mins</span></div>
+                <div class="box"><span class="val" id="s">00</span><span class="unit">Secs</span></div>
+            </div>
         </div>
+
+        <!-- TAB 2: WHAT IS EID -->
+        <div id="about" class="card">
+            <h2>What Is Eid?</h2>
+            <p>Eid is a magical and holy celebration observed by Muslims all over the world. There are two major Eids: <strong>Eid al-Fitr</strong> (celebrating the completion of Ramadan) and <strong>Eid al-Adha</strong> (the festival of sacrifice).</p>
+            <p>It's a wonderful day filled with morning prayers, wearing beautiful new clothes, eating sweet delicacies, giving charity, and sharing gifts (Eidi) with loved ones! 💕</p>
+        </div>
+
+        <!-- TAB 3: EID TASKS MANAGER -->
+        <div id="tasks" class="card">
+            <h2>Eid Task Manager</h2>
+            <p>Plan out your perfect Eid! Add tasks like buying outfits, decorating the house, or making desserts.</p>
+            <div class="todo-input-group">
+                <input type="text" id="taskInput" placeholder="Add a sweet Eid task...">
+                <button class="btn" onclick="addTask()">Add</button>
+            </div>
+            <ul class="task-list" id="taskList">
+                <li class="task-item">✨ Iron Eid clothes <button class="delete-btn" onclick="this.parentElement.remove()">✕</button></li>
+                <li class="task-item">🌙 Put up fairy lights <button class="delete-btn" onclick="this.parentElement.remove()">✕</button></li>
+            </ul>
+        </div>
+
+        <!-- TAB 4: CONTACT US -->
+        <div id="contact" class="card">
+            <h2>Let's Get In Touch!</h2>
+            <p>Have questions, ideas, or want to say Eid Mubarak? Drop us a sweet message anytime.</p>
+            <a href="mailto:cubesolversx@gmail.com" class="email-link">✉️ cubesolversx@gmail.com</a>
+        </div>
+
     </div>
 
     <script>
-        // Set your target date here
+        // --- TAB SWITCHER LOGIC ---
+        function switchTab(tabId) {
+            // Hide all cards and remove active class from buttons
+            document.querySelectorAll('.card').forEach(card => card.classList.remove('active'));
+            document.querySelectorAll('.menu-btn').forEach(btn => btn.classList.remove('active'));
+            
+            // Show current card and highlight active button
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        // --- TASK MANAGER LOGIC ---
+        function addTask() {
+            const input = document.getElementById('taskInput');
+            const taskText = input.value.trim();
+            if (taskText === "") return;
+
+            const ul = document.getElementById('taskList');
+            const li = document.createElement('li');
+            li.className = 'task-item';
+            li.innerHTML = `🌸 ${taskText} <button class="delete-btn" onclick="this.parentElement.remove()">✕</button>`;
+            
+            ul.appendChild(li);
+            input.value = "";
+        }
+
+        // Allow pressing 'Enter' to add tasks
+        document.getElementById('taskInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') addTask();
+        });
+
+        // --- COUNTDOWN TIMER LOGIC ---
         const target = new Date("2026-06-16T00:00:00").getTime();
 
         const x = setInterval(() => {
@@ -72,7 +334,7 @@
 
             if (diff <= 0) {
                 clearInterval(x);
-                window.location.href = 'eid ul fitr/index.html';
+                window.location.href = 'portal.html';
                 return;
             }
 
