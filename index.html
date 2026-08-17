@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Eid ul-Adha 2027 · Our Celebration</title>
+<meta name="theme-color" content="#06080c">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root{
+    --accent:#00f2ff;
+    --bg:#06080c;
+    --card:#12161f;
+    --border:#222936;
+
+    --bg-morning: linear-gradient(135deg, #ff9a9e 0%, #fecfef 60%, #feeedb 100%);
+    --bg-afternoon: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    --bg-evening: linear-gradient(135deg, #f12711 0%, #f5af19 100%);
+    --bg-night: linear-gradient(135deg, #1f1c2c 0%, #635b7d 100%);
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',-apple-system,BlinkMacSystemFont,sans-serif;}
+
+  body{
+    background:var(--bg); color:#fff; min-height:100vh;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:24px; overflow-x:hidden; text-align:center;
+    transition:background 1.5s ease, color 0.5s ease;
+  }
+
+  body.eid-theme.morning{ background:var(--bg-morning); color:#1e2530; }
+  body.eid-theme.afternoon{ background:var(--bg-afternoon); color:#fff; }
+  body.eid-theme.evening{ background:var(--bg-evening); color:#fff; }
+  body.eid-theme.night{ background:var(--bg-night); color:#fff; }
+
+  body.eid-theme.morning .title,
+  body.eid-theme.morning .subtitle,
+  body.eid-theme.morning #status-line,
+  body.eid-theme.morning footer{ color:#1e2530; }
+  body.eid-theme.morning .subtitle{ opacity:0.75; }
+  body.eid-theme.morning .flip-card{ background:rgba(0,0,0,0.06); border-color:rgba(0,0,0,0.12); color:#1e2530; }
+  body.eid-theme.morning .flip-label{ color:rgba(30,37,48,0.6); }
+  body.eid-theme.morning .colon{ color:#1e2530; }
+  body.eid-theme.morning .star-ambient{ display:none !important; }
+  body.eid-theme.morning #start-btn{ background:#1e2530; color:#fff; }
+
+  body.eid-theme.afternoon .star-ambient{ display:none !important; }
+  body.eid-theme.evening .star-ambient{ opacity:0.15; }
+  body.eid-theme.night .star-ambient{ opacity:0.4; }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important;}
+  }
+
+  .star-ambient{
+    position:fixed; width:2px; height:2px; background:#fff; border-radius:50%;
+    opacity:0.35; pointer-events:none; transition:opacity 1s ease;
+    animation:twinkle 3.5s ease-in-out infinite;
+  }
+  @keyframes twinkle{ 0%,100%{opacity:0.15;} 50%{opacity:0.85;} }
+
+  .stage{
+    position:relative; z-index:2; width:100%; max-width:480px;
+    display:flex; flex-direction:column; align-items:center;
+  }
+
+  .celestial-icon{
+    font-size:44px; margin-bottom:6px;
+    filter:drop-shadow(0 0 20px rgba(255,255,255,0.35));
+    animation:floaty 6s ease-in-out infinite;
+  }
+  @keyframes floaty{ 0%,100%{transform:translateY(0);} 50%{transform:translateY(-10px);} }
+
+  .eyebrow{
+    letter-spacing:0.3em; text-transform:uppercase;
+    font-size:clamp(10px,2.4vw,13px);
+    color:var(--accent);
+    opacity:0.9; margin-bottom:8px; font-weight:600;
+  }
+
+  h1.title{
+    font-family:'Amiri',serif; font-weight:700;
+    font-size:clamp(2.1rem,8vw,3.6rem); line-height:1.08;
+    margin-bottom:8px;
+    text-shadow:0 4px 14px rgba(0,0,0,0.25);
+  }
+
+  .subtitle{
+    font-size:clamp(0.85rem,3vw,1rem);
+    opacity:0.85; max-width:400px; margin:0 auto 30px; font-weight:300;
+  }
+  .subtitle strong{ font-weight:700; }
+
+  .timer-grid-eid{ display:flex; justify-content:center; gap:10px; margin-bottom:26px; flex-wrap:wrap; }
+  .flip-unit{ display:flex; flex-direction:column; align-items:center; gap:6px; }
+  .flip-card{
+    background:rgba(255,255,255,0.12); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
+    width:clamp(58px,17vw,72px); height:clamp(58px,17vw,72px);
+    border-radius:16px; border:1px solid rgba(255,255,255,0.15);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Amiri',serif; font-size:clamp(1.5rem,6vw,2rem); font-weight:700;
+    transition:all 0.5s ease;
+  }
+  .flip-card.pulse{ animation:pulseCard 0.5s ease; }
+  @keyframes pulseCard{ 0%{transform:scale(1);} 35%{transform:scale(1.08);} 100%{transform:scale(1);} }
+  .flip-label{ font-size:10px; text-transform:uppercase; letter-spacing:1px; font-weight:600; opacity:0.7; }
+
+  #status-line{ font-size:13px; opacity:0.6; margin-bottom:10px; }
+
+  #begun-screen{ display:none; flex-direction:column; align-items:center; gap:12px; }
+  #begun-screen.active{ display:flex; }
+  #begun-screen p{
+    font-family:'Amiri',serif; font-size:clamp(1.6rem,6vw,2.4rem); font-weight:700;
+    text-shadow:0 4px 20px rgba(0,0,0,0.3);
+  }
+
+  footer{ margin-top:26px; font-size:11px; opacity:0.5; }
+
+  /* ---------- Confetti ---------- */
+  #confetti-layer{ position:fixed; inset:0; z-index:60; pointer-events:none; overflow:hidden; display:none; }
+  #confetti-layer.active{ display:block; }
+  .confetti-piece{
+    position:absolute; width:10px; height:22px; top:-40px; opacity:0.9; border-radius:2px;
+    animation:fall linear forwards;
+  }
+  @keyframes fall{ to{ top:100vh; transform:translateX(90px) rotate(400deg); } }
+
+  /* ---------- Final 10-second overlay ---------- */
+  #final-overlay{
+    position:fixed; inset:0; z-index:50; background:rgba(6,8,12,0.92);
+    backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+    display:none; align-items:center; justify-content:center; flex-direction:column; text-align:center;
+  }
+  #final-overlay.active{ display:flex; }
+  .final-ring{
+    position:absolute; width:min(80vw,400px); height:min(80vw,400px);
+    border-radius:50%; border:2px solid rgba(0,242,255,0.55);
+    animation:ringPulse 1s ease-out infinite;
+  }
+  .final-ring.delay{ animation-delay:0.4s; border-color:rgba(255,215,0,0.5); }
+  @keyframes ringPulse{ 0%{transform:scale(0.7);opacity:0.9;} 100%{transform:scale(1.3);opacity:0;} }
+  #final-number{
+    position:relative; z-index:2; font-family:'Amiri',serif; font-weight:700;
+    font-size:clamp(5rem,28vw,10rem); color:#fff;
+    text-shadow:0 0 50px rgba(0,242,255,0.6);
+    animation:finalPop 1s ease;
+  }
+  @keyframes finalPop{ 0%{transform:scale(0.4);opacity:0;} 40%{transform:scale(1.15);opacity:1;} 100%{transform:scale(1);opacity:1;} }
+  #final-caption{ position:relative; z-index:2; margin-top:8px; letter-spacing:0.3em; text-transform:uppercase; font-size:12px; opacity:0.7; }
+
+  /* ---------- Takbeer popup ---------- */
+  #takbeer-overlay{
+    position:fixed; inset:0; z-index:80; background:rgba(6,8,12,0.85);
+    backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+    display:none; align-items:center; justify-content:center; padding:20px;
+  }
+  #takbeer-overlay.active{ display:flex; animation:fadeIn 0.5s ease; }
+  @keyframes fadeIn{ from{opacity:0;} to{opacity:1;} }
+  .takbeer-card{
+    width:100%; max-width:400px;
+    background:rgba(22,28,38,0.85); border:1px solid rgba(255,255,255,0.15);
+    backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+    border-radius:24px; padding:clamp(26px,6vw,38px) clamp(22px,5vw,32px);
+    text-align:center; color:#fff;
+    box-shadow:0 30px 80px rgba(0,0,0,0.5);
+    animation:cardRise 0.6s cubic-bezier(.2,.9,.3,1.3);
+  }
+  @keyframes cardRise{ 0%{transform:translateY(40px) scale(0.92);opacity:0;} 100%{transform:translateY(0) scale(1);opacity:1;} }
+  .takbeer-icon{ font-size:44px; margin-bottom:14px; animation:floaty 3s ease-in-out infinite; }
+  .takbeer-title{ font-family:'Amiri',serif; font-weight:700; font-size:clamp(1.6rem,6vw,2.1rem); margin-bottom:6px; color:var(--accent); }
+  .takbeer-caption{ font-size:13px; opacity:0.75; margin-bottom:20px; font-weight:300; }
+  .takbeer-bars{ display:flex; align-items:flex-end; justify-content:center; gap:4px; height:34px; margin-bottom:18px; }
+  .takbeer-bars span{ width:5px; border-radius:3px; background:var(--accent); animation:barBounce 1s ease-in-out infinite; }
+  .takbeer-bars span:nth-child(1){ height:40%; animation-delay:0s; }
+  .takbeer-bars span:nth-child(2){ height:70%; animation-delay:0.1s; }
+  .takbeer-bars span:nth-child(3){ height:100%; animation-delay:0.2s; }
+  .takbeer-bars span:nth-child(4){ height:55%; animation-delay:0.3s; }
+  .takbeer-bars span:nth-child(5){ height:85%; animation-delay:0.4s; }
+  .takbeer-bars span:nth-child(6){ height:35%; animation-delay:0.5s; }
+  @keyframes barBounce{ 0%,100%{transform:scaleY(0.4);} 50%{transform:scaleY(1);} }
+  .takbeer-progress{ width:100%; height:5px; border-radius:3px; background:rgba(255,255,255,0.12); overflow:hidden; }
+  .takbeer-progress-fill{ height:100%; width:0%; background:var(--accent); }
+
+  /* ---------- Start / unlock screen ---------- */
+  #start-overlay{
+    position:fixed; inset:0; z-index:100; background:var(--bg);
+    display:flex; align-items:center; justify-content:center; flex-direction:column; gap:20px;
+    text-align:center; padding:24px;
+  }
+  #start-overlay.hidden{ display:none; }
+  #start-overlay .start-icon{ font-size:50px; animation:floaty 5s ease-in-out infinite; }
+  #start-overlay h2{ font-family:'Amiri',serif; font-size:clamp(1.5rem,6vw,2.1rem); color:#fff; }
+  #start-overlay p{ font-size:13px; color:rgba(255,255,255,0.6); max-width:320px; font-weight:300; }
+  #start-btn{
+    padding:15px 32px; border:none; border-radius:50px;
+    background:var(--accent); color:#000; font-weight:700; font-size:14px;
+    text-transform:uppercase; letter-spacing:1px; cursor:pointer;
+    box-shadow:0 10px 26px rgba(0,242,255,0.3);
+  }
+</style>
+</head>
+<body>
+
+<div id="confetti-layer"></div>
+
+<div class="stage">
+  <div class="celestial-icon" id="celestial-icon">🌙</div>
+  <div class="eyebrow">Eid ul-Adha · 1449 AH</div>
+  <h1 class="title">Eid Mubarak</h1>
+  <p class="subtitle">A small room, three of us, and a lot of love — counting down to <strong>Eid ul-Adha 2027</strong> together.</p>
+
+  <div class="timer-grid-eid">
+    <div class="flip-unit"><div class="flip-card" id="d-days">--</div><div class="flip-label">Days</div></div>
+    <div class="flip-unit"><div class="flip-card" id="d-hours">--</div><div class="flip-label">Hours</div></div>
+    <div class="flip-unit"><div class="flip-card" id="d-mins">--</div><div class="flip-label">Mins</div></div>
+    <div class="flip-unit"><div class="flip-card" id="d-secs">--</div><div class="flip-label">Secs</div></div>
+  </div>
+
+  <div id="status-line">Loading celebration time…</div>
+
+  <div id="begun-screen"><p>The celebration has begun.</p></div>
+
+  <footer>Eid ul-Adha 2027 · made with love for our little gathering</footer>
+</div>
+
+<div id="final-overlay">
+  <div class="final-ring"></div>
+  <div class="final-ring delay"></div>
+  <div id="final-number">10</div>
+  <div id="final-caption">Get ready…</div>
+</div>
+
+<div id="takbeer-overlay">
+  <div class="takbeer-card">
+    <div class="takbeer-icon">🌙</div>
+    <div class="takbeer-title">Takbeer</div>
+    <p class="takbeer-caption">Listen to that beautiful Takbeer</p>
+    <div class="takbeer-bars"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="takbeer-progress"><div class="takbeer-progress-fill" id="takbeer-progress-fill"></div></div>
+  </div>
+</div>
+
+<audio id="takbeer-audio" preload="auto" src="https://eid7.vercel.app/Eid%20Takbeer%20-%20Allahu%20Akbar%20Kabira%20(1)_%5Bcut_23sec%5D.mp3"></audio>
+
+<div id="start-overlay">
+  <div class="start-icon">🌙</div>
+  <h2>Eid ul-Adha 2027</h2>
+  <p>Tap once to enter — this unlocks sound so the countdown voice and the Takbeer play automatically later.</p>
+  <button id="start-btn" type="button">Enter Celebration</button>
+</div>
+
+<script>
+(function(){
+
+  const SUPABASE_URL = "https://bbjemfjrrcankjdjqnqo.supabase.co";
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJiamVtZmpycmNhbmtqZGpxbnFvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyOTc2ODEsImV4cCI6MjA5NTg3MzY4MX0.qA_tcBtPFIYTHnPtr6oy6TauiSAi1kBlH7gz3fwbcg4";
+  const TABLE_NAME = "eid_settings";
+  const FALLBACK_CELEBRATION_TIME = "2027-06-17T08:00:00+06:00";
+
+  let celebrationTime = null;
+  let finalModeStarted = false;
+  let begun = false;
+  let lastSpokenSecond = null;
+  let soundUnlocked = false;
+
+  const els = {
+    days: document.getElementById('d-days'),
+    hours: document.getElementById('d-hours'),
+    mins: document.getElementById('d-mins'),
+    secs: document.getElementById('d-secs'),
+    status: document.getElementById('status-line'),
+    begunScreen: document.getElementById('begun-screen'),
+    finalOverlay: document.getElementById('final-overlay'),
+    finalNumber: document.getElementById('final-number'),
+    finalCaption: document.getElementById('final-caption'),
+    takbeerOverlay: document.getElementById('takbeer-overlay'),
+    takbeerAudio: document.getElementById('takbeer-audio'),
+    takbeerProgressFill: document.getElementById('takbeer-progress-fill'),
+    startOverlay: document.getElementById('start-overlay'),
+    startBtn: document.getElementById('start-btn'),
+    confettiLayer: document.getElementById('confetti-layer'),
+    timerGrid: document.querySelector('.timer-grid-eid'),
+    celestialIcon: document.getElementById('celestial-icon'),
+    body: document.body,
+  };
+
+  function pad(n){ return String(n).padStart(2,'0'); }
+
+  function makeStars(count){
+    const frag = document.createDocumentFragment();
+    for(let i=0;i<count;i++){
+      const s = document.createElement('div');
+      s.className = 'star-ambient';
+      s.style.top = Math.random()*100 + 'vh';
+      s.style.left = Math.random()*100 + 'vw';
+      s.style.opacity = (Math.random()*0.6 + 0.2).toString();
+      s.style.animationDelay = (Math.random()*3.5) + 's';
+      frag.appendChild(s);
+    }
+    document.body.appendChild(frag);
+  }
+  makeStars(40);
+
+  // ---------- Time-of-day dynamic theme (same phases as the 2026 site) ----------
+  function applyTimeBasedTheme(){
+    const hour = new Date().getHours();
+    let phase = 'night';
+    if(hour >= 6 && hour < 12) phase = 'morning';
+    else if(hour >= 12 && hour < 16) phase = 'afternoon';
+    else if(hour >= 16 && hour < 19) phase = 'evening';
+    else phase = 'night';
+
+    els.body.classList.remove('morning','afternoon','evening','night');
+    els.body.classList.add('eid-theme', phase);
+    els.celestialIcon.textContent = (phase === 'morning' || phase === 'afternoon') ? '☀️' : '🌙';
+  }
+  applyTimeBasedTheme();
+  setInterval(applyTimeBasedTheme, 30000);
+
+  // ---------- Confetti ----------
+  const confettiColors = ['#ffd700','#00f2ff','#00ff88','#ff007f'];
+  function burstConfetti(count){
+    for(let i=0;i<count;i++){
+      const p = document.createElement('div');
+      p.className = 'confetti-piece';
+      p.style.left = Math.random()*100 + 'vw';
+      p.style.background = confettiColors[Math.floor(Math.random()*confettiColors.length)];
+      p.style.animationDuration = (2.8 + Math.random()*2) + 's';
+      p.style.animationDelay = (Math.random()*0.6) + 's';
+      els.confettiLayer.appendChild(p);
+      setTimeout(()=>p.remove(), 6000);
+    }
+  }
+
+  function speak(text){
+    if(!('speechSynthesis' in window)) return;
+    try{
+      window.speechSynthesis.cancel();
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.rate = 1;
+      utter.pitch = 1.05;
+      window.speechSynthesis.speak(utter);
+    }catch(e){}
+  }
+
+  function pulse(el){
+    el.classList.remove('pulse');
+    void el.offsetWidth;
+    el.classList.add('pulse');
+  }
+
+  function renderNormalCountdown(diffMs){
+    const totalSec = Math.floor(diffMs/1000);
+    const days = Math.floor(totalSec / 86400);
+    const hours = Math.floor((totalSec % 86400) / 3600);
+    const mins = Math.floor((totalSec % 3600) / 60);
+    const secs = totalSec % 60;
+    const vals = {days, hours, mins, secs};
+    const map = {days:els.days, hours:els.hours, mins:els.mins, secs:els.secs};
+    for(const k in map){
+      const newVal = pad(vals[k]);
+      if(map[k].textContent !== newVal){
+        map[k].textContent = newVal;
+        pulse(map[k]);
+      }
+    }
+  }
+
+  function enterFinalMode(){
+    finalModeStarted = true;
+    els.timerGrid.style.display = 'none';
+    els.status.style.display = 'none';
+    els.finalOverlay.classList.add('active');
+  }
+
+  function updateFinal(secondsLeft){
+    if(secondsLeft !== lastSpokenSecond){
+      lastSpokenSecond = secondsLeft;
+      els.finalNumber.textContent = secondsLeft;
+      els.finalNumber.style.animation = 'none';
+      void els.finalNumber.offsetWidth;
+      els.finalNumber.style.animation = 'finalPop 1s ease';
+      els.finalCaption.textContent = secondsLeft <= 3 ? 'Almost there…' : 'Get ready…';
+      speak(String(secondsLeft));
+    }
+  }
+
+  function openTakbeerPopup(){
+    els.takbeerOverlay.classList.add('active');
+    els.takbeerAudio.currentTime = 0;
+    const p = els.takbeerAudio.play();
+    if(p && p.catch){ p.catch(()=>{}); }
+  }
+
+  els.takbeerAudio.addEventListener('timeupdate', ()=>{
+    if(els.takbeerAudio.duration){
+      const pct = (els.takbeerAudio.currentTime / els.takbeerAudio.duration) * 100;
+      els.takbeerProgressFill.style.width = pct + '%';
+    }
+  });
+  els.takbeerAudio.addEventListener('ended', ()=>{
+    els.takbeerOverlay.classList.remove('active');
+  });
+
+  function enterBegunState(){
+    if(begun) return;
+    begun = true;
+    els.finalOverlay.classList.remove('active');
+    els.timerGrid.style.display = 'none';
+    els.status.style.display = 'none';
+    els.begunScreen.classList.add('active');
+    els.confettiLayer.classList.add('active');
+    burstConfetti(100);
+    setTimeout(openTakbeerPopup, 1500);
+  }
+
+  function tick(){
+    if(!celebrationTime || begun) return;
+    const now = Date.now();
+    const diff = celebrationTime.getTime() - now;
+
+    if(diff <= 0){
+      enterBegunState();
+      return;
+    }
+    if(diff <= 10000){
+      if(!finalModeStarted) enterFinalMode();
+      const secondsLeft = Math.max(1, Math.ceil(diff/1000));
+      updateFinal(secondsLeft);
+    } else {
+      renderNormalCountdown(diff);
+    }
+  }
+
+  async function loadCelebrationTime(){
+    const usingPlaceholders =
+      SUPABASE_URL.includes('YOUR-PROJECT-REF') ||
+      SUPABASE_ANON_KEY.includes('YOUR-ANON-PUBLIC-KEY');
+
+    if(usingPlaceholders){
+      els.status.textContent = 'Preview mode — using a placeholder date (connect Supabase to set the real one)';
+      celebrationTime = new Date(FALLBACK_CELEBRATION_TIME);
+      return;
+    }
+    try{
+      const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      const { data, error } = await client
+        .from(TABLE_NAME)
+        .select('celebration_time')
+        .order('id', { ascending: false })
+        .limit(1)
+        .single();
+      if(error || !data){ throw error || new Error('No row found'); }
+      celebrationTime = new Date(data.celebration_time);
+      els.status.textContent = 'Counting down to our Eid ul-Adha celebration';
+    }catch(err){
+      console.warn('Supabase fetch failed, using fallback time.', err);
+      celebrationTime = new Date(FALLBACK_CELEBRATION_TIME);
+      els.status.textContent = "Couldn't reach Supabase — using the fallback date";
+    }
+  }
+
+  els.startBtn.addEventListener('click', ()=>{
+    if(soundUnlocked) return;
+    soundUnlocked = true;
+
+    els.takbeerAudio.volume = 1;
+    els.takbeerAudio.play().then(()=>{
+      els.takbeerAudio.pause();
+      els.takbeerAudio.currentTime = 0;
+    }).catch(()=>{});
+
+    try{
+      const primer = new SpeechSynthesisUtterance(' ');
+      primer.volume = 0;
+      window.speechSynthesis.speak(primer);
+    }catch(e){}
+
+    els.startOverlay.classList.add('hidden');
+
+    loadCelebrationTime().then(()=>{
+      tick();
+      setInterval(tick, 1000);
+    });
+  });
+
+})();
+</script>
+</body>
+</html>
