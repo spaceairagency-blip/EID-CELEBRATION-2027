@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Eid ul-Fitr 2027 · Sweet Celebration</title>
+<title>Eid Ul-Fitr 2027 · Sweet Celebration</title>
 <meta name="theme-color" content="#101321">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -153,11 +154,18 @@
 
   /* ---------- Takbeer popup ---------- */
   #takbeer-overlay{
-    position:fixed; inset:0; z-index:80; background:rgba(13,17,32,0.88);
-    backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
-    display:none; align-items:center; justify-content:center; padding:0;
-    background:linear-gradient(160deg, #1b2038, #0d1120 70%);
-  }
+  position:fixed; inset:0; z-index:80; overflow:hidden;
+  display:none; align-items:center; justify-content:center; padding:0;
+  background:
+    radial-gradient(circle at 20% 15%, rgba(127,224,192,0.22), transparent 55%),
+    radial-gradient(circle at 82% 20%, rgba(246,166,178,0.20), transparent 50%),
+    radial-gradient(circle at 50% 100%, rgba(243,207,138,0.16), transparent 60%),
+    linear-gradient(160deg, #0d1120 0%, #1c2340 45%, #2c1f3a 100%);
+  background-size: 200% 200%, 200% 200%, 200% 200%, 100% 100%;
+  animation: realcardsShift 14s ease-in-out infinite;
+  backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+}
+#takbeer-overlay.active{ display:flex; animation:fadeIn 0.5s ease, realcardsShift 14s ease-in-out infinite 0.5s; }
   #takbeer-overlay.active{ display:flex; animation:fadeIn 0.5s ease; }
   @keyframes fadeIn{ from{opacity:0;} to{opacity:1;} }
   .takbeer-card{
@@ -433,6 +441,9 @@
 </div>
 
 <div id="takbeer-overlay">
+  <div class="realcards-glow-orb o1"></div>
+  <div class="realcards-glow-orb o2"></div>
+  <div class="realcards-glow-orb o3"></div>
   <div class="takbeer-card">
     <div class="takbeer-bars"><span></span><span></span><span></span><span></span><span></span><span></span></div>
     <div class="takbeer-progress"><div class="takbeer-progress-fill" id="takbeer-progress-fill"></div></div>
