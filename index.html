@@ -12,6 +12,7 @@
     --mint:#7fe0c0;
     --mint-soft:#bff2de;
     --rose:#f6a6b2;
+    --gold:#f3cf8a;
     --cream:#fbf3e6;
     --bg-deep:#0d1120;
     --bg-deep-2:#171b30;
@@ -258,6 +259,91 @@
   .eid-card-msg{ font-size:14px; line-height:1.65; font-weight:300; color:rgba(251,243,230,0.82); }
   .eid-card-sign{ margin-top:16px; font-size:11px; letter-spacing:0.2em; text-transform:uppercase; opacity:0.5; }
 
+  /* ---------- Step 4: Get Your Cards (real life, 1 min timer) ---------- */
+  #realcards-overlay{
+    position:fixed; inset:0; z-index:82; overflow:hidden;
+    display:none; align-items:center; justify-content:center; flex-direction:column;
+    text-align:center; padding:24px;
+    background:
+      radial-gradient(circle at 20% 15%, rgba(127,224,192,0.22), transparent 55%),
+      radial-gradient(circle at 82% 20%, rgba(246,166,178,0.20), transparent 50%),
+      radial-gradient(circle at 50% 100%, rgba(243,207,138,0.16), transparent 60%),
+      linear-gradient(160deg, #0d1120 0%, #1c2340 45%, #2c1f3a 100%);
+    background-size: 200% 200%, 200% 200%, 200% 200%, 100% 100%;
+    animation: realcardsShift 14s ease-in-out infinite;
+  }
+  @keyframes realcardsShift{
+    0%{ background-position: 0% 0%, 100% 0%, 50% 100%, 0 0; }
+    50%{ background-position: 100% 100%, 0% 100%, 50% 0%, 0 0; }
+    100%{ background-position: 0% 0%, 100% 0%, 50% 100%, 0 0; }
+  }
+  #realcards-overlay.active{ display:flex; animation:fadeIn 0.6s ease, realcardsShift 14s ease-in-out infinite 0.6s; }
+
+  .realcards-glow-orb{
+    position:absolute; border-radius:50%; filter:blur(50px); pointer-events:none; opacity:0.55;
+    animation:orbFloat 9s ease-in-out infinite;
+  }
+  .realcards-glow-orb.o1{ width:220px; height:220px; background:radial-gradient(circle, var(--mint), transparent 70%); top:8%; left:-6%; animation-delay:0s; }
+  .realcards-glow-orb.o2{ width:180px; height:180px; background:radial-gradient(circle, var(--rose), transparent 70%); bottom:10%; right:-4%; animation-delay:2.5s; }
+  .realcards-glow-orb.o3{ width:160px; height:160px; background:radial-gradient(circle, var(--gold), transparent 70%); top:55%; left:78%; animation-delay:5s; }
+  @keyframes orbFloat{ 0%,100%{ transform:translateY(0) scale(1); } 50%{ transform:translateY(-24px) scale(1.08); } }
+
+  .realcards-inner{ position:relative; z-index:2; display:flex; flex-direction:column; align-items:center; max-width:420px; }
+
+  .realcards-icon-ring{
+    width:96px; height:96px; border-radius:50%; margin-bottom:22px;
+    display:flex; align-items:center; justify-content:center; font-size:38px;
+    background:linear-gradient(160deg, rgba(127,224,192,0.18), rgba(255,255,255,0.05));
+    border:1px solid var(--border);
+    box-shadow:0 0 0 8px rgba(127,224,192,0.06), 0 20px 50px rgba(0,0,0,0.35);
+    animation:floaty 4s ease-in-out infinite;
+  }
+
+  .realcards-title{
+    font-family:'Cormorant Garamond',serif; font-weight:700; font-style:italic;
+    font-size:clamp(2rem,8.5vw,3.1rem); line-height:1.1; margin-bottom:12px;
+    background:linear-gradient(180deg, var(--cream) 0%, var(--mint-soft) 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    text-shadow:0 4px 30px rgba(127,224,192,0.25);
+  }
+
+  .realcards-desc{
+    font-size:14px; font-weight:300; line-height:1.7; color:rgba(251,243,230,0.78);
+    margin-bottom:34px; max-width:340px;
+  }
+
+  .realcards-timer-ring-wrap{ position:relative; width:min(58vw,220px); height:min(58vw,220px); margin-bottom:26px; }
+  .realcards-timer-ring-wrap svg{ width:100%; height:100%; transform:rotate(-90deg); }
+  .realcards-timer-ring-bg{ fill:none; stroke:rgba(255,255,255,0.08); stroke-width:6; }
+  .realcards-timer-ring-fg{
+    fill:none; stroke:url(#realcards-gradient); stroke-width:6; stroke-linecap:round;
+    transition:stroke-dashoffset 1s linear;
+  }
+  .realcards-timer-center{
+    position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  }
+  .realcards-timer-num{
+    font-family:'Cormorant Garamond',serif; font-weight:700; font-size:clamp(2.6rem,11vw,3.6rem);
+    color:var(--cream); line-height:1; text-shadow:0 4px 24px rgba(127,224,192,0.35);
+  }
+  .realcards-timer-sub{ font-size:10px; letter-spacing:0.28em; text-transform:uppercase; opacity:0.55; margin-top:6px; color:var(--mint-soft); }
+
+  .realcards-hint{
+    font-size:11px; letter-spacing:0.22em; text-transform:uppercase; opacity:0.5; color:var(--mint-soft);
+    display:flex; align-items:center; gap:8px;
+  }
+  .realcards-hint .dot{ width:6px; height:6px; border-radius:50%; background:var(--mint); animation:glimmer 1.6s ease-in-out infinite; }
+
+  .realcards-done{ display:none; flex-direction:column; align-items:center; gap:10px; }
+  .realcards-done.active{ display:flex; }
+  .realcards-done p{
+    font-family:'Cormorant Garamond',serif; font-style:italic; font-size:clamp(1.7rem,7vw,2.4rem); font-weight:700;
+    background:linear-gradient(180deg, var(--cream) 0%, var(--gold) 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    text-shadow:0 4px 24px rgba(243,207,138,0.35);
+  }
+  .realcards-done span{ font-size:13px; opacity:0.6; font-weight:300; }
+
   /* ---------- Step intro screens ---------- */
   .step-intro{
     position:fixed; inset:0; z-index:80; background:var(--bg-deep);
@@ -404,6 +490,53 @@
   </div>
 </div>
 
+<!-- ---------- Step 4: Get Your Cards (real life) ---------- -->
+<div id="realcards-intro" class="step-intro">
+  <div class="step-intro-num">4</div>
+  <div class="step-intro-title">Get Your Cards</div>
+  <p class="step-intro-caption">Get your card is real life.</p>
+</div>
+
+<div id="realcards-overlay">
+  <div class="realcards-glow-orb o1"></div>
+  <div class="realcards-glow-orb o2"></div>
+  <div class="realcards-glow-orb o3"></div>
+
+  <div class="realcards-inner">
+    <div id="realcards-waiting">
+      <div class="realcards-icon-ring">🎁</div>
+      <div class="realcards-title">Get Your Cards</div>
+      <p class="realcards-desc">Get your card is real life. Step away from the screen — your card is waiting for you close by. Come back in one minute.</p>
+
+      <div class="realcards-timer-ring-wrap">
+        <svg viewBox="0 0 100 100">
+          <defs>
+            <linearGradient id="realcards-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#7fe0c0"/>
+              <stop offset="100%" stop-color="#f3cf8a"/>
+            </linearGradient>
+          </defs>
+          <circle class="realcards-timer-ring-bg" cx="50" cy="50" r="44"></circle>
+          <circle class="realcards-timer-ring-fg" id="realcards-ring-fg" cx="50" cy="50" r="44"
+                  stroke-dasharray="276.46" stroke-dashoffset="0"></circle>
+        </svg>
+        <div class="realcards-timer-center">
+          <div class="realcards-timer-num" id="realcards-timer-num">60</div>
+          <div class="realcards-timer-sub">Seconds</div>
+        </div>
+      </div>
+
+      <div class="realcards-hint"><span class="dot"></span> Go find your card now</div>
+    </div>
+
+    <div class="realcards-done" id="realcards-done">
+      <div class="realcards-icon-ring">💌</div>
+      <p>Time's up — I hope you found it!</p>
+      <span>Eid Mubarak, in real life too.</span>
+    </div>
+  </div>
+</div>
+
 <audio id="takbeer-audio" preload="auto" src="https://eid7.vercel.app/Eid%20Takbeer%20-%20Allahu%20Akbar%20Kabira%20(1)_%5Bcut_23sec%5D.mp3"></audio>
 
 <div id="start-overlay">
@@ -446,6 +579,12 @@
     prayerVideo: document.getElementById('prayer-video'),
     cardsIntro: document.getElementById('cards-intro'),
     cardsOverlay: document.getElementById('cards-overlay'),
+    realcardsIntro: document.getElementById('realcards-intro'),
+    realcardsOverlay: document.getElementById('realcards-overlay'),
+    realcardsWaiting: document.getElementById('realcards-waiting'),
+    realcardsDone: document.getElementById('realcards-done'),
+    realcardsTimerNum: document.getElementById('realcards-timer-num'),
+    realcardsRingFg: document.getElementById('realcards-ring-fg'),
     startOverlay: document.getElementById('start-overlay'),
     startBtn: document.getElementById('start-btn'),
     confettiLayer: document.getElementById('confetti-layer'),
@@ -590,7 +729,7 @@
 
   function autoScrollCards(){
     const cards = Array.from(document.querySelectorAll('.eid-card'));
-    if(!cards.length) return;
+    if(!cards.length){ setTimeout(openRealCardsPopup, 1500); return; }
     const scroller = els.cardsOverlay;
 
     const cardDelay = 900;   // time between each card's auto-scroll step
@@ -602,9 +741,63 @@
       }, startDelay + i * cardDelay);
     });
 
+    const totalWait = startDelay + cards.length * cardDelay + 400;
     setTimeout(()=>{
       scroller.scrollTo({ top: scroller.scrollHeight, behavior:'smooth' });
-    }, startDelay + cards.length * cardDelay + 400);
+    }, totalWait);
+
+    // Move on to Step 4 after the cards have been read
+    setTimeout(openRealCardsPopup, totalWait + 3200);
+  }
+
+  // ---------- Step 4: Get Your Cards (real life, 1-min timer) ----------
+  const REALCARDS_DURATION = 60; // seconds
+  const RING_CIRCUMFERENCE = 276.46; // 2 * PI * 44
+  let realcardsInterval = null;
+
+  function openRealCardsPopup(){
+    els.cardsOverlay.classList.remove('active');
+    els.realcardsIntro.classList.add('active');
+    setTimeout(()=>{
+      els.realcardsIntro.classList.remove('active');
+      els.realcardsOverlay.classList.add('active');
+      startRealCardsTimer();
+    }, INTRO_DURATION);
+  }
+
+  function startRealCardsTimer(){
+    els.realcardsWaiting.style.display = 'flex';
+    els.realcardsWaiting.style.flexDirection = 'column';
+    els.realcardsWaiting.style.alignItems = 'center';
+    els.realcardsDone.classList.remove('active');
+
+    let secondsLeft = REALCARDS_DURATION;
+    els.realcardsTimerNum.textContent = secondsLeft;
+    els.realcardsRingFg.style.strokeDasharray = RING_CIRCUMFERENCE;
+    els.realcardsRingFg.style.strokeDashoffset = 0;
+
+    if(realcardsInterval) clearInterval(realcardsInterval);
+    realcardsInterval = setInterval(()=>{
+      secondsLeft -= 1;
+      if(secondsLeft <= 0){
+        clearInterval(realcardsInterval);
+        secondsLeft = 0;
+        els.realcardsTimerNum.textContent = 0;
+        els.realcardsRingFg.style.strokeDashoffset = RING_CIRCUMFERENCE;
+        finishRealCardsTimer();
+        return;
+      }
+      els.realcardsTimerNum.textContent = secondsLeft;
+      const offset = RING_CIRCUMFERENCE * (1 - secondsLeft / REALCARDS_DURATION);
+      els.realcardsRingFg.style.strokeDashoffset = offset;
+      pulse(els.realcardsTimerNum);
+    }, 1000);
+  }
+
+  function finishRealCardsTimer(){
+    els.realcardsWaiting.style.display = 'none';
+    els.realcardsDone.classList.add('active');
+    burstConfetti(70);
   }
 
   els.takbeerAudio.addEventListener('timeupdate', ()=>{
