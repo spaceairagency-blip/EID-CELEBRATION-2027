@@ -1,910 +1,843 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>EID UL FITR · 2027</title>
-  <meta name="theme-color" content="#101321">
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@300;400;500;600;700;800&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <style>
-    :root{
-      --mint:#7fe0c0;
-      --mint-soft:#bff2de;
-      --rose:#f6a6b2;
-      --gold:#f3cf8a;
-      --cream:#fbf3e6;
-      --bg-deep:#0d1120;
-      --bg-deep-2:#171b30;
-      --card:#1b2038;
-      --border:rgba(127,224,192,0.18);
-      --bg-dawn: linear-gradient(155deg, #ffe0c2 0%, #ffc7d1 55%, #bff2de 100%);
-      --bg-day: linear-gradient(155deg, #7ec9e8 0%, #a3e8d0 100%);
-      --bg-dusk: linear-gradient(155deg, #f28aa5 0%, #7c4fa3 100%);
-      --bg-dark: linear-gradient(155deg, #0d1120 0%, #1c2340 55%, #2c1f3a 100%);
-    }
-
-    *{margin:0;padding:0;box-sizing:border-box;font-family:'Manrope',-apple-system,BlinkMacSystemFont,sans-serif;}
-
-    body{
-      background:var(--bg-dark); color:var(--cream); min-height:100vh;
-      display:flex; flex-direction:column; align-items:center; justify-content:center;
-      padding:24px; overflow-x:hidden; text-align:center; position:relative;
-      transition:background 1.8s ease, color 0.6s ease;
-    }
-
-    body.eid-theme.dawn{ background:var(--bg-dawn); color:#2a1a1f; }
-    body.eid-theme.day{ background:var(--bg-day); color:#0e2a2a; }
-    body.eid-theme.dusk{ background:var(--bg-dusk); color:#fff0f4; }
-    body.eid-theme.dark{ background:var(--bg-dark); color:var(--cream); }
-
-    body.eid-theme.dawn .subtitle,
-    body.eid-theme.dawn footer{ color:#2a1a1f; }
-    body.eid-theme.dawn .lamp-card{ background:rgba(0,0,0,0.06); border-color:rgba(0,0,0,0.14); color:#2a1a1f; }
-    body.eid-theme.dawn .lamp-label{ color:rgba(42,26,31,0.65); }
-    body.eid-theme.dawn .sparkle-ambient,
-    body.eid-theme.day .sparkle-ambient{ display:none !important; }
-    body.eid-theme.dusk .sparkle-ambient{ opacity:0.2; }
-    body.eid-theme.dark .sparkle-ambient{ opacity:0.5; }
-
-    @media (prefers-reduced-motion: reduce){
-      *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important;}
-    }
-
-    /* ---------- Ambient lantern motif ---------- */
-    .sky-signature{
-      position:fixed; bottom:-8vh; left:-8vw; width:52vmin; height:52vmin;
-      pointer-events:none; z-index:0; opacity:0.85;
-      animation:driftLantern 34s ease-in-out infinite;
-    }
-    @keyframes driftLantern{ 0%,100%{ transform:translate(0,0) rotate(0deg);} 50%{ transform:translate(2.5vw,-2vh) rotate(-2deg);} }
-    .sky-signature svg{ width:100%; height:100%; }
-
-    .sparkle-ambient{
-      position:fixed; width:2px; height:2px; background:var(--mint-soft); border-radius:50%;
-      opacity:0.35; pointer-events:none; transition:opacity 1s ease; z-index:0;
-      animation:glimmer 4s ease-in-out infinite;
-    }
-    @keyframes glimmer{ 0%,100%{opacity:0.12;} 50%{opacity:0.85;} }
-
-    .stage{
-      position:relative; z-index:2; width:100%; max-width:480px;
-      display:flex; flex-direction:column; align-items:center;
-    }
-
-    .eyebrow{
-      letter-spacing:0.32em; text-transform:uppercase;
-      font-size:clamp(10px,2.4vw,13px);
-      color:var(--mint);
-      opacity:0.95; margin-bottom:10px; font-weight:700;
-    }
-
-    h1.title{
-      font-family:'Cormorant Garamond',serif; font-weight:700; font-style:italic;
-      font-size:clamp(2.4rem,9.5vw,4.2rem); line-height:1.05;
-      margin-bottom:38px;
-      background:linear-gradient(180deg, var(--cream) 0%, var(--mint-soft) 100%);
-      -webkit-background-clip:text; background-clip:text; color:transparent;
-      text-shadow:0 4px 30px rgba(127,224,192,0.22);
-    }
-
-    .timer-grid-eid{ display:flex; justify-content:center; gap:11px; margin-bottom:8px; flex-wrap:wrap; }
-    .lamp-unit{ display:flex; flex-direction:column; align-items:center; gap:8px; }
-    .lamp-card{
-      background:linear-gradient(160deg, rgba(127,224,192,0.12), rgba(255,255,255,0.04));
-      backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
-      width:clamp(58px,17.5vw,76px); height:clamp(58px,17.5vw,76px);
-      border-radius:22px 22px 10px 10px; border:1px solid var(--border);
-      display:flex; align-items:center; justify-content:center;
-      font-family:'Manrope',sans-serif; font-size:clamp(1.5rem,6vw,2rem); font-weight:800;
-      color:var(--cream);
-      box-shadow:0 12px 30px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.06);
-      transition:all 0.5s ease;
-    }
-    .lamp-card.pulse{ animation:pulseCard 0.5s ease; }
-    @keyframes pulseCard{ 0%{transform:scale(1);} 35%{transform:scale(1.08); border-color:var(--mint);} 100%{transform:scale(1);} }
-    .lamp-label{ font-size:10px; text-transform:uppercase; letter-spacing:1.5px; font-weight:700; opacity:0.65; }
-
-    #status-line{ font-size:12px; opacity:0; height:0; overflow:hidden; }
-
-    #begun-screen{ display:none; flex-direction:column; align-items:center; gap:14px; }
-    #begun-screen.active{ display:flex; }
-    #begun-screen p{
-      font-family:'Cormorant Garamond',serif; font-style:italic; font-size:clamp(1.8rem,7vw,2.7rem); font-weight:700;
-      background:linear-gradient(180deg, var(--cream) 0%, var(--mint-soft) 100%);
-      -webkit-background-clip:text; background-clip:text; color:transparent;
-      text-shadow:0 4px 24px rgba(127,224,192,0.3);
-    }
-
-    footer{ margin-top:34px; font-size:11px; opacity:0.4; letter-spacing:0.5px; }
-
-    /* ---------- Confetti ---------- */
-    #confetti-layer{ position:fixed; inset:0; z-index:60; pointer-events:none; overflow:hidden; display:none; }
-    #confetti-layer.active{ display:block; }
-    .confetti-piece{
-      position:absolute; width:8px; height:18px; top:-40px; opacity:0.9; border-radius:3px;
-      animation:fall linear forwards;
-    }
-    @keyframes fall{ to{ top:100vh; transform:translateX(80px) rotate(380deg); } }
-
-    /* ---------- Final 10-second overlay ---------- */
-    #final-overlay{
-      position:fixed; inset:0; z-index:50; background:rgba(13,17,32,0.94);
-      backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
-      display:none; align-items:center; justify-content:center; flex-direction:column; text-align:center;
-    }
-    #final-overlay.active{ display:flex; }
-    .final-ring{
-      position:absolute; width:min(78vw,390px); height:min(78vw,390px);
-      border-radius:50%; border:2px solid rgba(127,224,192,0.5);
-      animation:ringPulse 1s ease-out infinite;
-    }
-    .final-ring.delay{ animation-delay:0.4s; border-color:rgba(251,243,230,0.32); }
-    @keyframes ringPulse{ 0%{transform:scale(0.7);opacity:0.9;} 100%{transform:scale(1.3);opacity:0;} }
-    #final-number{
-      position:relative; z-index:2; font-family:'Cormorant Garamond',serif; font-weight:700;
-      font-size:clamp(5rem,28vw,10rem); color:var(--cream);
-      text-shadow:0 0 60px rgba(127,224,192,0.45);
-      animation:finalPop 1s ease;
-    }
-    @keyframes finalPop{ 0%{transform:scale(0.4);opacity:0;} 40%{transform:scale(1.15);opacity:1;} 100%{transform:scale(1);opacity:1;} }
-    #final-caption{ position:relative; z-index:2; margin-top:10px; letter-spacing:0.35em; text-transform:uppercase; font-size:12px; opacity:0.6; color:var(--mint-soft); }
-
-    /* ---------- Takbeer popup — PREMIUM ---------- */
-    #takbeer-overlay{
-      position:fixed; inset:0; z-index:80; overflow:hidden;
-      display:none; align-items:center; justify-content:center; padding:0;
-      background:
-        radial-gradient(circle at 20% 15%, rgba(127,224,192,0.22), transparent 55%),
-        radial-gradient(circle at 82% 20%, rgba(246,166,178,0.20), transparent 50%),
-        radial-gradient(circle at 50% 100%, rgba(243,207,138,0.16), transparent 60%),
-        linear-gradient(160deg, #0d1120 0%, #1c2340 45%, #2c1f3a 100%);
-      background-size: 200% 200%, 200% 200%, 200% 200%, 100% 100%;
-      backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
-    }
-    #takbeer-overlay.active{ display:flex; animation:fadeIn 0.5s ease, realcardsShift 14s ease-in-out infinite 0.5s; }
-    @keyframes fadeIn{ from{opacity:0;} to{opacity:1;} }
-
-    .takbeer-card{
-      width:100%; height:100%; max-width:none; position:relative;
-      display:flex; flex-direction:column; align-items:center; justify-content:center;
-      border:none; border-radius:0; padding:24px;
-      text-align:center; color:var(--cream);
-      animation:cardRise 0.6s cubic-bezier(.2,.9,.3,1.3);
-    }
-    @keyframes cardRise{ 0%{transform:translateY(40px) scale(0.92);opacity:0;} 100%{transform:translateY(0) scale(1);opacity:1;} }
-
-    .takbeer-core-glow{
-      position:absolute; width:min(70vw,420px); height:min(70vw,420px);
-      border-radius:50%; pointer-events:none; z-index:0;
-      background:radial-gradient(circle, rgba(243,207,138,0.22), rgba(127,224,192,0.10) 45%, transparent 72%);
-      filter:blur(6px);
-      transition:transform 0.12s ease-out, opacity 0.12s ease-out;
-      transform:scale(1); opacity:0.6;
-    }
-
-    .takbeer-halo{
-      position:absolute; border-radius:50%; pointer-events:none; z-index:0;
-      border:1px solid rgba(243,207,138,0.18);
-    }
-    .takbeer-halo.h1{ width:min(60vw,340px); height:min(60vw,340px); animation:haloSpin 40s linear infinite; }
-    .takbeer-halo.h2{ width:min(78vw,440px); height:min(78vw,440px); border-color:rgba(127,224,192,0.14); animation:haloSpin 60s linear infinite reverse; }
-    @keyframes haloSpin{ to{ transform:rotate(360deg); } }
-
-    .takbeer-eyebrow{
-      position:relative; z-index:2;
-      font-size:11px; letter-spacing:0.4em; text-transform:uppercase; font-weight:700;
-      color:var(--mint-soft); opacity:0.75; margin-bottom:18px;
-    }
-
-    .takbeer-arabic{
-      position:relative; z-index:2;
-      font-family:'Amiri', serif; font-weight:700; direction:rtl;
-      font-size:clamp(2.4rem,13vw,4.6rem); line-height:1.3;
-      margin-bottom:10px;
-      background:linear-gradient(100deg,
-        var(--cream) 0%, var(--cream) 38%,
-        var(--gold) 48%, #fff8e6 52%,
-        var(--gold) 56%, var(--cream) 66%, var(--cream) 100%);
-      background-size:220% 100%;
-      -webkit-background-clip:text; background-clip:text; color:transparent;
-      text-shadow:0 6px 40px rgba(243,207,138,0.35);
-      animation:calligraphyIn 1.1s cubic-bezier(.2,.9,.25,1) both, shimmerSweep 3.2s linear infinite 1.1s;
-    }
-    @keyframes calligraphyIn{ 0%{ opacity:0; transform:translateY(14px) scale(0.96); letter-spacing:0.1em;} 100%{ opacity:1; transform:translateY(0) scale(1); letter-spacing:normal;} }
-    @keyframes shimmerSweep{ 0%{ background-position:220% 0; } 100%{ background-position:-20% 0; } }
-
-    .takbeer-translit{
-      position:relative; z-index:2;
-      font-family:'Cormorant Garamond',serif; font-style:italic; font-weight:600;
-      font-size:clamp(1.1rem,4.4vw,1.5rem); color:var(--mint-soft);
-      opacity:0; animation:fadeUp 0.9s ease 0.5s both;
-      margin-bottom:44px; letter-spacing:0.02em;
-    }
-    @keyframes fadeUp{ from{opacity:0; transform:translateY(8px);} to{opacity:0.85; transform:translateY(0);} }
-
-    .takbeer-bars{
-      position:relative; z-index:2;
-      display:flex; align-items:flex-end; justify-content:center; gap:9px;
-      height:130px; margin-bottom:40px;
-    }
-    .takbeer-bars span{
-      width:15px; border-radius:8px;
-      background:linear-gradient(180deg, var(--gold) 0%, var(--mint) 100%);
-      box-shadow:0 0 16px rgba(127,224,192,0.35);
-      transform-origin:bottom center;
-      height:14%;
-      transition:height 0.09s ease-out, box-shadow 0.15s ease-out;
-    }
-    .takbeer-bars.fallback span{ animation:barBounce 1s ease-in-out infinite; }
-    .takbeer-bars.fallback span:nth-child(1){ height:38%; animation-delay:0s; }
-    .takbeer-bars.fallback span:nth-child(2){ height:68%; animation-delay:0.1s; }
-    .takbeer-bars.fallback span:nth-child(3){ height:100%; animation-delay:0.2s; }
-    .takbeer-bars.fallback span:nth-child(4){ height:52%; animation-delay:0.3s; }
-    .takbeer-bars.fallback span:nth-child(5){ height:82%; animation-delay:0.4s; }
-    .takbeer-bars.fallback span:nth-child(6){ height:32%; animation-delay:0.5s; }
-    @keyframes barBounce{ 0%,100%{transform:scaleY(0.4);} 50%{transform:scaleY(1);} }
-
-    .takbeer-progress{
-      position:relative; z-index:2;
-      width:100%; max-width:420px; height:3px; border-radius:4px;
-      background:rgba(255,255,255,0.1); overflow:hidden;
-    }
-    .takbeer-progress-fill{
-      height:100%; width:0%;
-      background:linear-gradient(90deg, var(--mint), var(--gold));
-      box-shadow:0 0 10px rgba(243,207,138,0.5);
-      transition:width 0.4s cubic-bezier(.3,.6,.2,1);
-    }
-
-    .takbeer-caption{
-      position:relative; z-index:2; margin-top:18px;
-      font-size:10px; letter-spacing:0.3em; text-transform:uppercase;
-      color:rgba(251,243,230,0.4); font-weight:700;
-    }
-
-    /* ---------- Prayer video (Step 2) ---------- */
-    #prayer-overlay{
-      position:fixed; inset:0; z-index:80; background:#000;
-      display:none; align-items:center; justify-content:center; padding:0;
-    }
-    #prayer-overlay.active{ display:flex; animation:fadeIn 0.5s ease; }
-    .prayer-card{
-      width:100%; height:100%; max-width:none;
-      background:#000; border:none; border-radius:0; padding:0;
-      text-align:center; color:var(--cream);
-      position:relative;
-    }
-    .prayer-video-frame{
-      position:absolute; inset:0; width:100%; height:100%; overflow:hidden; background:#000;
-    }
-    .prayer-video-frame video{ width:100%; height:100%; object-fit:cover; display:block; }
-    .prayer-video-frame::after{
-      content:''; position:absolute; inset:0;
-      background:linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.05) 22%, rgba(0,0,0,0.05) 70%, rgba(0,0,0,0.6) 100%);
-      pointer-events:none;
-    }
-    .prayer-badge{
-      position:absolute; bottom:clamp(20px,5vh,40px); left:0; right:0; z-index:3;
-      color:var(--mint-soft); font-size:12px; letter-spacing:0.2em; text-transform:uppercase;
-      font-weight:700; text-shadow:0 2px 10px rgba(0,0,0,0.6);
-    }
-
-    /* ---------- Step 3: Your Cards ---------- */
-    #cards-overlay{
-      position:fixed; inset:0; z-index:80;
-      background:radial-gradient(ellipse at 50% 30%, #3d1268 0%, #2d0a52 35%, #1a0533 70%, #0d0020 100%);
-      display:none; align-items:center; justify-content:center; padding:24px;
-      overflow:hidden;
-    }
-    #cards-overlay.active{ display:flex; animation:fadeIn 0.6s ease; }
-
-    #nc-fireworks-canvas{ position:absolute; inset:0; z-index:1; pointer-events:none; }
-
-    .nc-container{
-      position:relative; z-index:2; width:100%; max-width:900px;
-      display:flex; flex-direction:column; align-items:center; gap:6px;
-    }
-    .nc-eyebrow{
-      font-family:'Manrope',sans-serif; font-size:11px; letter-spacing:0.32em; text-transform:uppercase;
-      color:#f5d06e; text-shadow:0 0 20px rgba(212,168,47,0.8); margin-bottom:2px; font-weight:700;
-    }
-    .nc-heading{
-      font-family:'Cormorant Garamond',serif; font-style:italic; font-weight:700;
-      font-size:clamp(1.7rem,6vw,2.6rem); color:#ffe084;
-      text-shadow:0 0 30px rgba(255,224,132,0.7); text-align:center; line-height:1.2; margin-bottom:18px;
-    }
-
-    .nc-cards-row{
-      display:flex; align-items:center; justify-content:center; gap:0;
-      width:100%; flex-wrap:wrap; position:relative;
-    }
-    .nc-arrow{
-      color:#ffe084; font-size:22px; text-shadow:0 0 10px #d4a82f;
-      animation:ncPulseArrow 1.5s ease-in-out infinite; flex-shrink:0; margin:0 -4px -50px; z-index:4;
-    }
-    @keyframes ncPulseArrow{ 0%,100%{ opacity:0.6; transform:scale(1); } 50%{ opacity:1; transform:scale(1.2); } }
-
-    .nc-card{
-      width:180px; border-radius:16px; padding:4px; position:relative; flex-shrink:0;
-      opacity:0; transform:scale(0.3); margin:8px;
-    }
-    .nc-card.zoomed-in{ animation:ncCardZoomIn 0.7s cubic-bezier(.34,1.56,.64,1) forwards; }
-    @keyframes ncCardZoomIn{
-      0%{ opacity:0; transform:scale(0.3) rotate(-4deg); }
-      60%{ opacity:1; transform:scale(1.08) rotate(1deg); }
-      100%{ opacity:1; transform:scale(1) rotate(0deg); }
-    }
-    .nc-card-navy, .nc-card-teal, .nc-card-rose{
-      background:linear-gradient(135deg, #a07820, #d4a82f, #f5d06e, #d4a82f);
-      box-shadow:0 8px 40px rgba(0,0,0,0.6), 0 0 20px rgba(212,168,47,0.3);
-      border-radius:16px; padding:4px;
-    }
-    .nc-card-inner{
-      border-radius:13px; padding:16px 12px 18px; height:250px;
-      display:flex; flex-direction:column; align-items:center; justify-content:space-between;
-      border:2px solid #d4a82f; position:relative; overflow:hidden;
-    }
-    .nc-card-navy .nc-card-inner{ background:linear-gradient(160deg, #0d2a4a 0%, #0a1e35 50%, #061428 100%); }
-    .nc-card-teal .nc-card-inner{ background:linear-gradient(160deg, #0d7a6b 0%, #095e52 50%, #063d36 100%); }
-    .nc-card-rose .nc-card-inner{ background:linear-gradient(160deg, #8b5463 0%, #6e3e4e 50%, #4a2835 100%); }
-
-    .nc-card-frame{ position:absolute; inset:7px; border:1px solid rgba(212,168,47,0.4); border-radius:8px; pointer-events:none; }
-    .nc-card-frame::before{ content:''; position:absolute; inset:4px; border:1px solid rgba(212,168,47,0.2); border-radius:5px; }
-
-    .nc-card-arch{
-      width:68px; height:46px; border:2px solid #d4a82f; border-bottom:none; border-radius:34px 34px 0 0;
-      position:absolute; top:10px; display:flex; align-items:flex-start; justify-content:center; padding-top:5px;
-    }
-    .nc-card-arch::after{ content:'☽'; color:#ffe084; font-size:15px; text-shadow:0 0 8px #d4a82f; }
-
-    .nc-card-corner{ position:absolute; width:14px; height:14px; border-color:#d4a82f; border-style:solid; opacity:0.7; }
-    .nc-card-corner.tl{ top:9px; left:9px; border-width:2px 0 0 2px; }
-    .nc-card-corner.tr{ top:9px; right:9px; border-width:2px 2px 0 0; }
-    .nc-card-corner.bl{ bottom:9px; left:9px; border-width:0 0 2px 2px; }
-    .nc-card-corner.br{ bottom:9px; right:9px; border-width:0 2px 2px 0; }
-
-    .nc-card-lanterns{ display:flex; gap:22px; margin-top:52px; }
-    .nc-mini-lantern{
-      width:10px; height:15px; background:radial-gradient(ellipse at 40% 30%, #ffe580, #e8a000 70%);
-      border-radius:3px 3px 5px 5px; border:1px solid #d4a82f; box-shadow:0 0 6px 2px rgba(255,200,50,0.5); position:relative;
-    }
-    .nc-mini-lantern::before{ content:''; position:absolute; top:-7px; left:50%; transform:translateX(-50%); width:1px; height:7px; background:#d4a82f; }
-
-    .nc-arabic-text{ font-family:'Amiri',serif; font-size:24px; color:#ffe084; text-shadow:0 0 15px rgba(255,224,132,0.7); direction:rtl; text-align:center; margin-top:-6px; }
-    .nc-eid-en{ font-family:'Manrope',sans-serif; font-size:9px; letter-spacing:2.2px; color:#f5d06e; text-align:center; margin-top:-2px; font-weight:700; }
-    .nc-divider{ width:70%; height:1px; background:linear-gradient(90deg, transparent, #d4a82f, transparent); margin:2px 0; }
-    .nc-name-arabic{ font-family:'Amiri',serif; font-size:11px; color:#f5d06e; direction:rtl; text-align:center; line-height:1.4; }
-    .nc-name-en{ font-family:'Manrope',sans-serif; font-size:8px; color:#ffe084; text-align:center; letter-spacing:0.5px; margin-top:1px; font-weight:700; }
-
-    .nc-sparkle{ position:absolute; color:#ffe084; font-size:9px; animation:ncSparkleFade var(--sd,2s) ease-in-out infinite; }
-    @keyframes ncSparkleFade{ 0%,100%{ opacity:0; transform:scale(0.5); } 50%{ opacity:1; transform:scale(1.2); } }
-
-    /* ---------- Step 4: Family Wishes Wall ---------- */
-    #wishwall-overlay{
-      position:fixed; inset:0; z-index:81; overflow:hidden;
-      display:none; align-items:center; justify-content:center; flex-direction:column;
-      background:
-        radial-gradient(circle at 18% 12%, rgba(127,224,192,0.16), transparent 50%),
-        radial-gradient(circle at 85% 18%, rgba(246,166,178,0.14), transparent 48%),
-        radial-gradient(circle at 50% 100%, rgba(243,207,138,0.12), transparent 55%),
-        linear-gradient(160deg, #0d1120 0%, #191c33 45%, #251a34 100%);
-      background-size:220% 220%, 220% 220%, 220% 220%, 100% 100%;
-      animation:wishBgShift 18s ease-in-out infinite;
-    }
-    @keyframes wishBgShift{
-      0%{ background-position:0% 0%, 100% 0%, 50% 100%, 0 0; }
-      50%{ background-position:100% 100%, 0% 100%, 50% 0%, 0 0; }
-      100%{ background-position:0% 0%, 100% 0%, 50% 100%, 0 0; }
-    }
-    #wishwall-overlay.active{ display:flex; animation:fadeIn 0.6s ease, wishBgShift 18s ease-in-out infinite 0.6s; }
-
-    .wishwall-depth-blur{
-      position:absolute; inset:0; z-index:1; pointer-events:none;
-      backdrop-filter:blur(0px);
-    }
-
-    .wishwall-header{
-      position:relative; z-index:6; text-align:center; margin-bottom:8px; padding:0 24px;
-    }
-    .wishwall-eyebrow{
-      font-size:11px; letter-spacing:0.34em; text-transform:uppercase; font-weight:700;
-      color:var(--mint); opacity:0; margin-bottom:10px;
-      animation:fadeUp 1s ease 0.2s forwards;
-    }
-    .wishwall-title{
-      font-family:'Cormorant Garamond',serif; font-weight:700; font-style:italic;
-      font-size:clamp(2rem,8vw,3.2rem); line-height:1.08;
-      background:linear-gradient(100deg, var(--mint-soft) 0%, var(--cream) 35%, var(--gold) 60%, var(--mint-soft) 100%);
-      background-size:260% 100%;
-      -webkit-background-clip:text; background-clip:text; color:transparent;
-      text-shadow:0 6px 40px rgba(127,224,192,0.25);
-      opacity:0; transform:scale(0.94);
-      animation:showTitleIn 1s cubic-bezier(.2,.9,.25,1) 0.4s forwards, shimmerSweep 4.5s linear infinite 1.5s;
-    }
-
-    .wishwall-field{
-      position:relative; z-index:5; width:100%; height:min(62vh, 560px); max-width:640px;
-      margin-top:6px;
-    }
-
-    .wish-orb{
-      position:absolute; border-radius:50%; filter:blur(46px); pointer-events:none; opacity:0.5;
-      animation:orbFloat 10s ease-in-out infinite;
-    }
-    .wish-orb.wo1{ width:200px; height:200px; background:radial-gradient(circle, var(--mint), transparent 70%); top:2%; left:-4%; }
-    .wish-orb.wo2{ width:180px; height:180px; background:radial-gradient(circle, var(--rose), transparent 70%); bottom:6%; right:-2%; animation-delay:3s; }
-    .wish-orb.wo3{ width:150px; height:150px; background:radial-gradient(circle, var(--gold), transparent 70%); top:45%; left:82%; animation-delay:5.5s; }
-
-    .wish-bubble{
-      position:absolute; left:50%; top:100%;
-      display:flex; align-items:center; gap:10px;
-      max-width:min(78vw, 300px);
-      padding:12px 18px 12px 12px; border-radius:22px;
-      background:linear-gradient(160deg, rgba(127,224,192,0.14), rgba(255,255,255,0.05));
-      border:1px solid rgba(251,243,230,0.14);
-      box-shadow:0 14px 34px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06);
-      backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
-      opacity:0;
-      animation-name:wishRise;
-      animation-timing-function:cubic-bezier(.22,.75,.32,1);
-      animation-fill-mode:forwards;
-    }
-    .wish-bubble.layer-back{ filter:blur(0.6px); box-shadow:0 10px 24px rgba(0,0,0,0.25); }
-    .wish-bubble.layer-front{ box-shadow:0 20px 46px rgba(0,0,0,0.45), 0 0 30px rgba(127,224,192,0.14); }
-
-    @keyframes wishRise{
-      0%{ opacity:0; transform:translate(-50%, 0) translateX(var(--dx0,0px)) scale(0.85); }
-      10%{ opacity:1; }
-      45%{ transform:translate(-50%, calc(-1 * var(--rise, 320px))) translateX(var(--dx1, 10px)) scale(1); }
-      85%{ opacity:1; transform:translate(-50%, calc(-1.6 * var(--rise, 320px))) translateX(var(--dx2, -14px)) scale(1); }
-      100%{ opacity:0; transform:translate(-50%, calc(-2 * var(--rise, 320px))) translateX(var(--dx2, -14px)) scale(0.96); }
-    }
-
-    .wish-avatar{
-      flex-shrink:0; width:34px; height:34px; border-radius:50%;
-      display:flex; align-items:center; justify-content:center;
-      font-family:'Cormorant Garamond',serif; font-weight:700; font-size:14px;
-      color:#0d1712;
-      box-shadow:0 4px 14px rgba(0,0,0,0.3);
-    }
-    .wish-text-wrap{ display:flex; flex-direction:column; gap:1px; text-align:left; }
-    .wish-from{
-      font-size:9.5px; letter-spacing:0.12em; text-transform:uppercase; font-weight:700;
-      color:var(--mint-soft); opacity:0.75;
-    }
-    .wish-msg{
-      font-size:13.5px; font-weight:400; color:var(--cream); line-height:1.35;
-      font-family:'Manrope',sans-serif;
-    }
-
-    .wish-glow-trail{
-      position:absolute; left:50%; bottom:0; width:2px; border-radius:2px;
-      background:linear-gradient(to top, rgba(127,224,192,0.35), transparent);
-      opacity:0; pointer-events:none;
-      animation-name:trailRise; animation-timing-function:linear; animation-fill-mode:forwards;
-    }
-    @keyframes trailRise{
-      0%{ opacity:0; height:0; }
-      15%{ opacity:0.6; }
-      70%{ opacity:0.3; }
-      100%{ opacity:0; height:var(--rise, 320px); transform:translateY(calc(-1 * var(--rise, 320px))); }
-    }
-
-    .wishwall-dust{
-      position:absolute; width:3px; height:3px; border-radius:50%; background:var(--gold);
-      opacity:0; pointer-events:none; z-index:4;
-      animation:dustDrift var(--dd,6s) ease-in-out infinite;
-      box-shadow:0 0 6px 1px rgba(243,207,138,0.6);
-    }
-    @keyframes dustDrift{
-      0%{ opacity:0; transform:translateY(0) translateX(0); }
-      12%{ opacity:0.8; }
-      88%{ opacity:0.5; }
-      100%{ opacity:0; transform:translateY(-160px) translateX(var(--dxd,20px)); }
-    }
-
-    .wishwall-caption{
-      position:relative; z-index:6; margin-top:14px;
-      font-size:11px; letter-spacing:0.24em; text-transform:uppercase; opacity:0;
-      color:rgba(251,243,230,0.45); font-weight:700;
-      animation:fadeUp 1s ease 1s forwards;
-    }
-
-    /* ---------- Step 5: Family Tree of Blessings ---------- */
-    #tree-overlay{
-      position:fixed; inset:0; z-index:82; overflow:hidden;
-      display:none; align-items:center; justify-content:center; flex-direction:column;
-      background:
-        radial-gradient(circle at 15% 10%, rgba(127,224,192,0.15), transparent 50%),
-        radial-gradient(circle at 88% 15%, rgba(246,166,178,0.13), transparent 48%),
-        radial-gradient(circle at 50% 105%, rgba(243,207,138,0.16), transparent 60%),
-        linear-gradient(165deg, #0a0d18 0%, #131a2c 45%, #1d1730 100%);
-      background-size:220% 220%, 220% 220%, 220% 220%, 100% 100%;
-      animation:wishBgShift 20s ease-in-out infinite;
-    }
-    #tree-overlay.active{ display:flex; animation:fadeIn 0.6s ease, wishBgShift 20s ease-in-out infinite 0.6s; }
-
-    .tree-header{ position:relative; z-index:6; text-align:center; margin-bottom:2px; padding:0 24px; }
-    .tree-eyebrow{
-      font-size:11px; letter-spacing:0.34em; text-transform:uppercase; font-weight:700;
-      color:var(--mint); opacity:0; margin-bottom:8px;
-      animation:fadeUp 1s ease 0.2s forwards;
-    }
-    .tree-title{
-      font-family:'Cormorant Garamond',serif; font-weight:700; font-style:italic;
-      font-size:clamp(1.9rem,7.6vw,3rem); line-height:1.08;
-      background:linear-gradient(100deg, var(--mint-soft) 0%, var(--cream) 35%, var(--gold) 60%, var(--mint-soft) 100%);
-      background-size:260% 100%;
-      -webkit-background-clip:text; background-clip:text; color:transparent;
-      text-shadow:0 6px 40px rgba(127,224,192,0.25);
-      opacity:0; transform:scale(0.94);
-      animation:showTitleIn 1s cubic-bezier(.2,.9,.25,1) 0.4s forwards, shimmerSweep 4.5s linear infinite 1.5s;
-    }
-    .tree-caption{
-      position:relative; z-index:6; margin-top:6px; margin-bottom:8px;
-      font-size:11.5px; opacity:0; color:rgba(251,243,230,0.55); font-weight:500; max-width:340px; padding:0 20px;
-      animation:fadeUp 1s ease 0.6s forwards;
-    }
-
-    .tree-stage{
-      position:relative; z-index:5; width:min(94vw,520px); height:min(56vh,460px);
-      display:flex; align-items:flex-end; justify-content:center;
-    }
-    .tree-stage svg{ width:100%; height:100%; overflow:visible; }
-
-    .tree-ground-glow{
-      position:absolute; bottom:-6%; left:50%; transform:translateX(-50%);
-      width:70%; height:36px; border-radius:50%;
-      background:radial-gradient(ellipse, rgba(127,224,192,0.35), transparent 72%);
-      filter:blur(10px); z-index:0; opacity:0;
-      animation:fadeUp 1.2s ease 0.3s forwards;
-    }
-
-    .tree-trunk-path{
-      fill:none; stroke:url(#trunkGradient); stroke-width:7; stroke-linecap:round;
-      stroke-dasharray:1400; stroke-dashoffset:1400;
-      animation:growTrunk 3.4s cubic-bezier(.3,.75,.25,1) 0.3s forwards;
-      filter:drop-shadow(0 0 10px rgba(127,224,192,0.35));
-    }
-    .tree-branch-path{
-      fill:none; stroke:url(#trunkGradient); stroke-width:4; stroke-linecap:round;
-      stroke-dasharray:340; stroke-dashoffset:340;
-      animation-name:growTrunk; animation-timing-function:cubic-bezier(.3,.75,.25,1); animation-fill-mode:forwards;
-      filter:drop-shadow(0 0 8px rgba(127,224,192,0.25));
-    }
-    @keyframes growTrunk{ to{ stroke-dashoffset:0; } }
-
-    .tree-root-glow{
-      fill:rgba(243,207,138,0.28); filter:blur(6px);
-      opacity:0; animation:fadeUp 1s ease 0.2s forwards;
-    }
-
-    .tree-leaf-group{ opacity:0; transform-box:fill-box; transform-origin:center; }
-    .tree-leaf-group.bloom{ animation:leafBloom 1.1s cubic-bezier(.2,1.1,.3,1) forwards; }
-    @keyframes leafBloom{
-      0%{ opacity:0; transform:scale(0) rotate(-25deg); }
-      55%{ opacity:1; transform:scale(1.25) rotate(6deg); }
-      75%{ transform:scale(0.92) rotate(-3deg); }
-      100%{ opacity:1; transform:scale(1) rotate(0deg); }
-    }
-    .tree-leaf-shape{
-      filter:drop-shadow(0 0 7px var(--leaf-glow,rgba(127,224,192,0.6)));
-      animation:leafSway var(--sway-dur,4.5s) ease-in-out infinite;
-      animation-delay:var(--sway-delay,0s);
-      transform-box:fill-box; transform-origin:bottom center;
-    }
-    @keyframes leafSway{
-      0%,100%{ transform:rotate(-3.5deg); }
-      50%{ transform:rotate(3.5deg); }
-    }
-    .tree-leaf-name{
-      font-family:'Cormorant Garamond',serif; font-weight:700; font-style:italic;
-      font-size:10.5px; fill:#0d1712; text-anchor:middle; dominant-baseline:middle;
-      pointer-events:none;
-    }
-
-    .tree-firefly{
-      position:absolute; width:4px; height:4px; border-radius:50%;
-      background:var(--gold); box-shadow:0 0 8px 2px rgba(243,207,138,0.7);
-      opacity:0; pointer-events:none; z-index:4;
-      animation:fireflyFloat var(--ff-dur,7s) ease-in-out infinite;
-    }
-    @keyframes fireflyFloat{
-      0%{ opacity:0; transform:translate(0,0); }
-      12%{ opacity:0.9; }
-      50%{ transform:translate(var(--fx,20px), var(--fy,-40px)); }
-      88%{ opacity:0.6; }
-      100%{ opacity:0; transform:translate(var(--fx2,-15px), var(--fy2,-80px)); }
-    }
-
-    .tree-footer{
-      position:relative; z-index:6; margin-top:10px;
-      font-size:10.5px; letter-spacing:0.22em; text-transform:uppercase; opacity:0;
-      color:rgba(251,243,230,0.45); font-weight:700;
-      animation:fadeUp 1s ease 1.1s forwards;
-    }
-
-    /* ---------- Step 6: SALAMI TABLE ---------- */
-    #salami-overlay{
-      position:fixed; inset:0; z-index:83;
-      display:none; align-items:center; justify-content:center; flex-direction:column;
-      padding:24px;
-      background:
-        radial-gradient(circle at 18% 12%, rgba(243,207,138,0.18), transparent 50%),
-        radial-gradient(circle at 85% 18%, rgba(127,224,192,0.14), transparent 48%),
-        radial-gradient(circle at 50% 100%, rgba(246,166,178,0.12), transparent 55%),
-        linear-gradient(160deg, #0d1120 0%, #191c33 45%, #251a34 100%);
-      background-size:220% 220%, 220% 220%, 220% 220%, 100% 100%;
-      animation:wishBgShift 18s ease-in-out infinite;
-    }
-    #salami-overlay.active{ display:flex; animation:fadeIn 0.6s ease, wishBgShift 18s ease-in-out infinite 0.6s; }
-
-    .salami-card{
-      position:relative; z-index:5; width:100%; max-width:400px;
-      background:linear-gradient(160deg, rgba(127,224,192,0.10), rgba(255,255,255,0.03));
-      backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
-      border:1px solid rgba(243,207,138,0.2);
-      border-radius:32px; padding:30px 20px 24px;
-      box-shadow:0 20px 50px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06);
-      text-align:center;
-    }
-
-    .salami-title{
-      font-family:'Cormorant Garamond',serif; font-weight:700; font-style:italic;
-      font-size:clamp(2rem,8vw,2.8rem);
-      background:linear-gradient(100deg, var(--gold) 0%, var(--cream) 40%, var(--mint-soft) 80%);
-      -webkit-background-clip:text; background-clip:text; color:transparent;
-      margin-bottom:12px;
-      text-shadow:0 4px 30px rgba(243,207,138,0.25);
-    }
-    .salami-sub{
-      font-size:12px; letter-spacing:0.3em; text-transform:uppercase;
-      color:var(--mint-soft); opacity:0.6; margin-bottom:22px;
-    }
-
-    .salami-row{
-      display:flex; align-items:center; justify-content:space-between;
-      padding:12px 6px; border-bottom:1px solid rgba(255,255,255,0.06);
-      transition:background 0.3s ease;
-    }
-    .salami-row:last-child{ border-bottom:none; }
-    .salami-row .name{
-      font-weight:600; font-size:15px; color:var(--cream);
-    }
-    .salami-row .amount{
-      font-weight:800; font-size:17px;
-      background:linear-gradient(135deg, var(--gold), var(--mint));
-      -webkit-background-clip:text; background-clip:text; color:transparent;
-      padding:4px 12px; border-radius:40px;
-      background-color:rgba(127,224,192,0.10);
-      border:1px solid rgba(243,207,138,0.2);
-    }
-    .salami-emoji{
-      font-size:20px; margin-right:8px;
-    }
-    .salami-total{
-      margin-top:18px; padding-top:16px; border-top:2px dashed rgba(243,207,138,0.25);
-      display:flex; justify-content:space-between; align-items:center;
-      font-weight:700; font-size:15px;
-    }
-    .salami-total span:last-child{
-      font-size:20px;
-      background:linear-gradient(135deg, var(--gold), var(--mint));
-      -webkit-background-clip:text; background-clip:text; color:transparent;
-    }
-
-    .salami-footer{
-      margin-top:18px; font-size:11px; letter-spacing:0.2em; opacity:0.4;
-      color:var(--cream);
-    }
-
-    /* ---------- Step 7: Get Your Cards (real life) ---------- */
-    #realcards-overlay{
-      position:fixed; inset:0; z-index:84; overflow:hidden;
-      display:none; align-items:center; justify-content:center; flex-direction:column;
-      text-align:center; padding:24px;
-      background:
-        radial-gradient(circle at 20% 15%, rgba(127,224,192,0.22), transparent 55%),
-        radial-gradient(circle at 82% 20%, rgba(246,166,178,0.20), transparent 50%),
-        radial-gradient(circle at 50% 100%, rgba(243,207,138,0.16), transparent 60%),
-        linear-gradient(160deg, #0d1120 0%, #1c2340 45%, #2c1f3a 100%);
-      background-size: 200% 200%, 200% 200%, 200% 200%, 100% 100%;
-      animation: realcardsShift 14s ease-in-out infinite;
-    }
-    @keyframes realcardsShift{
-      0%{ background-position: 0% 0%, 100% 0%, 50% 100%, 0 0; }
-      50%{ background-position: 100% 100%, 0% 100%, 50% 0%, 0 0; }
-      100%{ background-position: 0% 0%, 100% 0%, 50% 100%, 0 0; }
-    }
-    #realcards-overlay.active{ display:flex; animation:fadeIn 0.6s ease, realcardsShift 14s ease-in-out infinite 0.6s; }
-
-    .realcards-glow-orb{
-      position:absolute; border-radius:50%; filter:blur(50px); pointer-events:none; opacity:0.55;
-      animation:orbFloat 9s ease-in-out infinite;
-    }
-    .realcards-glow-orb.o1{ width:220px; height:220px; background:radial-gradient(circle, var(--mint), transparent 70%); top:8%; left:-6%; animation-delay:0s; }
-    .realcards-glow-orb.o2{ width:180px; height:180px; background:radial-gradient(circle, var(--rose), transparent 70%); bottom:10%; right:-4%; animation-delay:2.5s; }
-    .realcards-glow-orb.o3{ width:160px; height:160px; background:radial-gradient(circle, var(--gold), transparent 70%); top:55%; left:78%; animation-delay:5s; }
-    @keyframes orbFloat{ 0%,100%{ transform:translateY(0) scale(1); } 50%{ transform:translateY(-24px) scale(1.08); } }
-
-    .realcards-inner{ position:relative; z-index:2; display:flex; flex-direction:column; align-items:center; max-width:420px; }
-
-    .realcards-icon-ring{
-      width:96px; height:96px; border-radius:50%; margin-bottom:22px;
-      display:flex; align-items:center; justify-content:center; font-size:38px;
-      background:linear-gradient(160deg, rgba(127,224,192,0.18), rgba(255,255,255,0.05));
-      border:1px solid var(--border);
-      box-shadow:0 0 0 8px rgba(127,224,192,0.06), 0 20px 50px rgba(0,0,0,0.35);
-      animation:floaty 4s ease-in-out infinite;
-    }
-
-    .realcards-title{
-      font-family:'Cormorant Garamond',serif; font-weight:700; font-style:italic;
-      font-size:clamp(2rem,8.5vw,3.1rem); line-height:1.1; margin-bottom:12px;
-      background:linear-gradient(180deg, var(--cream) 0%, var(--mint-soft) 100%);
-      -webkit-background-clip:text; background-clip:text; color:transparent;
-      text-shadow:0 4px 30px rgba(127,224,192,0.25);
-    }
-
-    .realcards-desc{
-      font-size:14px; font-weight:300; line-height:1.7; color:rgba(251,243,230,0.78);
-      margin-bottom:34px; max-width:340px;
-    }
-
-    .realcards-timer-ring-wrap{ position:relative; width:min(58vw,220px); height:min(58vw,220px); margin-bottom:26px; }
-    .realcards-timer-ring-wrap svg{ width:100%; height:100%; transform:rotate(-90deg); }
-    .realcards-timer-ring-bg{ fill:none; stroke:rgba(255,255,255,0.08); stroke-width:6; }
-    .realcards-timer-ring-fg{
-      fill:none; stroke:url(#realcards-gradient); stroke-width:6; stroke-linecap:round;
-      transition:stroke-dashoffset 1s linear;
-    }
-    .realcards-timer-center{
-      position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;
-    }
-    .realcards-timer-num{
-      font-family:'Cormorant Garamond',serif; font-weight:700; font-size:clamp(2.6rem,11vw,3.6rem);
-      color:var(--cream); line-height:1; text-shadow:0 4px 24px rgba(127,224,192,0.35);
-    }
-    .realcards-timer-sub{ font-size:10px; letter-spacing:0.28em; text-transform:uppercase; opacity:0.55; margin-top:6px; color:var(--mint-soft); }
-
-    .realcards-hint{
-      font-size:11px; letter-spacing:0.22em; text-transform:uppercase; opacity:0.5; color:var(--mint-soft);
-      display:flex; align-items:center; gap:8px;
-    }
-    .realcards-hint .dot{ width:6px; height:6px; border-radius:50%; background:var(--mint); animation:glimmer 1.6s ease-in-out infinite; }
-
-    .realcards-done{ display:none; flex-direction:column; align-items:center; gap:10px; }
-    .realcards-done.active{ display:flex; }
-    .realcards-done p{
-      font-family:'Cormorant Garamond',serif; font-style:italic; font-size:clamp(1.7rem,7vw,2.4rem); font-weight:700;
-      background:linear-gradient(180deg, var(--cream) 0%, var(--gold) 100%);
-      -webkit-background-clip:text; background-clip:text; color:transparent;
-      text-shadow:0 4px 24px rgba(243,207,138,0.35);
-    }
-    .realcards-done span{ font-size:13px; opacity:0.6; font-weight:300; }
-
-    /* ---------- Step intro screens ---------- */
-    .step-intro{
-      position:fixed; inset:0; z-index:80; background:var(--bg-deep);
-      display:none; align-items:center; justify-content:center; flex-direction:column;
-      text-align:center; padding:24px;
-    }
-    .step-intro.active{ display:flex; animation:fadeIn 0.6s ease; }
-    .step-intro-num{
-      font-family:'Cormorant Garamond',serif; font-weight:700; color:#0d1120;
-      background:linear-gradient(160deg, var(--mint), var(--mint-soft));
-      width:clamp(62px,15.5vw,88px); height:clamp(62px,15.5vw,88px); border-radius:50%;
-      display:flex; align-items:center; justify-content:center;
-      font-size:clamp(1.8rem,7vw,2.6rem);
-      box-shadow:0 16px 40px rgba(127,224,192,0.32);
-      margin-bottom:28px;
-      animation:floaty 4s ease-in-out infinite;
-    }
-    .step-intro-title{
-      font-family:'Cormorant Garamond',serif; font-weight:700; font-style:italic; font-size:clamp(2.2rem,9vw,4rem);
-      color:var(--mint-soft); margin-bottom:16px; line-height:1.1;
-      text-shadow:0 4px 30px rgba(127,224,192,0.28);
-    }
-    .step-intro-caption{
-      font-size:clamp(14px,3.5vw,18px); opacity:0.7; font-weight:300; max-width:340px;
-    }
-
-    /* ---------- Start / unlock screen ---------- */
-    #start-overlay{
-      position:fixed; inset:0; z-index:100; background:var(--bg-deep);
-      display:flex; align-items:center; justify-content:center; flex-direction:column; gap:20px;
-      text-align:center; padding:24px;
-    }
-    #start-overlay.hidden{ display:none; }
-    #start-overlay .start-icon{ font-size:48px; animation:floaty 5s ease-in-out infinite; filter:drop-shadow(0 0 20px rgba(127,224,192,0.4)); }
-    @keyframes floaty{ 0%,100%{transform:translateY(0);} 50%{transform:translateY(-10px);} }
-    #start-overlay h2{ font-family:'Cormorant Garamond',serif; font-style:italic; font-size:clamp(1.7rem,6vw,2.3rem); color:var(--mint-soft); }
-    #start-overlay p{ font-size:13px; color:rgba(251,243,230,0.6); max-width:320px; font-weight:300; }
-    #start-btn{
-      padding:15px 34px; border:none; border-radius:50px;
-      background:linear-gradient(135deg, var(--mint), var(--mint-soft)); color:#0d1712; font-weight:800; font-size:14px;
-      text-transform:uppercase; letter-spacing:1px; cursor:pointer;
-      box-shadow:0 12px 30px rgba(127,224,192,0.32);
-    }
-
-    /* ---------- Step: The Eid Show ---------- */
-    #show-overlay{
-      position:fixed; inset:0; z-index:90; background:#05060e;
-      display:none; align-items:center; justify-content:center; flex-direction:column;
-      overflow:hidden; text-align:center;
-    }
-    #show-overlay.active{ display:flex; animation:fadeIn 0.6s ease; }
-    #show-canvas{ position:absolute; inset:0; width:100%; height:100%; z-index:1; }
-
-    .show-lanterns{ position:absolute; inset:0; z-index:2; pointer-events:none; overflow:hidden; }
-    .show-lantern{
-      position:absolute; bottom:-140px; width:34px; height:46px;
-      animation:lanternRise linear infinite;
-    }
-    .show-lantern .body{
-      width:100%; height:78%; border-radius:14px 14px 20px 20px;
-      box-shadow:0 0 18px 4px var(--lc), inset 0 -6px 10px rgba(0,0,0,0.25);
-      background:radial-gradient(circle at 50% 35%, #fff8e0, var(--lc) 65%);
-    }
-    .show-lantern .cap{ width:44%; height:10%; margin:0 auto; background:rgba(255,255,255,0.5); border-radius:3px 3px 0 0; }
-    .show-lantern .flame{ position:absolute; left:50%; bottom:-6px; width:5px; height:9px; background:#fff3c2; border-radius:50% 50% 50% 50%; transform:translateX(-50%); filter:blur(0.5px); opacity:0.9; }
-    @keyframes lanternRise{
-      0%{ transform:translate(0,0) rotate(-2deg); opacity:0; }
-      6%{ opacity:0.95; }
-      50%{ transform:translate(3vw,-56vh) rotate(2deg); }
-      94%{ opacity:0.9; }
-      100%{ transform:translate(-2vw,-112vh) rotate(-2deg); opacity:0; }
-    }
-
-    .show-title-wrap{
-      position:relative; z-index:3; display:flex; flex-direction:column; align-items:center;
-      padding:24px; pointer-events:none;
-    }
-    .show-eyebrow{
-      font-size:11px; letter-spacing:0.42em; text-transform:uppercase; font-weight:700;
-      color:var(--gold); opacity:0; margin-bottom:14px;
-      animation:fadeUp 1s ease 0.3s forwards;
-    }
-    .show-title{
-      font-family:'Cormorant Garamond',serif; font-weight:700; font-style:italic;
-      font-size:clamp(2.6rem,12vw,5.2rem); line-height:1.05; margin-bottom:14px;
-      background:linear-gradient(100deg, var(--rose) 0%, var(--gold) 30%, var(--mint-soft) 60%, var(--rose) 100%);
-      background-size:280% 100%;
-      -webkit-background-clip:text; background-clip:text; color:transparent;
-      text-shadow:0 6px 50px rgba(243,207,138,0.35);
-      opacity:0; transform:scale(0.9);
-      animation:showTitleIn 1.2s cubic-bezier(.2,.9,.25,1) 0.5s forwards, shimmerSweep 4s linear infinite 1.7s;
-    }
-    @keyframes showTitleIn{ to{ opacity:1; transform:scale(1); } }
-    .show-caption{
-      font-size:clamp(13px,3.4vw,16px); font-weight:300; color:rgba(251,243,230,0.75);
-      max-width:340px; opacity:0; animation:fadeUp 1s ease 1.1s forwards;
-    }
-
-    .show-skip{
-      position:absolute; z-index:4; bottom:26px; right:50%; transform:translateX(50%);
-      padding:10px 22px; border-radius:50px; border:1px solid rgba(251,243,230,0.25);
-      background:rgba(13,17,32,0.4); backdrop-filter:blur(6px);
-      color:var(--cream); font-size:11px; letter-spacing:0.18em; text-transform:uppercase;
-      font-weight:700; cursor:pointer; opacity:0; animation:fadeUp 1s ease 2s forwards;
-    }
-
-    /* ---------- Mini skip button ---------- */
-    .mini-skip{
-      position:fixed; top:calc(env(safe-area-inset-top, 0px) + 16px); right:16px; z-index:200;
-      padding:7px 14px; border-radius:20px; border:1px solid rgba(251,243,230,0.16);
-      background:rgba(13,17,32,0.28); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
-      color:rgba(251,243,230,0.55); font-size:10px; letter-spacing:0.14em; text-transform:uppercase;
-      font-weight:700; font-family:'Manrope',sans-serif; cursor:pointer;
-      display:none; align-items:center; gap:5px;
-      transition:opacity 0.2s ease, background 0.2s ease, color 0.2s ease;
-    }
-    .mini-skip:hover{ background:rgba(13,17,32,0.5); color:rgba(251,243,230,0.85); }
-    .mini-skip.visible{ display:inline-flex; }
-    .mini-skip svg{ width:10px; height:10px; opacity:0.8; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>EID UL-FITR 2027 · Sweet Celebration</title>
+<meta name="theme-color" content="#101321">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@300;400;500;600;700;800&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root{
+    --mint:#7fe0c0;
+    --mint-soft:#bff2de;
+    --rose:#f6a6b2;
+    --gold:#f3cf8a;
+    --cream:#fbf3e6;
+    --bg-deep:#0d1120;
+    --bg-deep-2:#171b30;
+    --card:#1b2038;
+    --border:rgba(127,224,192,0.18);
+
+    --bg-dawn: linear-gradient(155deg, #ffe0c2 0%, #ffc7d1 55%, #bff2de 100%);
+    --bg-day: linear-gradient(155deg, #7ec9e8 0%, #a3e8d0 100%);
+    --bg-dusk: linear-gradient(155deg, #f28aa5 0%, #7c4fa3 100%);
+    --bg-dark: linear-gradient(155deg, #0d1120 0%, #1c2340 55%, #2c1f3a 100%);
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;font-family:'Manrope',-apple-system,BlinkMacSystemFont,sans-serif;}
+
+  body{
+    background:var(--bg-dark); color:var(--cream); min-height:100vh;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:24px; overflow-x:hidden; text-align:center; position:relative;
+    transition:background 1.8s ease, color 0.6s ease;
+  }
+
+  body.eid-theme.dawn{ background:var(--bg-dawn); color:#2a1a1f; }
+  body.eid-theme.day{ background:var(--bg-day); color:#0e2a2a; }
+  body.eid-theme.dusk{ background:var(--bg-dusk); color:#fff0f4; }
+  body.eid-theme.dark{ background:var(--bg-dark); color:var(--cream); }
+
+  body.eid-theme.dawn .subtitle,
+  body.eid-theme.dawn footer{ color:#2a1a1f; }
+  body.eid-theme.dawn .lamp-card{ background:rgba(0,0,0,0.06); border-color:rgba(0,0,0,0.14); color:#2a1a1f; }
+  body.eid-theme.dawn .lamp-label{ color:rgba(42,26,31,0.65); }
+  body.eid-theme.dawn .sparkle-ambient,
+  body.eid-theme.day .sparkle-ambient{ display:none !important; }
+  body.eid-theme.dusk .sparkle-ambient{ opacity:0.2; }
+  body.eid-theme.dark .sparkle-ambient{ opacity:0.5; }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important;}
+  }
+
+  /* ---------- Ambient lantern motif (distinct signature element) ---------- */
+  .sky-signature{
+    position:fixed; bottom:-8vh; left:-8vw; width:52vmin; height:52vmin;
+    pointer-events:none; z-index:0; opacity:0.85;
+    animation:driftLantern 34s ease-in-out infinite;
+  }
+  @keyframes driftLantern{ 0%,100%{ transform:translate(0,0) rotate(0deg);} 50%{ transform:translate(2.5vw,-2vh) rotate(-2deg);} }
+  .sky-signature svg{ width:100%; height:100%; }
+
+  .sparkle-ambient{
+    position:fixed; width:2px; height:2px; background:var(--mint-soft); border-radius:50%;
+    opacity:0.35; pointer-events:none; transition:opacity 1s ease; z-index:0;
+    animation:glimmer 4s ease-in-out infinite;
+  }
+  @keyframes glimmer{ 0%,100%{opacity:0.12;} 50%{opacity:0.85;} }
+
+  .stage{
+    position:relative; z-index:2; width:100%; max-width:480px;
+    display:flex; flex-direction:column; align-items:center;
+  }
+
+  .eyebrow{
+    letter-spacing:0.32em; text-transform:uppercase;
+    font-size:clamp(10px,2.4vw,13px);
+    color:var(--mint);
+    opacity:0.95; margin-bottom:10px; font-weight:700;
+  }
+
+  h1.title{
+    font-family:'Cormorant Garamond',serif; font-weight:700; font-style:italic;
+    font-size:clamp(2.4rem,9.5vw,4.2rem); line-height:1.05;
+    margin-bottom:38px;
+    background:linear-gradient(180deg, var(--cream) 0%, var(--mint-soft) 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    text-shadow:0 4px 30px rgba(127,224,192,0.22);
+  }
+
+  .timer-grid-eid{ display:flex; justify-content:center; gap:11px; margin-bottom:8px; flex-wrap:wrap; }
+  .lamp-unit{ display:flex; flex-direction:column; align-items:center; gap:8px; }
+  .lamp-card{
+    background:linear-gradient(160deg, rgba(127,224,192,0.12), rgba(255,255,255,0.04));
+    backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+    width:clamp(58px,17.5vw,76px); height:clamp(58px,17.5vw,76px);
+    border-radius:22px 22px 10px 10px; border:1px solid var(--border);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Manrope',sans-serif; font-size:clamp(1.5rem,6vw,2rem); font-weight:800;
+    color:var(--cream);
+    box-shadow:0 12px 30px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.06);
+    transition:all 0.5s ease;
+  }
+  .lamp-card.pulse{ animation:pulseCard 0.5s ease; }
+  @keyframes pulseCard{ 0%{transform:scale(1);} 35%{transform:scale(1.08); border-color:var(--mint);} 100%{transform:scale(1);} }
+  .lamp-label{ font-size:10px; text-transform:uppercase; letter-spacing:1.5px; font-weight:700; opacity:0.65; }
+
+  #status-line{ font-size:12px; opacity:0; height:0; overflow:hidden; }
+
+  #begun-screen{ display:none; flex-direction:column; align-items:center; gap:14px; }
+  #begun-screen.active{ display:flex; }
+  #begun-screen p{
+    font-family:'Cormorant Garamond',serif; font-style:italic; font-size:clamp(1.8rem,7vw,2.7rem); font-weight:700;
+    background:linear-gradient(180deg, var(--cream) 0%, var(--mint-soft) 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    text-shadow:0 4px 24px rgba(127,224,192,0.3);
+  }
+
+  footer{ margin-top:34px; font-size:11px; opacity:0.4; letter-spacing:0.5px; }
+
+  /* ---------- Confetti ---------- */
+  #confetti-layer{ position:fixed; inset:0; z-index:60; pointer-events:none; overflow:hidden; display:none; }
+  #confetti-layer.active{ display:block; }
+  .confetti-piece{
+    position:absolute; width:8px; height:18px; top:-40px; opacity:0.9; border-radius:3px;
+    animation:fall linear forwards;
+  }
+  @keyframes fall{ to{ top:100vh; transform:translateX(80px) rotate(380deg); } }
+
+  /* ---------- Final 10-second overlay ---------- */
+  #final-overlay{
+    position:fixed; inset:0; z-index:50; background:rgba(13,17,32,0.94);
+    backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+    display:none; align-items:center; justify-content:center; flex-direction:column; text-align:center;
+  }
+  #final-overlay.active{ display:flex; }
+  .final-ring{
+    position:absolute; width:min(78vw,390px); height:min(78vw,390px);
+    border-radius:50%; border:2px solid rgba(127,224,192,0.5);
+    animation:ringPulse 1s ease-out infinite;
+  }
+  .final-ring.delay{ animation-delay:0.4s; border-color:rgba(251,243,230,0.32); }
+  @keyframes ringPulse{ 0%{transform:scale(0.7);opacity:0.9;} 100%{transform:scale(1.3);opacity:0;} }
+  #final-number{
+    position:relative; z-index:2; font-family:'Cormorant Garamond',serif; font-weight:700;
+    font-size:clamp(5rem,28vw,10rem); color:var(--cream);
+    text-shadow:0 0 60px rgba(127,224,192,0.45);
+    animation:finalPop 1s ease;
+  }
+  @keyframes finalPop{ 0%{transform:scale(0.4);opacity:0;} 40%{transform:scale(1.15);opacity:1;} 100%{transform:scale(1);opacity:1;} }
+  #final-caption{ position:relative; z-index:2; margin-top:10px; letter-spacing:0.35em; text-transform:uppercase; font-size:12px; opacity:0.6; color:var(--mint-soft); }
+
+  /* ---------- Takbeer popup — PREMIUM ---------- */
+  #takbeer-overlay{
+    position:fixed; inset:0; z-index:80; overflow:hidden;
+    display:none; align-items:center; justify-content:center; padding:0;
+    background:
+      radial-gradient(circle at 20% 15%, rgba(127,224,192,0.22), transparent 55%),
+      radial-gradient(circle at 82% 20%, rgba(246,166,178,0.20), transparent 50%),
+      radial-gradient(circle at 50% 100%, rgba(243,207,138,0.16), transparent 60%),
+      linear-gradient(160deg, #0d1120 0%, #1c2340 45%, #2c1f3a 100%);
+    background-size: 200% 200%, 200% 200%, 200% 200%, 100% 100%;
+    backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+  }
+  #takbeer-overlay.active{ display:flex; animation:fadeIn 0.5s ease, realcardsShift 14s ease-in-out infinite 0.5s; }
+  @keyframes fadeIn{ from{opacity:0;} to{opacity:1;} }
+
+  .takbeer-card{
+    width:100%; height:100%; max-width:none; position:relative;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    border:none; border-radius:0; padding:24px;
+    text-align:center; color:var(--cream);
+    animation:cardRise 0.6s cubic-bezier(.2,.9,.3,1.3);
+  }
+  @keyframes cardRise{ 0%{transform:translateY(40px) scale(0.92);opacity:0;} 100%{transform:translateY(0) scale(1);opacity:1;} }
+
+  /* Center glow that breathes with the amplitude */
+  .takbeer-core-glow{
+    position:absolute; width:min(70vw,420px); height:min(70vw,420px);
+    border-radius:50%; pointer-events:none; z-index:0;
+    background:radial-gradient(circle, rgba(243,207,138,0.22), rgba(127,224,192,0.10) 45%, transparent 72%);
+    filter:blur(6px);
+    transition:transform 0.12s ease-out, opacity 0.12s ease-out;
+    transform:scale(1); opacity:0.6;
+  }
+
+  /* Rotating thin halo rings for ceremony */
+  .takbeer-halo{
+    position:absolute; border-radius:50%; pointer-events:none; z-index:0;
+    border:1px solid rgba(243,207,138,0.18);
+  }
+  .takbeer-halo.h1{ width:min(60vw,340px); height:min(60vw,340px); animation:haloSpin 40s linear infinite; }
+  .takbeer-halo.h2{ width:min(78vw,440px); height:min(78vw,440px); border-color:rgba(127,224,192,0.14); animation:haloSpin 60s linear infinite reverse; }
+  @keyframes haloSpin{ to{ transform:rotate(360deg); } }
+
+  .takbeer-eyebrow{
+    position:relative; z-index:2;
+    font-size:11px; letter-spacing:0.4em; text-transform:uppercase; font-weight:700;
+    color:var(--mint-soft); opacity:0.75; margin-bottom:18px;
+  }
+
+  /* Arabic calligraphy reveal with gold shimmer sweep */
+  .takbeer-arabic{
+    position:relative; z-index:2;
+    font-family:'Amiri', serif; font-weight:700; direction:rtl;
+    font-size:clamp(2.4rem,13vw,4.6rem); line-height:1.3;
+    margin-bottom:10px;
+    background:linear-gradient(100deg,
+      var(--cream) 0%, var(--cream) 38%,
+      var(--gold) 48%, #fff8e6 52%,
+      var(--gold) 56%, var(--cream) 66%, var(--cream) 100%);
+    background-size:220% 100%;
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    text-shadow:0 6px 40px rgba(243,207,138,0.35);
+    animation:calligraphyIn 1.1s cubic-bezier(.2,.9,.25,1) both, shimmerSweep 3.2s linear infinite 1.1s;
+  }
+  @keyframes calligraphyIn{ 0%{ opacity:0; transform:translateY(14px) scale(0.96); letter-spacing:0.1em;} 100%{ opacity:1; transform:translateY(0) scale(1); letter-spacing:normal;} }
+  @keyframes shimmerSweep{ 0%{ background-position:220% 0; } 100%{ background-position:-20% 0; } }
+
+  .takbeer-translit{
+    position:relative; z-index:2;
+    font-family:'Cormorant Garamond',serif; font-style:italic; font-weight:600;
+    font-size:clamp(1.1rem,4.4vw,1.5rem); color:var(--mint-soft);
+    opacity:0; animation:fadeUp 0.9s ease 0.5s both;
+    margin-bottom:44px; letter-spacing:0.02em;
+  }
+  @keyframes fadeUp{ from{opacity:0; transform:translateY(8px);} to{opacity:0.85; transform:translateY(0);} }
+
+  /* Audio-reactive bars */
+  .takbeer-bars{
+    position:relative; z-index:2;
+    display:flex; align-items:flex-end; justify-content:center; gap:9px;
+    height:130px; margin-bottom:40px;
+  }
+  .takbeer-bars span{
+    width:15px; border-radius:8px;
+    background:linear-gradient(180deg, var(--gold) 0%, var(--mint) 100%);
+    box-shadow:0 0 16px rgba(127,224,192,0.35);
+    transform-origin:bottom center;
+    height:14%;
+    transition:height 0.09s ease-out, box-shadow 0.15s ease-out;
+  }
+  /* Fallback CSS animation used only if Web Audio analysis is unavailable */
+  .takbeer-bars.fallback span{ animation:barBounce 1s ease-in-out infinite; }
+  .takbeer-bars.fallback span:nth-child(1){ height:38%; animation-delay:0s; }
+  .takbeer-bars.fallback span:nth-child(2){ height:68%; animation-delay:0.1s; }
+  .takbeer-bars.fallback span:nth-child(3){ height:100%; animation-delay:0.2s; }
+  .takbeer-bars.fallback span:nth-child(4){ height:52%; animation-delay:0.3s; }
+  .takbeer-bars.fallback span:nth-child(5){ height:82%; animation-delay:0.4s; }
+  .takbeer-bars.fallback span:nth-child(6){ height:32%; animation-delay:0.5s; }
+  @keyframes barBounce{ 0%,100%{transform:scaleY(0.4);} 50%{transform:scaleY(1);} }
+
+  .takbeer-progress{
+    position:relative; z-index:2;
+    width:100%; max-width:420px; height:3px; border-radius:4px;
+    background:rgba(255,255,255,0.1); overflow:hidden;
+  }
+  .takbeer-progress-fill{
+    height:100%; width:0%;
+    background:linear-gradient(90deg, var(--mint), var(--gold));
+    box-shadow:0 0 10px rgba(243,207,138,0.5);
+    transition:width 0.4s cubic-bezier(.3,.6,.2,1);
+  }
+
+  .takbeer-caption{
+    position:relative; z-index:2; margin-top:18px;
+    font-size:10px; letter-spacing:0.3em; text-transform:uppercase;
+    color:rgba(251,243,230,0.4); font-weight:700;
+  }
+
+  /* ---------- Prayer video (Step 2) ---------- */
+  #prayer-overlay{
+    position:fixed; inset:0; z-index:80; background:#000;
+    display:none; align-items:center; justify-content:center; padding:0;
+  }
+  #prayer-overlay.active{ display:flex; animation:fadeIn 0.5s ease; }
+  .prayer-card{
+    width:100%; height:100%; max-width:none;
+    background:#000; border:none; border-radius:0; padding:0;
+    text-align:center; color:var(--cream);
+    position:relative;
+  }
+  .prayer-video-frame{
+    position:absolute; inset:0; width:100%; height:100%; overflow:hidden; background:#000;
+  }
+  .prayer-video-frame video{ width:100%; height:100%; object-fit:cover; display:block; }
+  .prayer-video-frame::after{
+    content:''; position:absolute; inset:0;
+    background:linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.05) 22%, rgba(0,0,0,0.05) 70%, rgba(0,0,0,0.6) 100%);
+    pointer-events:none;
+  }
+  .prayer-badge{
+    position:absolute; bottom:clamp(20px,5vh,40px); left:0; right:0; z-index:3;
+    color:var(--mint-soft); font-size:12px; letter-spacing:0.2em; text-transform:uppercase;
+    font-weight:700; text-shadow:0 2px 10px rgba(0,0,0,0.6);
+  }
+
+  /* ---------- Step 3: Your Cards (gold name-card reveal) ---------- */
+  #cards-overlay{
+    position:fixed; inset:0; z-index:80;
+    background:radial-gradient(ellipse at 50% 30%, #3d1268 0%, #2d0a52 35%, #1a0533 70%, #0d0020 100%);
+    display:none; align-items:center; justify-content:center; padding:24px;
+    overflow:hidden;
+  }
+  #cards-overlay.active{ display:flex; animation:fadeIn 0.6s ease; }
+
+  #nc-fireworks-canvas{ position:absolute; inset:0; z-index:1; pointer-events:none; }
+
+  .nc-container{
+    position:relative; z-index:2; width:100%; max-width:900px;
+    display:flex; flex-direction:column; align-items:center; gap:6px;
+  }
+  .nc-eyebrow{
+    font-family:'Manrope',sans-serif; font-size:11px; letter-spacing:0.32em; text-transform:uppercase;
+    color:#f5d06e; text-shadow:0 0 20px rgba(212,168,47,0.8); margin-bottom:2px; font-weight:700;
+  }
+  .nc-heading{
+    font-family:'Cormorant Garamond',serif; font-style:italic; font-weight:700;
+    font-size:clamp(1.7rem,6vw,2.6rem); color:#ffe084;
+    text-shadow:0 0 30px rgba(255,224,132,0.7); text-align:center; line-height:1.2; margin-bottom:18px;
+  }
+
+  .nc-cards-row{
+    display:flex; align-items:center; justify-content:center; gap:0;
+    width:100%; flex-wrap:wrap; position:relative;
+  }
+  .nc-arrow{
+    color:#ffe084; font-size:22px; text-shadow:0 0 10px #d4a82f;
+    animation:ncPulseArrow 1.5s ease-in-out infinite; flex-shrink:0; margin:0 -4px -50px; z-index:4;
+  }
+  @keyframes ncPulseArrow{ 0%,100%{ opacity:0.6; transform:scale(1); } 50%{ opacity:1; transform:scale(1.2); } }
+
+  .nc-card{
+    width:180px; border-radius:16px; padding:4px; position:relative; flex-shrink:0;
+    opacity:0; transform:scale(0.3); margin:8px;
+  }
+  .nc-card.zoomed-in{ animation:ncCardZoomIn 0.7s cubic-bezier(.34,1.56,.64,1) forwards; }
+  @keyframes ncCardZoomIn{
+    0%{ opacity:0; transform:scale(0.3) rotate(-4deg); }
+    60%{ opacity:1; transform:scale(1.08) rotate(1deg); }
+    100%{ opacity:1; transform:scale(1) rotate(0deg); }
+  }
+  .nc-card-navy, .nc-card-teal, .nc-card-rose{
+    background:linear-gradient(135deg, #a07820, #d4a82f, #f5d06e, #d4a82f);
+    box-shadow:0 8px 40px rgba(0,0,0,0.6), 0 0 20px rgba(212,168,47,0.3);
+    border-radius:16px; padding:4px;
+  }
+  .nc-card-inner{
+    border-radius:13px; padding:16px 12px 18px; height:250px;
+    display:flex; flex-direction:column; align-items:center; justify-content:space-between;
+    border:2px solid #d4a82f; position:relative; overflow:hidden;
+  }
+  .nc-card-navy .nc-card-inner{ background:linear-gradient(160deg, #0d2a4a 0%, #0a1e35 50%, #061428 100%); }
+  .nc-card-teal .nc-card-inner{ background:linear-gradient(160deg, #0d7a6b 0%, #095e52 50%, #063d36 100%); }
+  .nc-card-rose .nc-card-inner{ background:linear-gradient(160deg, #8b5463 0%, #6e3e4e 50%, #4a2835 100%); }
+
+  .nc-card-frame{ position:absolute; inset:7px; border:1px solid rgba(212,168,47,0.4); border-radius:8px; pointer-events:none; }
+  .nc-card-frame::before{ content:''; position:absolute; inset:4px; border:1px solid rgba(212,168,47,0.2); border-radius:5px; }
+
+  .nc-card-arch{
+    width:68px; height:46px; border:2px solid #d4a82f; border-bottom:none; border-radius:34px 34px 0 0;
+    position:absolute; top:10px; display:flex; align-items:flex-start; justify-content:center; padding-top:5px;
+  }
+  .nc-card-arch::after{ content:'☽'; color:#ffe084; font-size:15px; text-shadow:0 0 8px #d4a82f; }
+
+  .nc-card-corner{ position:absolute; width:14px; height:14px; border-color:#d4a82f; border-style:solid; opacity:0.7; }
+  .nc-card-corner.tl{ top:9px; left:9px; border-width:2px 0 0 2px; }
+  .nc-card-corner.tr{ top:9px; right:9px; border-width:2px 2px 0 0; }
+  .nc-card-corner.bl{ bottom:9px; left:9px; border-width:0 0 2px 2px; }
+  .nc-card-corner.br{ bottom:9px; right:9px; border-width:0 2px 2px 0; }
+
+  .nc-card-lanterns{ display:flex; gap:22px; margin-top:52px; }
+  .nc-mini-lantern{
+    width:10px; height:15px; background:radial-gradient(ellipse at 40% 30%, #ffe580, #e8a000 70%);
+    border-radius:3px 3px 5px 5px; border:1px solid #d4a82f; box-shadow:0 0 6px 2px rgba(255,200,50,0.5); position:relative;
+  }
+  .nc-mini-lantern::before{ content:''; position:absolute; top:-7px; left:50%; transform:translateX(-50%); width:1px; height:7px; background:#d4a82f; }
+
+  .nc-arabic-text{ font-family:'Amiri',serif; font-size:24px; color:#ffe084; text-shadow:0 0 15px rgba(255,224,132,0.7); direction:rtl; text-align:center; margin-top:-6px; }
+  .nc-eid-en{ font-family:'Manrope',sans-serif; font-size:9px; letter-spacing:2.2px; color:#f5d06e; text-align:center; margin-top:-2px; font-weight:700; }
+  .nc-divider{ width:70%; height:1px; background:linear-gradient(90deg, transparent, #d4a82f, transparent); margin:2px 0; }
+  .nc-name-arabic{ font-family:'Amiri',serif; font-size:11px; color:#f5d06e; direction:rtl; text-align:center; line-height:1.4; }
+  .nc-name-en{ font-family:'Manrope',sans-serif; font-size:8px; color:#ffe084; text-align:center; letter-spacing:0.5px; margin-top:1px; font-weight:700; }
+
+  .nc-sparkle{ position:absolute; color:#ffe084; font-size:9px; animation:ncSparkleFade var(--sd,2s) ease-in-out infinite; }
+  @keyframes ncSparkleFade{ 0%,100%{ opacity:0; transform:scale(0.5); } 50%{ opacity:1; transform:scale(1.2); } }
+
+  /* ---------- Step 4: Family Wishes Wall ---------- */
+  #wishwall-overlay{
+    position:fixed; inset:0; z-index:81; overflow:hidden;
+    display:none; align-items:center; justify-content:center; flex-direction:column;
+    background:
+      radial-gradient(circle at 18% 12%, rgba(127,224,192,0.16), transparent 50%),
+      radial-gradient(circle at 85% 18%, rgba(246,166,178,0.14), transparent 48%),
+      radial-gradient(circle at 50% 100%, rgba(243,207,138,0.12), transparent 55%),
+      linear-gradient(160deg, #0d1120 0%, #191c33 45%, #251a34 100%);
+    background-size:220% 220%, 220% 220%, 220% 220%, 100% 100%;
+    animation:wishBgShift 18s ease-in-out infinite;
+  }
+  @keyframes wishBgShift{
+    0%{ background-position:0% 0%, 100% 0%, 50% 100%, 0 0; }
+    50%{ background-position:100% 100%, 0% 100%, 50% 0%, 0 0; }
+    100%{ background-position:0% 0%, 100% 0%, 50% 100%, 0 0; }
+  }
+  #wishwall-overlay.active{ display:flex; animation:fadeIn 0.6s ease, wishBgShift 18s ease-in-out infinite 0.6s; }
+
+  .wishwall-depth-blur{
+    position:absolute; inset:0; z-index:1; pointer-events:none;
+    backdrop-filter:blur(0px);
+  }
+
+  .wishwall-header{
+    position:relative; z-index:6; text-align:center; margin-bottom:8px; padding:0 24px;
+  }
+  .wishwall-eyebrow{
+    font-size:11px; letter-spacing:0.34em; text-transform:uppercase; font-weight:700;
+    color:var(--mint); opacity:0; margin-bottom:10px;
+    animation:fadeUp 1s ease 0.2s forwards;
+  }
+  .wishwall-title{
+    font-family:'Cormorant Garamond',serif; font-weight:700; font-style:italic;
+    font-size:clamp(2rem,8vw,3.2rem); line-height:1.08;
+    background:linear-gradient(100deg, var(--mint-soft) 0%, var(--cream) 35%, var(--gold) 60%, var(--mint-soft) 100%);
+    background-size:260% 100%;
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    text-shadow:0 6px 40px rgba(127,224,192,0.25);
+    opacity:0; transform:scale(0.94);
+    animation:showTitleIn 1s cubic-bezier(.2,.9,.25,1) 0.4s forwards, shimmerSweep 4.5s linear infinite 1.5s;
+  }
+
+  .wishwall-field{
+    position:relative; z-index:5; width:100%; height:min(62vh, 560px); max-width:640px;
+    margin-top:6px;
+  }
+
+  .wish-orb{
+    position:absolute; border-radius:50%; filter:blur(46px); pointer-events:none; opacity:0.5;
+    animation:orbFloat 10s ease-in-out infinite;
+  }
+  .wish-orb.wo1{ width:200px; height:200px; background:radial-gradient(circle, var(--mint), transparent 70%); top:2%; left:-4%; }
+  .wish-orb.wo2{ width:180px; height:180px; background:radial-gradient(circle, var(--rose), transparent 70%); bottom:6%; right:-2%; animation-delay:3s; }
+  .wish-orb.wo3{ width:150px; height:150px; background:radial-gradient(circle, var(--gold), transparent 70%); top:45%; left:82%; animation-delay:5.5s; }
+
+  /* Individual wish bubble */
+  .wish-bubble{
+    position:absolute; left:50%; top:100%;
+    display:flex; align-items:center; gap:10px;
+    max-width:min(78vw, 300px);
+    padding:12px 18px 12px 12px; border-radius:22px;
+    background:linear-gradient(160deg, rgba(127,224,192,0.14), rgba(255,255,255,0.05));
+    border:1px solid rgba(251,243,230,0.14);
+    box-shadow:0 14px 34px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06);
+    backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+    opacity:0;
+    animation-name:wishRise;
+    animation-timing-function:cubic-bezier(.22,.75,.32,1);
+    animation-fill-mode:forwards;
+  }
+  .wish-bubble.layer-back{ filter:blur(0.6px); box-shadow:0 10px 24px rgba(0,0,0,0.25); }
+  .wish-bubble.layer-front{ box-shadow:0 20px 46px rgba(0,0,0,0.45), 0 0 30px rgba(127,224,192,0.14); }
+
+  @keyframes wishRise{
+    0%{ opacity:0; transform:translate(-50%, 0) translateX(var(--dx0,0px)) scale(0.85); }
+    10%{ opacity:1; }
+    45%{ transform:translate(-50%, calc(-1 * var(--rise, 320px))) translateX(var(--dx1, 10px)) scale(1); }
+    85%{ opacity:1; transform:translate(-50%, calc(-1.6 * var(--rise, 320px))) translateX(var(--dx2, -14px)) scale(1); }
+    100%{ opacity:0; transform:translate(-50%, calc(-2 * var(--rise, 320px))) translateX(var(--dx2, -14px)) scale(0.96); }
+  }
+
+  .wish-avatar{
+    flex-shrink:0; width:34px; height:34px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Cormorant Garamond',serif; font-weight:700; font-size:14px;
+    color:#0d1712;
+    box-shadow:0 4px 14px rgba(0,0,0,0.3);
+  }
+  .wish-text-wrap{ display:flex; flex-direction:column; gap:1px; text-align:left; }
+  .wish-from{
+    font-size:9.5px; letter-spacing:0.12em; text-transform:uppercase; font-weight:700;
+    color:var(--mint-soft); opacity:0.75;
+  }
+  .wish-msg{
+    font-size:13.5px; font-weight:400; color:var(--cream); line-height:1.35;
+    font-family:'Manrope',sans-serif;
+  }
+
+  .wish-glow-trail{
+    position:absolute; left:50%; bottom:0; width:2px; border-radius:2px;
+    background:linear-gradient(to top, rgba(127,224,192,0.35), transparent);
+    opacity:0; pointer-events:none;
+    animation-name:trailRise; animation-timing-function:linear; animation-fill-mode:forwards;
+  }
+  @keyframes trailRise{
+    0%{ opacity:0; height:0; }
+    15%{ opacity:0.6; }
+    70%{ opacity:0.3; }
+    100%{ opacity:0; height:var(--rise, 320px); transform:translateY(calc(-1 * var(--rise, 320px))); }
+  }
+
+  .wishwall-dust{
+    position:absolute; width:3px; height:3px; border-radius:50%; background:var(--gold);
+    opacity:0; pointer-events:none; z-index:4;
+    animation:dustDrift var(--dd,6s) ease-in-out infinite;
+    box-shadow:0 0 6px 1px rgba(243,207,138,0.6);
+  }
+  @keyframes dustDrift{
+    0%{ opacity:0; transform:translateY(0) translateX(0); }
+    12%{ opacity:0.8; }
+    88%{ opacity:0.5; }
+    100%{ opacity:0; transform:translateY(-160px) translateX(var(--dxd,20px)); }
+  }
+
+  .wishwall-caption{
+    position:relative; z-index:6; margin-top:14px;
+    font-size:11px; letter-spacing:0.24em; text-transform:uppercase; opacity:0;
+    color:rgba(251,243,230,0.45); font-weight:700;
+    animation:fadeUp 1s ease 1s forwards;
+  }
+
+  /* ---------- Step 5: Family Tree of Blessings ---------- */
+  #tree-overlay{
+    position:fixed; inset:0; z-index:82; overflow:hidden;
+    display:none; align-items:center; justify-content:center; flex-direction:column;
+    background:
+      radial-gradient(circle at 15% 10%, rgba(127,224,192,0.15), transparent 50%),
+      radial-gradient(circle at 88% 15%, rgba(246,166,178,0.13), transparent 48%),
+      radial-gradient(circle at 50% 105%, rgba(243,207,138,0.16), transparent 60%),
+      linear-gradient(165deg, #0a0d18 0%, #131a2c 45%, #1d1730 100%);
+    background-size:220% 220%, 220% 220%, 220% 220%, 100% 100%;
+    animation:wishBgShift 20s ease-in-out infinite;
+  }
+  #tree-overlay.active{ display:flex; animation:fadeIn 0.6s ease, wishBgShift 20s ease-in-out infinite 0.6s; }
+
+  .tree-header{ position:relative; z-index:6; text-align:center; margin-bottom:2px; padding:0 24px; }
+  .tree-eyebrow{
+    font-size:11px; letter-spacing:0.34em; text-transform:uppercase; font-weight:700;
+    color:var(--mint); opacity:0; margin-bottom:8px;
+    animation:fadeUp 1s ease 0.2s forwards;
+  }
+  .tree-title{
+    font-family:'Cormorant Garamond',serif; font-weight:700; font-style:italic;
+    font-size:clamp(1.9rem,7.6vw,3rem); line-height:1.08;
+    background:linear-gradient(100deg, var(--mint-soft) 0%, var(--cream) 35%, var(--gold) 60%, var(--mint-soft) 100%);
+    background-size:260% 100%;
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    text-shadow:0 6px 40px rgba(127,224,192,0.25);
+    opacity:0; transform:scale(0.94);
+    animation:showTitleIn 1s cubic-bezier(.2,.9,.25,1) 0.4s forwards, shimmerSweep 4.5s linear infinite 1.5s;
+  }
+  .tree-caption{
+    position:relative; z-index:6; margin-top:6px; margin-bottom:8px;
+    font-size:11.5px; opacity:0; color:rgba(251,243,230,0.55); font-weight:500; max-width:340px; padding:0 20px;
+    animation:fadeUp 1s ease 0.6s forwards;
+  }
+
+  .tree-stage{
+    position:relative; z-index:5; width:min(94vw,520px); height:min(56vh,460px);
+    display:flex; align-items:flex-end; justify-content:center;
+  }
+  .tree-stage svg{ width:100%; height:100%; overflow:visible; }
+
+  .tree-ground-glow{
+    position:absolute; bottom:-6%; left:50%; transform:translateX(-50%);
+    width:70%; height:36px; border-radius:50%;
+    background:radial-gradient(ellipse, rgba(127,224,192,0.35), transparent 72%);
+    filter:blur(10px); z-index:0; opacity:0;
+    animation:fadeUp 1.2s ease 0.3s forwards;
+  }
+
+  .tree-trunk-path{
+    fill:none; stroke:url(#trunkGradient); stroke-width:7; stroke-linecap:round;
+    stroke-dasharray:1400; stroke-dashoffset:1400;
+    animation:growTrunk 3.4s cubic-bezier(.3,.75,.25,1) 0.3s forwards;
+    filter:drop-shadow(0 0 10px rgba(127,224,192,0.35));
+  }
+  .tree-branch-path{
+    fill:none; stroke:url(#trunkGradient); stroke-width:4; stroke-linecap:round;
+    stroke-dasharray:340; stroke-dashoffset:340;
+    animation-name:growTrunk; animation-timing-function:cubic-bezier(.3,.75,.25,1); animation-fill-mode:forwards;
+    filter:drop-shadow(0 0 8px rgba(127,224,192,0.25));
+  }
+  @keyframes growTrunk{ to{ stroke-dashoffset:0; } }
+
+  .tree-root-glow{
+    fill:rgba(243,207,138,0.28); filter:blur(6px);
+    opacity:0; animation:fadeUp 1s ease 0.2s forwards;
+  }
+
+  .tree-leaf-group{ opacity:0; transform-box:fill-box; transform-origin:center; }
+  .tree-leaf-group.bloom{ animation:leafBloom 1.1s cubic-bezier(.2,1.1,.3,1) forwards; }
+  @keyframes leafBloom{
+    0%{ opacity:0; transform:scale(0) rotate(-25deg); }
+    55%{ opacity:1; transform:scale(1.25) rotate(6deg); }
+    75%{ transform:scale(0.92) rotate(-3deg); }
+    100%{ opacity:1; transform:scale(1) rotate(0deg); }
+  }
+  .tree-leaf-shape{
+    filter:drop-shadow(0 0 7px var(--leaf-glow,rgba(127,224,192,0.6)));
+    animation:leafSway var(--sway-dur,4.5s) ease-in-out infinite;
+    animation-delay:var(--sway-delay,0s);
+    transform-box:fill-box; transform-origin:bottom center;
+  }
+  @keyframes leafSway{
+    0%,100%{ transform:rotate(-3.5deg); }
+    50%{ transform:rotate(3.5deg); }
+  }
+  .tree-leaf-name{
+    font-family:'Cormorant Garamond',serif; font-weight:700; font-style:italic;
+    font-size:10.5px; fill:#0d1712; text-anchor:middle; dominant-baseline:middle;
+    pointer-events:none;
+  }
+
+  .tree-firefly{
+    position:absolute; width:4px; height:4px; border-radius:50%;
+    background:var(--gold); box-shadow:0 0 8px 2px rgba(243,207,138,0.7);
+    opacity:0; pointer-events:none; z-index:4;
+    animation:fireflyFloat var(--ff-dur,7s) ease-in-out infinite;
+  }
+  @keyframes fireflyFloat{
+    0%{ opacity:0; transform:translate(0,0); }
+    12%{ opacity:0.9; }
+    50%{ transform:translate(var(--fx,20px), var(--fy,-40px)); }
+    88%{ opacity:0.6; }
+    100%{ opacity:0; transform:translate(var(--fx2,-15px), var(--fy2,-80px)); }
+  }
+
+  .tree-footer{
+    position:relative; z-index:6; margin-top:10px;
+    font-size:10.5px; letter-spacing:0.22em; text-transform:uppercase; opacity:0;
+    color:rgba(251,243,230,0.45); font-weight:700;
+    animation:fadeUp 1s ease 1.1s forwards;
+  }
+
+  /* ---------- Step 6: Get Your Cards (real life, 1 min timer) ---------- */
+
+  #realcards-overlay{
+    position:fixed; inset:0; z-index:82; overflow:hidden;
+    display:none; align-items:center; justify-content:center; flex-direction:column;
+    text-align:center; padding:24px;
+    background:
+      radial-gradient(circle at 20% 15%, rgba(127,224,192,0.22), transparent 55%),
+      radial-gradient(circle at 82% 20%, rgba(246,166,178,0.20), transparent 50%),
+      radial-gradient(circle at 50% 100%, rgba(243,207,138,0.16), transparent 60%),
+      linear-gradient(160deg, #0d1120 0%, #1c2340 45%, #2c1f3a 100%);
+    background-size: 200% 200%, 200% 200%, 200% 200%, 100% 100%;
+    animation: realcardsShift 14s ease-in-out infinite;
+  }
+  @keyframes realcardsShift{
+    0%{ background-position: 0% 0%, 100% 0%, 50% 100%, 0 0; }
+    50%{ background-position: 100% 100%, 0% 100%, 50% 0%, 0 0; }
+    100%{ background-position: 0% 0%, 100% 0%, 50% 100%, 0 0; }
+  }
+  #realcards-overlay.active{ display:flex; animation:fadeIn 0.6s ease, realcardsShift 14s ease-in-out infinite 0.6s; }
+
+  .realcards-glow-orb{
+    position:absolute; border-radius:50%; filter:blur(50px); pointer-events:none; opacity:0.55;
+    animation:orbFloat 9s ease-in-out infinite;
+  }
+  .realcards-glow-orb.o1{ width:220px; height:220px; background:radial-gradient(circle, var(--mint), transparent 70%); top:8%; left:-6%; animation-delay:0s; }
+  .realcards-glow-orb.o2{ width:180px; height:180px; background:radial-gradient(circle, var(--rose), transparent 70%); bottom:10%; right:-4%; animation-delay:2.5s; }
+  .realcards-glow-orb.o3{ width:160px; height:160px; background:radial-gradient(circle, var(--gold), transparent 70%); top:55%; left:78%; animation-delay:5s; }
+  @keyframes orbFloat{ 0%,100%{ transform:translateY(0) scale(1); } 50%{ transform:translateY(-24px) scale(1.08); } }
+
+  .realcards-inner{ position:relative; z-index:2; display:flex; flex-direction:column; align-items:center; max-width:420px; }
+
+  .realcards-icon-ring{
+    width:96px; height:96px; border-radius:50%; margin-bottom:22px;
+    display:flex; align-items:center; justify-content:center; font-size:38px;
+    background:linear-gradient(160deg, rgba(127,224,192,0.18), rgba(255,255,255,0.05));
+    border:1px solid var(--border);
+    box-shadow:0 0 0 8px rgba(127,224,192,0.06), 0 20px 50px rgba(0,0,0,0.35);
+    animation:floaty 4s ease-in-out infinite;
+  }
+
+  .realcards-title{
+    font-family:'Cormorant Garamond',serif; font-weight:700; font-style:italic;
+    font-size:clamp(2rem,8.5vw,3.1rem); line-height:1.1; margin-bottom:12px;
+    background:linear-gradient(180deg, var(--cream) 0%, var(--mint-soft) 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    text-shadow:0 4px 30px rgba(127,224,192,0.25);
+  }
+
+  .realcards-desc{
+    font-size:14px; font-weight:300; line-height:1.7; color:rgba(251,243,230,0.78);
+    margin-bottom:34px; max-width:340px;
+  }
+
+  .realcards-timer-ring-wrap{ position:relative; width:min(58vw,220px); height:min(58vw,220px); margin-bottom:26px; }
+  .realcards-timer-ring-wrap svg{ width:100%; height:100%; transform:rotate(-90deg); }
+  .realcards-timer-ring-bg{ fill:none; stroke:rgba(255,255,255,0.08); stroke-width:6; }
+  .realcards-timer-ring-fg{
+    fill:none; stroke:url(#realcards-gradient); stroke-width:6; stroke-linecap:round;
+    transition:stroke-dashoffset 1s linear;
+  }
+  .realcards-timer-center{
+    position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  }
+  .realcards-timer-num{
+    font-family:'Cormorant Garamond',serif; font-weight:700; font-size:clamp(2.6rem,11vw,3.6rem);
+    color:var(--cream); line-height:1; text-shadow:0 4px 24px rgba(127,224,192,0.35);
+  }
+  .realcards-timer-sub{ font-size:10px; letter-spacing:0.28em; text-transform:uppercase; opacity:0.55; margin-top:6px; color:var(--mint-soft); }
+
+  .realcards-hint{
+    font-size:11px; letter-spacing:0.22em; text-transform:uppercase; opacity:0.5; color:var(--mint-soft);
+    display:flex; align-items:center; gap:8px;
+  }
+  .realcards-hint .dot{ width:6px; height:6px; border-radius:50%; background:var(--mint); animation:glimmer 1.6s ease-in-out infinite; }
+
+  .realcards-done{ display:none; flex-direction:column; align-items:center; gap:10px; }
+  .realcards-done.active{ display:flex; }
+  .realcards-done p{
+    font-family:'Cormorant Garamond',serif; font-style:italic; font-size:clamp(1.7rem,7vw,2.4rem); font-weight:700;
+    background:linear-gradient(180deg, var(--cream) 0%, var(--gold) 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    text-shadow:0 4px 24px rgba(243,207,138,0.35);
+  }
+  .realcards-done span{ font-size:13px; opacity:0.6; font-weight:300; }
+
+  /* ---------- Step intro screens ---------- */
+  .step-intro{
+    position:fixed; inset:0; z-index:80; background:var(--bg-deep);
+    display:none; align-items:center; justify-content:center; flex-direction:column;
+    text-align:center; padding:24px;
+  }
+  .step-intro.active{ display:flex; animation:fadeIn 0.6s ease; }
+  .step-intro-num{
+    font-family:'Cormorant Garamond',serif; font-weight:700; color:#0d1120;
+    background:linear-gradient(160deg, var(--mint), var(--mint-soft));
+    width:clamp(62px,15.5vw,88px); height:clamp(62px,15.5vw,88px); border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:clamp(1.8rem,7vw,2.6rem);
+    box-shadow:0 16px 40px rgba(127,224,192,0.32);
+    margin-bottom:28px;
+    animation:floaty 4s ease-in-out infinite;
+  }
+  .step-intro-title{
+    font-family:'Cormorant Garamond',serif; font-weight:700; font-style:italic; font-size:clamp(2.2rem,9vw,4rem);
+    color:var(--mint-soft); margin-bottom:16px; line-height:1.1;
+    text-shadow:0 4px 30px rgba(127,224,192,0.28);
+  }
+  .step-intro-caption{
+    font-size:clamp(14px,3.5vw,18px); opacity:0.7; font-weight:300; max-width:340px;
+  }
+
+  /* ---------- Start / unlock screen ---------- */
+  #start-overlay{
+    position:fixed; inset:0; z-index:100; background:var(--bg-deep);
+    display:flex; align-items:center; justify-content:center; flex-direction:column; gap:20px;
+    text-align:center; padding:24px;
+  }
+  #start-overlay.hidden{ display:none; }
+  #start-overlay .start-icon{ font-size:48px; animation:floaty 5s ease-in-out infinite; filter:drop-shadow(0 0 20px rgba(127,224,192,0.4)); }
+  @keyframes floaty{ 0%,100%{transform:translateY(0);} 50%{transform:translateY(-10px);} }
+  #start-overlay h2{ font-family:'Cormorant Garamond',serif; font-style:italic; font-size:clamp(1.7rem,6vw,2.3rem); color:var(--mint-soft); }
+  #start-overlay p{ font-size:13px; color:rgba(251,243,230,0.6); max-width:320px; font-weight:300; }
+  #start-btn{
+    padding:15px 34px; border:none; border-radius:50px;
+    background:linear-gradient(135deg, var(--mint), var(--mint-soft)); color:#0d1712; font-weight:800; font-size:14px;
+    text-transform:uppercase; letter-spacing:1px; cursor:pointer;
+    box-shadow:0 12px 30px rgba(127,224,192,0.32);
+  }
+
+  /* ---------- Step 5: The Eid Show ---------- */
+  #show-overlay{
+    position:fixed; inset:0; z-index:90; background:#05060e;
+    display:none; align-items:center; justify-content:center; flex-direction:column;
+    overflow:hidden; text-align:center;
+  }
+  #show-overlay.active{ display:flex; animation:fadeIn 0.6s ease; }
+  #show-canvas{ position:absolute; inset:0; width:100%; height:100%; z-index:1; }
+
+  .show-lanterns{ position:absolute; inset:0; z-index:2; pointer-events:none; overflow:hidden; }
+  .show-lantern{
+    position:absolute; bottom:-140px; width:34px; height:46px;
+    animation:lanternRise linear infinite;
+  }
+  .show-lantern .body{
+    width:100%; height:78%; border-radius:14px 14px 20px 20px;
+    box-shadow:0 0 18px 4px var(--lc), inset 0 -6px 10px rgba(0,0,0,0.25);
+    background:radial-gradient(circle at 50% 35%, #fff8e0, var(--lc) 65%);
+  }
+  .show-lantern .cap{ width:44%; height:10%; margin:0 auto; background:rgba(255,255,255,0.5); border-radius:3px 3px 0 0; }
+  .show-lantern .flame{ position:absolute; left:50%; bottom:-6px; width:5px; height:9px; background:#fff3c2; border-radius:50% 50% 50% 50%; transform:translateX(-50%); filter:blur(0.5px); opacity:0.9; }
+  @keyframes lanternRise{
+    0%{ transform:translate(0,0) rotate(-2deg); opacity:0; }
+    6%{ opacity:0.95; }
+    50%{ transform:translate(3vw,-56vh) rotate(2deg); }
+    94%{ opacity:0.9; }
+    100%{ transform:translate(-2vw,-112vh) rotate(-2deg); opacity:0; }
+  }
+
+  .show-title-wrap{
+    position:relative; z-index:3; display:flex; flex-direction:column; align-items:center;
+    padding:24px; pointer-events:none;
+  }
+  .show-eyebrow{
+    font-size:11px; letter-spacing:0.42em; text-transform:uppercase; font-weight:700;
+    color:var(--gold); opacity:0; margin-bottom:14px;
+    animation:fadeUp 1s ease 0.3s forwards;
+  }
+  .show-title{
+    font-family:'Cormorant Garamond',serif; font-weight:700; font-style:italic;
+    font-size:clamp(2.6rem,12vw,5.2rem); line-height:1.05; margin-bottom:14px;
+    background:linear-gradient(100deg, var(--rose) 0%, var(--gold) 30%, var(--mint-soft) 60%, var(--rose) 100%);
+    background-size:280% 100%;
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    text-shadow:0 6px 50px rgba(243,207,138,0.35);
+    opacity:0; transform:scale(0.9);
+    animation:showTitleIn 1.2s cubic-bezier(.2,.9,.25,1) 0.5s forwards, shimmerSweep 4s linear infinite 1.7s;
+  }
+  @keyframes showTitleIn{ to{ opacity:1; transform:scale(1); } }
+  .show-caption{
+    font-size:clamp(13px,3.4vw,16px); font-weight:300; color:rgba(251,243,230,0.75);
+    max-width:340px; opacity:0; animation:fadeUp 1s ease 1.1s forwards;
+  }
+
+  .show-skip{
+    position:absolute; z-index:4; bottom:26px; right:50%; transform:translateX(50%);
+    padding:10px 22px; border-radius:50px; border:1px solid rgba(251,243,230,0.25);
+    background:rgba(13,17,32,0.4); backdrop-filter:blur(6px);
+    color:var(--cream); font-size:11px; letter-spacing:0.18em; text-transform:uppercase;
+    font-weight:700; cursor:pointer; opacity:0; animation:fadeUp 1s ease 2s forwards;
+  }
+
+  /* ---------- Mini skip button (present on every screen) ---------- */
+  .mini-skip{
+    position:fixed; top:calc(env(safe-area-inset-top, 0px) + 16px); right:16px; z-index:200;
+    padding:7px 14px; border-radius:20px; border:1px solid rgba(251,243,230,0.16);
+    background:rgba(13,17,32,0.28); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
+    color:rgba(251,243,230,0.55); font-size:10px; letter-spacing:0.14em; text-transform:uppercase;
+    font-weight:700; font-family:'Manrope',sans-serif; cursor:pointer;
+    display:none; align-items:center; gap:5px;
+    transition:opacity 0.2s ease, background 0.2s ease, color 0.2s ease;
+  }
+  .mini-skip:hover{ background:rgba(13,17,32,0.5); color:rgba(251,243,230,0.85); }
+  .mini-skip.visible{ display:inline-flex; }
+  .mini-skip svg{ width:10px; height:10px; opacity:0.8; }
+</style>
 </head>
 <body>
 
@@ -1076,7 +1009,8 @@
   </div>
 </div>
 
-<!-- Step 4: Family Wishes Wall -->
+
+<!-- ---------- Step 4: Family Wishes Wall ---------- -->
 <div id="wishwall-intro" class="step-intro">
   <div class="step-intro-num">4</div>
   <div class="step-intro-title">Wishes Wall</div>
@@ -1099,7 +1033,7 @@
   <div class="wishwall-caption">Eid Mubarak, from all of us</div>
 </div>
 
-<!-- Step 5: Family Tree of Blessings -->
+<!-- ---------- Step 5: Family Tree of Blessings ---------- -->
 <div id="tree-intro" class="step-intro">
   <div class="step-intro-num">5</div>
   <div class="step-intro-title">Family Tree of Blessings</div>
@@ -1133,36 +1067,7 @@
   <div class="tree-footer">Eid Mubarak, from our roots to yours</div>
 </div>
 
-<!-- Step 6: Salami Table -->
-<div id="salami-intro" class="step-intro">
-  <div class="step-intro-num">6</div>
-  <div class="step-intro-title">Eid Salami Table</div>
-  <p class="step-intro-caption">A little tradition, with love</p>
-</div>
-
-<div id="salami-overlay">
-  <div class="salami-card">
-    <div class="salami-title">Eid Salami</div>
-    <div class="salami-sub">✨ Blessings from the heart ✨</div>
-
-    <div class="salami-row">
-      <span class="name"><span class="salami-emoji">🌙</span> Lopa Yeasmin</span>
-      <span class="amount">100 Taka</span>
-    </div>
-    <div class="salami-row">
-      <span class="name"><span class="salami-emoji">⭐</span> Tahia Yeasmin</span>
-      <span class="amount">100 Taka</span>
-    </div>
-
-    <div class="salami-total">
-      <span>Total</span>
-      <span>200 Taka</span>
-    </div>
-    <div class="salami-footer">Eid Mubarak · 2027</div>
-  </div>
-</div>
-
-<!-- Step 7: Get Your Cards (real life) -->
+<!-- ---------- Step 7: Get Your Cards (real life) ---------- -->
 <div id="realcards-intro" class="step-intro">
   <div class="step-intro-num">7</div>
   <div class="step-intro-title">Get Your Cards</div>
@@ -1209,9 +1114,9 @@
   </div>
 </div>
 
-<!-- Step: The Eid Show -->
+<!-- ---------- Step 6: The Eid Show ---------- -->
 <div id="show-intro" class="step-intro">
-  <div class="step-intro-num">8</div>
+  <div class="step-intro-num">6</div>
   <div class="step-intro-title">Eid Mubarak</div>
   <p class="step-intro-caption">Fireworks, lanterns, and every bit of shine we could fit on one screen</p>
 </div>
@@ -1285,8 +1190,6 @@
     treeSvg: document.getElementById('tree-svg'),
     treeBranches: document.getElementById('tree-branches'),
     treeLeaves: document.getElementById('tree-leaves'),
-    salamiIntro: document.getElementById('salami-intro'),
-    salamiOverlay: document.getElementById('salami-overlay'),
     realcardsIntro: document.getElementById('realcards-intro'),
     realcardsOverlay: document.getElementById('realcards-overlay'),
     realcardsWaiting: document.getElementById('realcards-waiting'),
@@ -1318,6 +1221,7 @@
   }
   makeSparkles(40);
 
+  // ---------- Time-of-day dynamic theme ----------
   function applyTimeBasedTheme(){
     const hour = new Date().getHours();
     let phase = 'dark';
@@ -1332,6 +1236,7 @@
   applyTimeBasedTheme();
   setInterval(applyTimeBasedTheme, 30000);
 
+  // ---------- Confetti ----------
   const confettiColors = ['#7fe0c0','#bff2de','#fbf3e6','#f6a6b2'];
   function burstConfetti(count){
     for(let i=0;i<count;i++){
@@ -1400,6 +1305,7 @@
 
   const INTRO_DURATION = 2200;
 
+  // ---------- Mini skip button (visible, unobtrusive, on every screen) ----------
   let miniSkipHandler = null;
   function bindMiniSkip(action){
     if(miniSkipHandler){ els.miniSkip.removeEventListener('click', miniSkipHandler); }
@@ -1411,6 +1317,7 @@
     els.miniSkip.classList.remove('visible');
   }
 
+  // ---------- Audio-reactive Takbeer visualizer ----------
   let audioCtx = null;
   let analyser = null;
   let sourceNode = null;
@@ -1440,6 +1347,7 @@
     }
   }
 
+  // Spread six bars across low→mid frequency bins (voice/percussion range reads best)
   const BAR_BIN_SPANS = [
     [1,3],[2,5],[4,9],[6,13],[9,18],[13,26]
   ];
@@ -1577,6 +1485,7 @@
     });
   }
 
+  // ---------- Name-card reveal + lightweight fireworks (Step 3) ----------
   let ncCtx = null;
   let ncParticles = [];
   let ncActive = false;
@@ -1649,6 +1558,7 @@
       setTimeout(()=>{ if(card) card.classList.add('zoomed-in'); }, 400 + i*600);
     });
 
+    // Stop the fireworks flurry shortly after the last card lands, then move on — no interaction required
     const totalWait = 400 + cards.length*600 + 2600;
     setTimeout(stopNcFireworks, totalWait - 1200);
     cardsAdvanceTimer = setTimeout(()=>{
@@ -1657,6 +1567,7 @@
     }, totalWait);
   }
 
+  // ---------- Step 4: Family Wishes Wall ----------
   let wishwallIntroTimer = null;
   let wishwallAdvanceTimer = null;
   let wishwallSpawnTimers = [];
@@ -1683,7 +1594,7 @@
     const fieldW = rect.width || window.innerWidth;
     const fieldH = rect.height || 480;
 
-    const startXPct = 12 + Math.random()*76;
+    const startXPct = 12 + Math.random()*76; // % across the field
     const rise = fieldH * (0.62 + Math.random()*0.22);
     const duration = 8 + Math.random()*3.5;
     const dx0 = (Math.random()-0.5)*30;
@@ -1747,7 +1658,7 @@
     setTimeout(()=>dust.remove(), 8000);
   }
 
-  const WISHWALL_DURATION = 15000;
+  const WISHWALL_DURATION = 15000; // ms — how long the wall runs before moving on
 
   function startWishWall(){
     els.wishwallField.innerHTML = '';
@@ -1760,6 +1671,7 @@
       wishwallSpawnTimers.push(t);
       delay += 1150 + Math.random()*500;
     });
+    // keep a light stream of bubbles going for the remainder of the screen's duration
     const loopTimer = setInterval(()=>{
       const data = WISH_MESSAGES[Math.floor(Math.random()*WISH_MESSAGES.length)];
       spawnWishBubble(data);
@@ -1807,17 +1719,19 @@
     });
   }
 
+  // ---------- Step 5: Family Tree of Blessings ----------
   let treeIntroTimer = null;
   let treeAdvanceTimer = null;
   let treeSpawnTimers = [];
   let treeFireflyInterval = null;
   let treeFireflyEls = [];
 
-  const FAMILY_NAMES = [ 'Lopa', 'Nipa', 'Tahia', 'Nana', 'Nanu', 'Safiq', 'Samiyyan' ];
+  const FAMILY_NAMES = ['Nipa','Lopa','Tahia','Safiq','Nana','Nanu','Samiyyan'];
   const LEAF_PALETTES = [
     ['#7fe0c0','#4fc7a0'], ['#f6a6b2','#e97e93'], ['#f3cf8a','#e8b845'], ['#bff2de','#7fe0c0']
   ];
 
+  // Deterministic-ish branch layout: a set of endpoints along a stylised canopy
   function buildTreeSlots(count){
     const slots = [];
     const tiers = [
@@ -1825,6 +1739,7 @@
       { y:105, spread:[45,355], count:0 },
       { y:65,  spread:[30,370], count:0 },
     ];
+    // distribute names across tiers roughly evenly
     for(let i=0;i<count;i++){ tiers[i % tiers.length].count++; }
     tiers.forEach(tier=>{
       const [minX,maxX] = tier.spread;
@@ -1923,7 +1838,8 @@
     const slots = buildTreeSlots(names.length);
     const trunkTopX = 200, trunkTopY = 170;
 
-    let delay = 0.2;
+    // branches + leaves bloom in sequence, staggered like the tree is truly growing
+    let delay = 0.2; // seconds, after trunk starts growing
     slots.forEach((slot, i)=>{
       const branchDelay = delay;
       const t1 = setTimeout(()=>{ drawBranch(trunkTopX, trunkTopY, slot.x, slot.y, 0); }, (2.6 + branchDelay) * 1000);
@@ -1933,6 +1849,7 @@
       delay += 0.42;
     });
 
+    // fireflies drifting through the canopy once it's mostly bloomed
     const fireflyStart = 2.6 + delay*1000/1000 + 1.2;
     const t3 = setTimeout(()=>{
       for(let i=0;i<6;i++){ setTimeout(spawnTreeFirefly, i*450); }
@@ -1950,7 +1867,7 @@
     treeFireflyEls = [];
   }
 
-  const TREE_DURATION = 15000;
+  const TREE_DURATION = 15000; // ms — how long the tree screen runs before moving on
 
   function openTreePopup(){
     els.treeIntro.classList.add('active');
@@ -1971,49 +1888,18 @@
     treeAdvanceTimer = setTimeout(()=>{
       stopFamilyTree();
       els.treeOverlay.classList.remove('active');
-      openSalamiPopup();
+      openShowPopup();
     }, TREE_DURATION);
     bindMiniSkip(()=>{
       clearTimeout(treeAdvanceTimer);
       stopFamilyTree();
       els.treeOverlay.classList.remove('active');
-      openSalamiPopup();
+      openShowPopup();
     });
   }
 
-  // ---------- SALAMI TABLE ----------
-  let salamiIntroTimer = null;
-  let salamiAdvanceTimer = null;
-
-  function openSalamiPopup(){
-    els.salamiIntro.classList.add('active');
-    bindMiniSkip(()=>{
-      els.salamiIntro.classList.remove('active');
-      clearTimeout(salamiIntroTimer);
-      enterSalamiOverlay();
-    });
-    salamiIntroTimer = setTimeout(()=>{
-      els.salamiIntro.classList.remove('active');
-      enterSalamiOverlay();
-    }, INTRO_DURATION);
-  }
-
-  function enterSalamiOverlay(){
-    els.salamiOverlay.classList.add('active');
-    salamiAdvanceTimer = setTimeout(()=>{
-      els.salamiOverlay.classList.remove('active');
-      openRealCardsPopup();
-    }, 6000); // show for 6 seconds then move on
-    bindMiniSkip(()=>{
-      clearTimeout(salamiAdvanceTimer);
-      els.salamiOverlay.classList.remove('active');
-      openRealCardsPopup();
-    });
-  }
-
-  // ---------- REAL CARDS ----------
-  const REALCARDS_DURATION = 60;
-  const RING_CIRCUMFERENCE = 276.46;
+  const REALCARDS_DURATION = 60; // seconds
+  const RING_CIRCUMFERENCE = 276.46; // 2 * PI * 44
   let realcardsInterval = null;
 
   function openRealCardsPopup(){
@@ -2079,7 +1965,6 @@
     hideMiniSkip();
   }
 
-  // ---------- SHOW ----------
   const showEls = {
     intro: document.getElementById('show-intro'),
     overlay: document.getElementById('show-overlay'),
@@ -2115,6 +2000,7 @@
     const targetY = rand(h*0.16, h*0.5);
     const color = pick(FW_COLORS);
 
+    // rising trail particle
     showParticles.push({
       type:'rocket', x: targetX + rand(-30,30), y: h + 20, vx: rand(-0.4,0.4), vy: rand(-9.5,-7.5),
       targetY, color, trail: []
@@ -2126,7 +2012,7 @@
     const shapeRoll = Math.random();
     for(let i=0;i<count;i++){
       const angle = (Math.PI*2*i)/count + rand(-0.12,0.12);
-      const speed = shapeRoll < 0.15 ? rand(1,2) : rand(2.2,6.2);
+      const speed = shapeRoll < 0.15 ? rand(1,2) : rand(2.2,6.2); // occasional tight burst
       showParticles.push({
         type:'spark', x, y,
         vx: Math.cos(angle)*speed, vy: Math.sin(angle)*speed,
@@ -2134,6 +2020,7 @@
         life: 1, decay: rand(0.010,0.020), size: rand(1.6,3.2), gravity:0.045
       });
     }
+    // secondary glitter ring
     for(let i=0;i<18;i++){
       const angle = rand(0, Math.PI*2);
       const speed = rand(0.6,2.2);
@@ -2228,6 +2115,7 @@
 
     speakEidWish();
 
+    // opening flurry
     for(let i=0;i<4;i++){ setTimeout(()=>{ if(showRunning) launchFirework(); }, i*260); }
 
     if(showLanternInterval) clearInterval(showLanternInterval);
@@ -2245,7 +2133,7 @@
     if('speechSynthesis' in window){ window.speechSynthesis.cancel(); }
   }
 
-  const SHOW_DURATION = 16000;
+  const SHOW_DURATION = 16000; // ms — how long the fireworks show runs before moving on
 
   function openShowPopup(){
     els.cardsOverlay.classList.remove('active');
