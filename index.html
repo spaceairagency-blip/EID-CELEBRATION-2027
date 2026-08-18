@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>EID UL-FITR 2027 · Sweet Celebration</title>
 <meta name="theme-color" content="#101321">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@300;400;500;600;700;800&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   :root{
@@ -152,41 +151,123 @@
   @keyframes finalPop{ 0%{transform:scale(0.4);opacity:0;} 40%{transform:scale(1.15);opacity:1;} 100%{transform:scale(1);opacity:1;} }
   #final-caption{ position:relative; z-index:2; margin-top:10px; letter-spacing:0.35em; text-transform:uppercase; font-size:12px; opacity:0.6; color:var(--mint-soft); }
 
-  /* ---------- Takbeer popup ---------- */
+  /* ---------- Takbeer popup — PREMIUM ---------- */
   #takbeer-overlay{
-  position:fixed; inset:0; z-index:80; overflow:hidden;
-  display:none; align-items:center; justify-content:center; padding:0;
-  background:
-    radial-gradient(circle at 20% 15%, rgba(127,224,192,0.22), transparent 55%),
-    radial-gradient(circle at 82% 20%, rgba(246,166,178,0.20), transparent 50%),
-    radial-gradient(circle at 50% 100%, rgba(243,207,138,0.16), transparent 60%),
-    linear-gradient(160deg, #0d1120 0%, #1c2340 45%, #2c1f3a 100%);
-  background-size: 200% 200%, 200% 200%, 200% 200%, 100% 100%;
-  animation: realcardsShift 14s ease-in-out infinite;
-  backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
-}
-#takbeer-overlay.active{ display:flex; animation:fadeIn 0.5s ease, realcardsShift 14s ease-in-out infinite 0.5s; }
-  #takbeer-overlay.active{ display:flex; animation:fadeIn 0.5s ease; }
+    position:fixed; inset:0; z-index:80; overflow:hidden;
+    display:none; align-items:center; justify-content:center; padding:0;
+    background:
+      radial-gradient(circle at 20% 15%, rgba(127,224,192,0.22), transparent 55%),
+      radial-gradient(circle at 82% 20%, rgba(246,166,178,0.20), transparent 50%),
+      radial-gradient(circle at 50% 100%, rgba(243,207,138,0.16), transparent 60%),
+      linear-gradient(160deg, #0d1120 0%, #1c2340 45%, #2c1f3a 100%);
+    background-size: 200% 200%, 200% 200%, 200% 200%, 100% 100%;
+    backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+  }
+  #takbeer-overlay.active{ display:flex; animation:fadeIn 0.5s ease, realcardsShift 14s ease-in-out infinite 0.5s; }
   @keyframes fadeIn{ from{opacity:0;} to{opacity:1;} }
+
   .takbeer-card{
-    width:100%; height:100%; max-width:none;
+    width:100%; height:100%; max-width:none; position:relative;
     display:flex; flex-direction:column; align-items:center; justify-content:center;
     border:none; border-radius:0; padding:24px;
     text-align:center; color:var(--cream);
     animation:cardRise 0.6s cubic-bezier(.2,.9,.3,1.3);
   }
   @keyframes cardRise{ 0%{transform:translateY(40px) scale(0.92);opacity:0;} 100%{transform:translateY(0) scale(1);opacity:1;} }
-  .takbeer-bars{ display:flex; align-items:flex-end; justify-content:center; gap:9px; height:130px; margin-bottom:52px; }
-  .takbeer-bars span{ width:15px; border-radius:8px; background:var(--mint); animation:barBounce 1s ease-in-out infinite; }
-  .takbeer-bars span:nth-child(1){ height:38%; animation-delay:0s; }
-  .takbeer-bars span:nth-child(2){ height:68%; animation-delay:0.1s; }
-  .takbeer-bars span:nth-child(3){ height:100%; animation-delay:0.2s; }
-  .takbeer-bars span:nth-child(4){ height:52%; animation-delay:0.3s; }
-  .takbeer-bars span:nth-child(5){ height:82%; animation-delay:0.4s; }
-  .takbeer-bars span:nth-child(6){ height:32%; animation-delay:0.5s; }
+
+  /* Center glow that breathes with the amplitude */
+  .takbeer-core-glow{
+    position:absolute; width:min(70vw,420px); height:min(70vw,420px);
+    border-radius:50%; pointer-events:none; z-index:0;
+    background:radial-gradient(circle, rgba(243,207,138,0.22), rgba(127,224,192,0.10) 45%, transparent 72%);
+    filter:blur(6px);
+    transition:transform 0.12s ease-out, opacity 0.12s ease-out;
+    transform:scale(1); opacity:0.6;
+  }
+
+  /* Rotating thin halo rings for ceremony */
+  .takbeer-halo{
+    position:absolute; border-radius:50%; pointer-events:none; z-index:0;
+    border:1px solid rgba(243,207,138,0.18);
+  }
+  .takbeer-halo.h1{ width:min(60vw,340px); height:min(60vw,340px); animation:haloSpin 40s linear infinite; }
+  .takbeer-halo.h2{ width:min(78vw,440px); height:min(78vw,440px); border-color:rgba(127,224,192,0.14); animation:haloSpin 60s linear infinite reverse; }
+  @keyframes haloSpin{ to{ transform:rotate(360deg); } }
+
+  .takbeer-eyebrow{
+    position:relative; z-index:2;
+    font-size:11px; letter-spacing:0.4em; text-transform:uppercase; font-weight:700;
+    color:var(--mint-soft); opacity:0.75; margin-bottom:18px;
+  }
+
+  /* Arabic calligraphy reveal with gold shimmer sweep */
+  .takbeer-arabic{
+    position:relative; z-index:2;
+    font-family:'Amiri', serif; font-weight:700; direction:rtl;
+    font-size:clamp(2.4rem,13vw,4.6rem); line-height:1.3;
+    margin-bottom:10px;
+    background:linear-gradient(100deg,
+      var(--cream) 0%, var(--cream) 38%,
+      var(--gold) 48%, #fff8e6 52%,
+      var(--gold) 56%, var(--cream) 66%, var(--cream) 100%);
+    background-size:220% 100%;
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    text-shadow:0 6px 40px rgba(243,207,138,0.35);
+    animation:calligraphyIn 1.1s cubic-bezier(.2,.9,.25,1) both, shimmerSweep 3.2s linear infinite 1.1s;
+  }
+  @keyframes calligraphyIn{ 0%{ opacity:0; transform:translateY(14px) scale(0.96); letter-spacing:0.1em;} 100%{ opacity:1; transform:translateY(0) scale(1); letter-spacing:normal;} }
+  @keyframes shimmerSweep{ 0%{ background-position:220% 0; } 100%{ background-position:-20% 0; } }
+
+  .takbeer-translit{
+    position:relative; z-index:2;
+    font-family:'Cormorant Garamond',serif; font-style:italic; font-weight:600;
+    font-size:clamp(1.1rem,4.4vw,1.5rem); color:var(--mint-soft);
+    opacity:0; animation:fadeUp 0.9s ease 0.5s both;
+    margin-bottom:44px; letter-spacing:0.02em;
+  }
+  @keyframes fadeUp{ from{opacity:0; transform:translateY(8px);} to{opacity:0.85; transform:translateY(0);} }
+
+  /* Audio-reactive bars */
+  .takbeer-bars{
+    position:relative; z-index:2;
+    display:flex; align-items:flex-end; justify-content:center; gap:9px;
+    height:130px; margin-bottom:40px;
+  }
+  .takbeer-bars span{
+    width:15px; border-radius:8px;
+    background:linear-gradient(180deg, var(--gold) 0%, var(--mint) 100%);
+    box-shadow:0 0 16px rgba(127,224,192,0.35);
+    transform-origin:bottom center;
+    height:14%;
+    transition:height 0.09s ease-out, box-shadow 0.15s ease-out;
+  }
+  /* Fallback CSS animation used only if Web Audio analysis is unavailable */
+  .takbeer-bars.fallback span{ animation:barBounce 1s ease-in-out infinite; }
+  .takbeer-bars.fallback span:nth-child(1){ height:38%; animation-delay:0s; }
+  .takbeer-bars.fallback span:nth-child(2){ height:68%; animation-delay:0.1s; }
+  .takbeer-bars.fallback span:nth-child(3){ height:100%; animation-delay:0.2s; }
+  .takbeer-bars.fallback span:nth-child(4){ height:52%; animation-delay:0.3s; }
+  .takbeer-bars.fallback span:nth-child(5){ height:82%; animation-delay:0.4s; }
+  .takbeer-bars.fallback span:nth-child(6){ height:32%; animation-delay:0.5s; }
   @keyframes barBounce{ 0%,100%{transform:scaleY(0.4);} 50%{transform:scaleY(1);} }
-  .takbeer-progress{ width:100%; max-width:480px; height:7px; border-radius:4px; background:rgba(255,255,255,0.1); overflow:hidden; }
-  .takbeer-progress-fill{ height:100%; width:0%; background:linear-gradient(90deg, var(--mint), var(--mint-soft)); }
+
+  .takbeer-progress{
+    position:relative; z-index:2;
+    width:100%; max-width:420px; height:3px; border-radius:4px;
+    background:rgba(255,255,255,0.1); overflow:hidden;
+  }
+  .takbeer-progress-fill{
+    height:100%; width:0%;
+    background:linear-gradient(90deg, var(--mint), var(--gold));
+    box-shadow:0 0 10px rgba(243,207,138,0.5);
+    transition:width 0.4s cubic-bezier(.3,.6,.2,1);
+  }
+
+  .takbeer-caption{
+    position:relative; z-index:2; margin-top:18px;
+    font-size:10px; letter-spacing:0.3em; text-transform:uppercase;
+    color:rgba(251,243,230,0.4); font-weight:700;
+  }
 
   /* ---------- Prayer video (Step 2) ---------- */
   #prayer-overlay{
@@ -267,7 +348,7 @@
   .eid-card-msg{ font-size:14px; line-height:1.65; font-weight:300; color:rgba(251,243,230,0.82); }
   .eid-card-sign{ margin-top:16px; font-size:11px; letter-spacing:0.2em; text-transform:uppercase; opacity:0.5; }
 
-  /* ---------- Step 4: Get Your Cards (real life, 1 min timer) ---------- */
+  /* ---------- Step 5: Get Your Cards (real life, 1 min timer) ---------- */
   #realcards-overlay{
     position:fixed; inset:0; z-index:82; overflow:hidden;
     display:none; align-items:center; justify-content:center; flex-direction:column;
@@ -395,6 +476,82 @@
     text-transform:uppercase; letter-spacing:1px; cursor:pointer;
     box-shadow:0 12px 30px rgba(127,224,192,0.32);
   }
+
+  /* ---------- Step 5: The Eid Show ---------- */
+  #show-overlay{
+    position:fixed; inset:0; z-index:90; background:#05060e;
+    display:none; align-items:center; justify-content:center; flex-direction:column;
+    overflow:hidden; text-align:center;
+  }
+  #show-overlay.active{ display:flex; animation:fadeIn 0.6s ease; }
+  #show-canvas{ position:absolute; inset:0; width:100%; height:100%; z-index:1; }
+
+  .show-lanterns{ position:absolute; inset:0; z-index:2; pointer-events:none; overflow:hidden; }
+  .show-lantern{
+    position:absolute; bottom:-140px; width:34px; height:46px;
+    animation:lanternRise linear infinite;
+  }
+  .show-lantern .body{
+    width:100%; height:78%; border-radius:14px 14px 20px 20px;
+    box-shadow:0 0 18px 4px var(--lc), inset 0 -6px 10px rgba(0,0,0,0.25);
+    background:radial-gradient(circle at 50% 35%, #fff8e0, var(--lc) 65%);
+  }
+  .show-lantern .cap{ width:44%; height:10%; margin:0 auto; background:rgba(255,255,255,0.5); border-radius:3px 3px 0 0; }
+  .show-lantern .flame{ position:absolute; left:50%; bottom:-6px; width:5px; height:9px; background:#fff3c2; border-radius:50% 50% 50% 50%; transform:translateX(-50%); filter:blur(0.5px); opacity:0.9; }
+  @keyframes lanternRise{
+    0%{ transform:translate(0,0) rotate(-2deg); opacity:0; }
+    6%{ opacity:0.95; }
+    50%{ transform:translate(3vw,-56vh) rotate(2deg); }
+    94%{ opacity:0.9; }
+    100%{ transform:translate(-2vw,-112vh) rotate(-2deg); opacity:0; }
+  }
+
+  .show-title-wrap{
+    position:relative; z-index:3; display:flex; flex-direction:column; align-items:center;
+    padding:24px; pointer-events:none;
+  }
+  .show-eyebrow{
+    font-size:11px; letter-spacing:0.42em; text-transform:uppercase; font-weight:700;
+    color:var(--gold); opacity:0; margin-bottom:14px;
+    animation:fadeUp 1s ease 0.3s forwards;
+  }
+  .show-title{
+    font-family:'Cormorant Garamond',serif; font-weight:700; font-style:italic;
+    font-size:clamp(2.6rem,12vw,5.2rem); line-height:1.05; margin-bottom:14px;
+    background:linear-gradient(100deg, var(--rose) 0%, var(--gold) 30%, var(--mint-soft) 60%, var(--rose) 100%);
+    background-size:280% 100%;
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    text-shadow:0 6px 50px rgba(243,207,138,0.35);
+    opacity:0; transform:scale(0.9);
+    animation:showTitleIn 1.2s cubic-bezier(.2,.9,.25,1) 0.5s forwards, shimmerSweep 4s linear infinite 1.7s;
+  }
+  @keyframes showTitleIn{ to{ opacity:1; transform:scale(1); } }
+  .show-caption{
+    font-size:clamp(13px,3.4vw,16px); font-weight:300; color:rgba(251,243,230,0.75);
+    max-width:340px; opacity:0; animation:fadeUp 1s ease 1.1s forwards;
+  }
+
+  .show-skip{
+    position:absolute; z-index:4; bottom:26px; right:50%; transform:translateX(50%);
+    padding:10px 22px; border-radius:50px; border:1px solid rgba(251,243,230,0.25);
+    background:rgba(13,17,32,0.4); backdrop-filter:blur(6px);
+    color:var(--cream); font-size:11px; letter-spacing:0.18em; text-transform:uppercase;
+    font-weight:700; cursor:pointer; opacity:0; animation:fadeUp 1s ease 2s forwards;
+  }
+
+  /* ---------- Mini skip button (present on every screen) ---------- */
+  .mini-skip{
+    position:fixed; top:calc(env(safe-area-inset-top, 0px) + 16px); right:16px; z-index:200;
+    padding:7px 14px; border-radius:20px; border:1px solid rgba(251,243,230,0.16);
+    background:rgba(13,17,32,0.28); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
+    color:rgba(251,243,230,0.55); font-size:10px; letter-spacing:0.14em; text-transform:uppercase;
+    font-weight:700; font-family:'Manrope',sans-serif; cursor:pointer;
+    display:none; align-items:center; gap:5px;
+    transition:opacity 0.2s ease, background 0.2s ease, color 0.2s ease;
+  }
+  .mini-skip:hover{ background:rgba(13,17,32,0.5); color:rgba(251,243,230,0.85); }
+  .mini-skip.visible{ display:inline-flex; }
+  .mini-skip svg{ width:10px; height:10px; opacity:0.8; }
 </style>
 </head>
 <body>
@@ -441,12 +598,21 @@
 </div>
 
 <div id="takbeer-overlay">
-  <div class="realcards-glow-orb o1"></div>
-  <div class="realcards-glow-orb o2"></div>
-  <div class="realcards-glow-orb o3"></div>
   <div class="takbeer-card">
-    <div class="takbeer-bars"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="takbeer-halo h1" aria-hidden="true"></div>
+    <div class="takbeer-halo h2" aria-hidden="true"></div>
+    <div class="takbeer-core-glow" id="takbeer-core-glow" aria-hidden="true"></div>
+
+    <div class="takbeer-eyebrow">1448 AH</div>
+    <div class="takbeer-arabic">الله أكبر</div>
+    <div class="takbeer-translit">Allahu Akbar Kabira</div>
+
+    <div class="takbeer-bars" id="takbeer-bars">
+      <span></span><span></span><span></span><span></span><span></span><span></span>
+    </div>
+
     <div class="takbeer-progress"><div class="takbeer-progress-fill" id="takbeer-progress-fill"></div></div>
+    <div class="takbeer-caption">Eid Takbeer · Playing</div>
   </div>
 </div>
 
@@ -501,9 +667,9 @@
   </div>
 </div>
 
-<!-- ---------- Step 4: Get Your Cards (real life) ---------- -->
+<!-- ---------- Step 5: Get Your Cards (real life) ---------- -->
 <div id="realcards-intro" class="step-intro">
-  <div class="step-intro-num">4</div>
+  <div class="step-intro-num">5</div>
   <div class="step-intro-title">Get Your Cards</div>
   <p class="step-intro-caption">Get your card is real life.</p>
 </div>
@@ -548,7 +714,25 @@
   </div>
 </div>
 
-<audio id="takbeer-audio" preload="auto" src="https://eid7.vercel.app/Eid%20Takbeer%20-%20Allahu%20Akbar%20Kabira%20(1)_%5Bcut_23sec%5D.mp3"></audio>
+<!-- ---------- Step 5: The Eid Show ---------- -->
+<div id="show-intro" class="step-intro">
+  <div class="step-intro-num">4</div>
+  <div class="step-intro-title">Eid Mubarak</div>
+  <p class="step-intro-caption">Fireworks, lanterns, and every bit of shine we could fit on one screen</p>
+</div>
+
+<div id="show-overlay">
+  <canvas id="show-canvas"></canvas>
+  <div class="show-lanterns" id="show-lanterns"></div>
+  <div class="show-title-wrap">
+    <div class="show-eyebrow">Grand Finale</div>
+    <div class="show-title">Eid Mubarak</div>
+    <div class="show-caption">Sit back, turn the sound up, and let the sky celebrate with you.</div>
+  </div>
+  <button class="show-skip" id="show-skip" type="button">Restart the show</button>
+</div>
+
+<audio id="takbeer-audio" preload="auto" crossorigin="anonymous" src="https://eid7.vercel.app/Eid%20Takbeer%20-%20Allahu%20Akbar%20Kabira%20(1)_%5Bcut_23sec%5D.mp3"></audio>
 
 <div id="start-overlay">
   <div class="start-icon">✨</div>
@@ -556,6 +740,11 @@
   <p>Tap once to enter — this unlocks sound so the countdown voice and the Takbeer play automatically later.</p>
   <button id="start-btn" type="button">Enter Celebration</button>
 </div>
+
+<button id="mini-skip" class="mini-skip" type="button">
+  Skip
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg>
+</button>
 
 <script>
 (function(){
@@ -585,6 +774,8 @@
     takbeerOverlay: document.getElementById('takbeer-overlay'),
     takbeerAudio: document.getElementById('takbeer-audio'),
     takbeerProgressFill: document.getElementById('takbeer-progress-fill'),
+    takbeerBars: document.getElementById('takbeer-bars'),
+    takbeerCoreGlow: document.getElementById('takbeer-core-glow'),
     prayerIntro: document.getElementById('prayer-intro'),
     prayerOverlay: document.getElementById('prayer-overlay'),
     prayerVideo: document.getElementById('prayer-video'),
@@ -598,6 +789,7 @@
     realcardsRingFg: document.getElementById('realcards-ring-fg'),
     startOverlay: document.getElementById('start-overlay'),
     startBtn: document.getElementById('start-btn'),
+    miniSkip: document.getElementById('mini-skip'),
     confettiLayer: document.getElementById('confetti-layer'),
     timerGrid: document.querySelector('.timer-grid-eid'),
     body: document.body,
@@ -704,43 +896,190 @@
 
   const INTRO_DURATION = 2200;
 
+  // ---------- Mini skip button (visible, unobtrusive, on every screen) ----------
+  let miniSkipHandler = null;
+  function bindMiniSkip(action){
+    if(miniSkipHandler){ els.miniSkip.removeEventListener('click', miniSkipHandler); }
+    miniSkipHandler = ()=>{ els.miniSkip.classList.remove('visible'); action(); };
+    els.miniSkip.addEventListener('click', miniSkipHandler);
+    els.miniSkip.classList.add('visible');
+  }
+  function hideMiniSkip(){
+    els.miniSkip.classList.remove('visible');
+  }
+
+  // ---------- Audio-reactive Takbeer visualizer ----------
+  let audioCtx = null;
+  let analyser = null;
+  let sourceNode = null;
+  let freqData = null;
+  let barEls = [];
+  let rafId = null;
+  let audioGraphReady = false;
+
+  function ensureAudioGraph(){
+    if(audioGraphReady) return true;
+    try{
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if(!AC) return false;
+      audioCtx = new AC();
+      analyser = audioCtx.createAnalyser();
+      analyser.fftSize = 128;
+      analyser.smoothingTimeConstant = 0.82;
+      freqData = new Uint8Array(analyser.frequencyBinCount);
+      sourceNode = audioCtx.createMediaElementSource(els.takbeerAudio);
+      sourceNode.connect(analyser);
+      analyser.connect(audioCtx.destination);
+      audioGraphReady = true;
+      return true;
+    }catch(e){
+      console.warn('Audio visualizer unavailable, using fallback bars.', e);
+      return false;
+    }
+  }
+
+  // Spread six bars across low→mid frequency bins (voice/percussion range reads best)
+  const BAR_BIN_SPANS = [
+    [1,3],[2,5],[4,9],[6,13],[9,18],[13,26]
+  ];
+
+  function animateBars(){
+    if(!analyser || !freqData) return;
+    analyser.getByteFrequencyData(freqData);
+
+    let peakAvg = 0;
+    barEls.forEach((bar, i)=>{
+      const [lo,hi] = BAR_BIN_SPANS[i];
+      let sum = 0, n = 0;
+      for(let b=lo;b<=hi && b<freqData.length;b++){ sum += freqData[b]; n++; }
+      const avg = n ? sum/n : 0;
+      peakAvg += avg;
+      const pct = Math.max(10, Math.min(100, (avg/255)*100));
+      bar.style.height = pct + '%';
+      bar.style.boxShadow = '0 0 ' + (10 + pct*0.35) + 'px rgba(243,207,138,' + (0.25 + pct/220) + ')';
+    });
+    peakAvg = peakAvg / barEls.length;
+
+    const glowScale = 1 + (peakAvg/255) * 0.35;
+    const glowOpacity = 0.45 + (peakAvg/255) * 0.5;
+    els.takbeerCoreGlow.style.transform = 'scale(' + glowScale.toFixed(3) + ')';
+    els.takbeerCoreGlow.style.opacity = glowOpacity.toFixed(3);
+
+    rafId = requestAnimationFrame(animateBars);
+  }
+
+  function startTakbeerVisualizer(){
+    barEls = Array.from(els.takbeerBars.querySelectorAll('span'));
+    const ok = ensureAudioGraph();
+    if(ok){
+      els.takbeerBars.classList.remove('fallback');
+      if(audioCtx.state === 'suspended'){ audioCtx.resume().catch(()=>{}); }
+      cancelAnimationFrame(rafId);
+      animateBars();
+    } else {
+      els.takbeerBars.classList.add('fallback');
+    }
+  }
+
+  function stopTakbeerVisualizer(){
+    cancelAnimationFrame(rafId);
+    els.takbeerCoreGlow.style.transform = 'scale(1)';
+    els.takbeerCoreGlow.style.opacity = '0.6';
+  }
+
   function openTakbeerPopup(){
     els.takbeerIntro.classList.add('active');
-    setTimeout(()=>{
+    bindMiniSkip(()=>{
       els.takbeerIntro.classList.remove('active');
-      els.takbeerOverlay.classList.add('active');
-      els.takbeerAudio.currentTime = 0;
-      const p = els.takbeerAudio.play();
-      if(p && p.catch){ p.catch(()=>{}); }
+      clearTimeout(takbeerIntroTimer);
+      enterTakbeerOverlay();
+    });
+    takbeerIntroTimer = setTimeout(()=>{
+      els.takbeerIntro.classList.remove('active');
+      enterTakbeerOverlay();
     }, INTRO_DURATION);
+  }
+
+  let takbeerIntroTimer = null;
+
+  function enterTakbeerOverlay(){
+    els.takbeerOverlay.classList.add('active');
+    els.takbeerAudio.currentTime = 0;
+    const p = els.takbeerAudio.play();
+    if(p && p.then){
+      p.then(startTakbeerVisualizer).catch(()=>{ els.takbeerBars.classList.add('fallback'); });
+    } else {
+      startTakbeerVisualizer();
+    }
+    bindMiniSkip(()=>{
+      els.takbeerAudio.pause();
+      stopTakbeerVisualizer();
+      els.takbeerOverlay.classList.remove('active');
+      openPrayerPopup();
+    });
   }
 
   function openPrayerPopup(){
     els.prayerIntro.classList.add('active');
-    setTimeout(()=>{
+    bindMiniSkip(()=>{
       els.prayerIntro.classList.remove('active');
-      els.prayerOverlay.classList.add('active');
-      els.prayerVideo.currentTime = 0;
-      const p = els.prayerVideo.play();
-      if(p && p.catch){ p.catch(()=>{}); }
-      setTimeout(openCardsPopup, 12000);
+      clearTimeout(prayerIntroTimer);
+      enterPrayerOverlay();
+    });
+    prayerIntroTimer = setTimeout(()=>{
+      els.prayerIntro.classList.remove('active');
+      enterPrayerOverlay();
     }, INTRO_DURATION);
+  }
+
+  let prayerIntroTimer = null;
+  let prayerAdvanceTimer = null;
+
+  function enterPrayerOverlay(){
+    els.prayerOverlay.classList.add('active');
+    els.prayerVideo.currentTime = 0;
+    const p = els.prayerVideo.play();
+    if(p && p.catch){ p.catch(()=>{}); }
+    prayerAdvanceTimer = setTimeout(openCardsPopup, 12000);
+    bindMiniSkip(()=>{
+      clearTimeout(prayerAdvanceTimer);
+      openCardsPopup();
+    });
   }
 
   function openCardsPopup(){
     els.prayerOverlay.classList.remove('active');
     els.prayerVideo.pause();
     els.cardsIntro.classList.add('active');
-    setTimeout(()=>{
+    bindMiniSkip(()=>{
       els.cardsIntro.classList.remove('active');
-      els.cardsOverlay.classList.add('active');
-      autoScrollCards();
+      clearTimeout(cardsIntroTimer);
+      enterCardsOverlay();
+    });
+    cardsIntroTimer = setTimeout(()=>{
+      els.cardsIntro.classList.remove('active');
+      enterCardsOverlay();
     }, INTRO_DURATION);
   }
 
+  let cardsIntroTimer = null;
+  let cardsAdvanceTimer = null;
+
+  function enterCardsOverlay(){
+    els.cardsOverlay.classList.add('active');
+    autoScrollCards();
+    bindMiniSkip(()=>{
+      clearTimeout(cardsAdvanceTimer);
+      els.cardsOverlay.classList.remove('active');
+      openShowPopup();
+    });
+  }
+
+  // ---------- Step 4: The Eid Show (fireworks + lanterns + sound) ----------
+
   function autoScrollCards(){
     const cards = Array.from(document.querySelectorAll('.eid-card'));
-    if(!cards.length){ setTimeout(openRealCardsPopup, 1500); return; }
+    if(!cards.length){ cardsAdvanceTimer = setTimeout(openShowPopup, 1500); return; }
     const scroller = els.cardsOverlay;
 
     const cardDelay = 900;   // time between each card's auto-scroll step
@@ -757,23 +1096,39 @@
       scroller.scrollTo({ top: scroller.scrollHeight, behavior:'smooth' });
     }, totalWait);
 
-    // Move on to Step 4 after the cards have been read
-    setTimeout(openRealCardsPopup, totalWait + 3200);
+    // Move on to Step 4 (Eid Mubarak show) after the cards have been read
+    cardsAdvanceTimer = setTimeout(openShowPopup, totalWait + 3200);
   }
 
-  // ---------- Step 4: Get Your Cards (real life, 1-min timer) ----------
   const REALCARDS_DURATION = 60; // seconds
   const RING_CIRCUMFERENCE = 276.46; // 2 * PI * 44
   let realcardsInterval = null;
 
   function openRealCardsPopup(){
-    els.cardsOverlay.classList.remove('active');
     els.realcardsIntro.classList.add('active');
-    setTimeout(()=>{
+    bindMiniSkip(()=>{
       els.realcardsIntro.classList.remove('active');
-      els.realcardsOverlay.classList.add('active');
-      startRealCardsTimer();
+      clearTimeout(realcardsIntroTimer);
+      enterRealCardsOverlay();
+    });
+    realcardsIntroTimer = setTimeout(()=>{
+      els.realcardsIntro.classList.remove('active');
+      enterRealCardsOverlay();
     }, INTRO_DURATION);
+  }
+
+  let realcardsIntroTimer = null;
+
+  function enterRealCardsOverlay(){
+    els.realcardsOverlay.classList.add('active');
+    startRealCardsTimer();
+    bindMiniSkip(()=>{
+      if(realcardsInterval) clearInterval(realcardsInterval);
+      els.realcardsTimerNum.textContent = 0;
+      els.realcardsRingFg.style.strokeDashoffset = RING_CIRCUMFERENCE;
+      finishRealCardsTimer();
+      hideMiniSkip();
+    });
   }
 
   function startRealCardsTimer(){
@@ -809,7 +1164,216 @@
     els.realcardsWaiting.style.display = 'none';
     els.realcardsDone.classList.add('active');
     burstConfetti(70);
+    hideMiniSkip();
   }
+
+  const showEls = {
+    intro: document.getElementById('show-intro'),
+    overlay: document.getElementById('show-overlay'),
+    canvas: document.getElementById('show-canvas'),
+    lanternsLayer: document.getElementById('show-lanterns'),
+    skipBtn: document.getElementById('show-skip'),
+  };
+  let showCtx = null;
+  let showRafId = null;
+  let showRunning = false;
+  let showParticles = [];
+  let showLastLaunch = 0;
+  let showLanternInterval = null;
+  let showResizeBound = false;
+
+  const FW_COLORS = ['#ff5d73','#ffd166','#7fe0c0','#bff2de','#f6a6b2','#f3cf8a','#a78bfa','#5fd0ff','#ffffff'];
+  const LANTERN_COLORS = ['#f3cf8a','#f6a6b2','#7fe0c0','#ffb37a','#ffdca8'];
+
+  function resizeShowCanvas(){
+    showEls.canvas.width = window.innerWidth * devicePixelRatio;
+    showEls.canvas.height = window.innerHeight * devicePixelRatio;
+    showEls.canvas.style.width = window.innerWidth + 'px';
+    showEls.canvas.style.height = window.innerHeight + 'px';
+    showCtx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+  }
+
+  function rand(a,b){ return a + Math.random()*(b-a); }
+  function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+  function launchFirework(){
+    const w = window.innerWidth, h = window.innerHeight;
+    const targetX = rand(w*0.15, w*0.85);
+    const targetY = rand(h*0.16, h*0.5);
+    const color = pick(FW_COLORS);
+
+    // rising trail particle
+    showParticles.push({
+      type:'rocket', x: targetX + rand(-30,30), y: h + 20, vx: rand(-0.4,0.4), vy: rand(-9.5,-7.5),
+      targetY, color, trail: []
+    });
+  }
+
+  function explode(x,y,color){
+    const count = Math.floor(rand(38,64));
+    const shapeRoll = Math.random();
+    for(let i=0;i<count;i++){
+      const angle = (Math.PI*2*i)/count + rand(-0.12,0.12);
+      const speed = shapeRoll < 0.15 ? rand(1,2) : rand(2.2,6.2); // occasional tight burst
+      showParticles.push({
+        type:'spark', x, y,
+        vx: Math.cos(angle)*speed, vy: Math.sin(angle)*speed,
+        color: Math.random() < 0.25 ? pick(FW_COLORS) : color,
+        life: 1, decay: rand(0.010,0.020), size: rand(1.6,3.2), gravity:0.045
+      });
+    }
+    // secondary glitter ring
+    for(let i=0;i<18;i++){
+      const angle = rand(0, Math.PI*2);
+      const speed = rand(0.6,2.2);
+      showParticles.push({
+        type:'glitter', x, y, vx:Math.cos(angle)*speed, vy:Math.sin(angle)*speed,
+        color:'#ffffff', life:1, decay: rand(0.02,0.035), size: rand(0.8,1.6), gravity:0.02
+      });
+    }
+  }
+
+  function stepShow(ts){
+    if(!showRunning) return;
+    const w = window.innerWidth, h = window.innerHeight;
+    showCtx.fillStyle = 'rgba(5,6,14,0.22)';
+    showCtx.fillRect(0,0,w,h);
+
+    if(ts - showLastLaunch > rand(650,1150)){
+      showLastLaunch = ts;
+      launchFirework();
+      if(Math.random() < 0.35){ setTimeout(()=>{ if(showRunning) launchFirework(); }, rand(120,260)); }
+    }
+
+    for(let i=showParticles.length-1;i>=0;i--){
+      const p = showParticles[i];
+      if(p.type === 'rocket'){
+        p.trail.push({x:p.x,y:p.y});
+        if(p.trail.length>8) p.trail.shift();
+        p.x += p.vx; p.y += p.vy; p.vy += 0.05;
+        showCtx.strokeStyle = p.color; showCtx.lineWidth = 2; showCtx.globalAlpha = 0.6;
+        showCtx.beginPath();
+        p.trail.forEach((pt,idx)=>{ idx===0?showCtx.moveTo(pt.x,pt.y):showCtx.lineTo(pt.x,pt.y); });
+        showCtx.stroke();
+        showCtx.globalAlpha = 1;
+        if(p.vy >= -1 || p.y <= p.targetY){
+          explode(p.x,p.y,p.color);
+          showParticles.splice(i,1);
+        }
+      } else {
+        p.x += p.vx; p.y += p.vy; p.vy += p.gravity; p.vx *= 0.985;
+        p.life -= p.decay;
+        if(p.life <= 0){ showParticles.splice(i,1); continue; }
+        showCtx.globalAlpha = Math.max(0,p.life);
+        showCtx.fillStyle = p.color;
+        showCtx.beginPath();
+        showCtx.arc(p.x,p.y,p.size,0,Math.PI*2);
+        showCtx.fill();
+        showCtx.globalAlpha = 1;
+      }
+    }
+
+    if(showParticles.length > 900){ showParticles.splice(0, showParticles.length-900); }
+
+    showRafId = requestAnimationFrame(stepShow);
+  }
+
+  function spawnLantern(){
+    const el = document.createElement('div');
+    el.className = 'show-lantern';
+    const color = pick(LANTERN_COLORS);
+    el.style.setProperty('--lc', color);
+    el.style.left = rand(4,94) + 'vw';
+    el.style.animationDuration = rand(14,22) + 's';
+    el.innerHTML = '<div class="cap"></div><div class="body"></div><div class="flame"></div>';
+    showEls.lanternsLayer.appendChild(el);
+    setTimeout(()=>el.remove(), 23000);
+  }
+
+  function speakEidWish(){
+    if(!('speechSynthesis' in window)) return;
+    try{
+      window.speechSynthesis.cancel();
+      const utter = new SpeechSynthesisUtterance('Eid Mubarak! May this blessed day bring you peace, joy, and endless happiness, surrounded by the people you love.');
+      utter.rate = 0.92;
+      utter.pitch = 1.05;
+      window.speechSynthesis.speak(utter);
+    }catch(e){}
+  }
+
+  function startShow(){
+    if(showRunning) return;
+    showRunning = true;
+    showCtx = showEls.canvas.getContext('2d');
+    if(!showResizeBound){
+      window.addEventListener('resize', resizeShowCanvas);
+      showResizeBound = true;
+    }
+    resizeShowCanvas();
+    showCtx.fillStyle = '#05060e';
+    showCtx.fillRect(0,0,window.innerWidth,window.innerHeight);
+    showParticles = [];
+    showLastLaunch = 0;
+
+    speakEidWish();
+
+    // opening flurry
+    for(let i=0;i<4;i++){ setTimeout(()=>{ if(showRunning) launchFirework(); }, i*260); }
+
+    if(showLanternInterval) clearInterval(showLanternInterval);
+    for(let i=0;i<5;i++){ setTimeout(spawnLantern, i*900); }
+    showLanternInterval = setInterval(spawnLantern, 2600);
+
+    showRafId = requestAnimationFrame(stepShow);
+  }
+
+  function stopShow(){
+    showRunning = false;
+    cancelAnimationFrame(showRafId);
+    if(showLanternInterval) clearInterval(showLanternInterval);
+    showEls.lanternsLayer.innerHTML = '';
+    if('speechSynthesis' in window){ window.speechSynthesis.cancel(); }
+  }
+
+  const SHOW_DURATION = 16000; // ms — how long the fireworks show runs before moving on
+
+  function openShowPopup(){
+    els.cardsOverlay.classList.remove('active');
+    showEls.intro.classList.add('active');
+    bindMiniSkip(()=>{
+      showEls.intro.classList.remove('active');
+      clearTimeout(showIntroTimer);
+      enterShowOverlay();
+    });
+    showIntroTimer = setTimeout(()=>{
+      showEls.intro.classList.remove('active');
+      enterShowOverlay();
+    }, INTRO_DURATION);
+  }
+
+  let showIntroTimer = null;
+  let showAdvanceTimer = null;
+
+  function enterShowOverlay(){
+    showEls.overlay.classList.add('active');
+    startShow();
+    showAdvanceTimer = setTimeout(()=>{
+      stopShow();
+      showEls.overlay.classList.remove('active');
+      openRealCardsPopup();
+    }, SHOW_DURATION);
+    bindMiniSkip(()=>{
+      clearTimeout(showAdvanceTimer);
+      stopShow();
+      showEls.overlay.classList.remove('active');
+      openRealCardsPopup();
+    });
+  }
+
+  showEls.skipBtn.addEventListener('click', ()=>{
+    stopShow();
+    startShow();
+  });
 
   els.takbeerAudio.addEventListener('timeupdate', ()=>{
     if(els.takbeerAudio.duration){
@@ -818,6 +1382,7 @@
     }
   });
   els.takbeerAudio.addEventListener('ended', ()=>{
+    stopTakbeerVisualizer();
     els.takbeerOverlay.classList.remove('active');
     setTimeout(openPrayerPopup, 400);
   });
@@ -880,10 +1445,13 @@
     if(soundUnlocked) return;
     soundUnlocked = true;
 
+    ensureAudioGraph();
+
     els.takbeerAudio.volume = 1;
     els.takbeerAudio.play().then(()=>{
       els.takbeerAudio.pause();
       els.takbeerAudio.currentTime = 0;
+      if(audioCtx && audioCtx.state === 'suspended'){ audioCtx.resume().catch(()=>{}); }
     }).catch(()=>{});
 
     try{
