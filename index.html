@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -296,59 +298,230 @@
     font-weight:700; text-shadow:0 2px 10px rgba(0,0,0,0.6);
   }
 
-  /* ---------- Step 3: Your Cards ---------- */
+  /* ---------- Step 3: Your Cards (gold name-card reveal) ---------- */
   #cards-overlay{
-    position:fixed; inset:0; z-index:80; background:var(--bg-deep);
-    display:none; align-items:flex-start; justify-content:center; padding:0;
-    overflow-y:auto; scroll-behavior:smooth;
+    position:fixed; inset:0; z-index:80;
+    background:radial-gradient(ellipse at 50% 30%, #3d1268 0%, #2d0a52 35%, #1a0533 70%, #0d0020 100%);
+    display:none; align-items:center; justify-content:center; padding:24px;
+    overflow:hidden;
   }
   #cards-overlay.active{ display:flex; animation:fadeIn 0.6s ease; }
-  .cards-wrap{
-    width:100%; max-width:520px; padding:48px 22px 60px; display:flex; flex-direction:column; align-items:center;
-  }
-  .cards-title{
-    font-family:'Cormorant Garamond',serif; font-weight:700; font-style:italic;
-    font-size:clamp(2.2rem,9vw,3.2rem); margin-bottom:8px;
-    background:linear-gradient(180deg, var(--cream) 0%, var(--mint-soft) 100%);
-    -webkit-background-clip:text; background-clip:text; color:transparent;
-    text-shadow:0 4px 30px rgba(127,224,192,0.25);
-  }
-  .cards-subtitle{ font-size:12px; letter-spacing:0.3em; text-transform:uppercase; opacity:0.55; margin-bottom:36px; color:var(--mint-soft); }
 
-  .eid-card{
-    width:100%; max-width:400px; border-radius:26px; margin-bottom:26px;
-    padding:32px 26px; position:relative; overflow:hidden; text-align:left;
-    background:linear-gradient(160deg, rgba(127,224,192,0.10), rgba(255,255,255,0.03));
-    border:1px solid var(--border);
-    box-shadow:0 18px 45px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.06);
-    opacity:0; transform:translateY(26px);
-    animation:cardFloatIn 0.8s cubic-bezier(.2,.9,.3,1.1) forwards;
-    scroll-margin-top: 40px;
-  }
-  .eid-card:nth-of-type(1){ animation-delay:0.15s; }
-  .eid-card:nth-of-type(2){ animation-delay:0.45s; }
-  .eid-card:nth-of-type(3){ animation-delay:0.75s; }
-  @keyframes cardFloatIn{ to{ opacity:1; transform:translateY(0); } }
+  #nc-fireworks-canvas{ position:absolute; inset:0; z-index:1; pointer-events:none; }
 
-  .eid-card::before{
-    content:''; position:absolute; top:-40%; right:-30%; width:70%; height:140%;
-    background:radial-gradient(circle, rgba(127,224,192,0.16), transparent 70%);
-    pointer-events:none;
+  .nc-container{
+    position:relative; z-index:2; width:100%; max-width:900px;
+    display:flex; flex-direction:column; align-items:center; gap:6px;
   }
-  .eid-card-icon{
-    width:52px; height:52px; border-radius:50%; margin-bottom:16px;
-    background:linear-gradient(160deg, var(--mint), var(--mint-soft));
-    display:flex; align-items:center; justify-content:center;
-    font-size:22px; box-shadow:0 10px 26px rgba(127,224,192,0.3);
+  .nc-eyebrow{
+    font-family:'Manrope',sans-serif; font-size:11px; letter-spacing:0.32em; text-transform:uppercase;
+    color:#f5d06e; text-shadow:0 0 20px rgba(212,168,47,0.8); margin-bottom:2px; font-weight:700;
   }
-  .eid-card-name{
+  .nc-heading{
     font-family:'Cormorant Garamond',serif; font-style:italic; font-weight:700;
-    font-size:clamp(1.5rem,6vw,1.9rem); color:var(--cream); margin-bottom:10px;
+    font-size:clamp(1.7rem,6vw,2.6rem); color:#ffe084;
+    text-shadow:0 0 30px rgba(255,224,132,0.7); text-align:center; line-height:1.2; margin-bottom:18px;
   }
-  .eid-card-msg{ font-size:14px; line-height:1.65; font-weight:300; color:rgba(251,243,230,0.82); }
-  .eid-card-sign{ margin-top:16px; font-size:11px; letter-spacing:0.2em; text-transform:uppercase; opacity:0.5; }
 
-  /* ---------- Step 5: Get Your Cards (real life, 1 min timer) ---------- */
+  .nc-cards-row{
+    display:flex; align-items:center; justify-content:center; gap:0;
+    width:100%; flex-wrap:wrap; position:relative;
+  }
+  .nc-arrow{
+    color:#ffe084; font-size:22px; text-shadow:0 0 10px #d4a82f;
+    animation:ncPulseArrow 1.5s ease-in-out infinite; flex-shrink:0; margin:0 -4px -50px; z-index:4;
+  }
+  @keyframes ncPulseArrow{ 0%,100%{ opacity:0.6; transform:scale(1); } 50%{ opacity:1; transform:scale(1.2); } }
+
+  .nc-card{
+    width:180px; border-radius:16px; padding:4px; position:relative; flex-shrink:0;
+    opacity:0; transform:scale(0.3); margin:8px;
+  }
+  .nc-card.zoomed-in{ animation:ncCardZoomIn 0.7s cubic-bezier(.34,1.56,.64,1) forwards; }
+  @keyframes ncCardZoomIn{
+    0%{ opacity:0; transform:scale(0.3) rotate(-4deg); }
+    60%{ opacity:1; transform:scale(1.08) rotate(1deg); }
+    100%{ opacity:1; transform:scale(1) rotate(0deg); }
+  }
+  .nc-card-navy, .nc-card-teal, .nc-card-rose{
+    background:linear-gradient(135deg, #a07820, #d4a82f, #f5d06e, #d4a82f);
+    box-shadow:0 8px 40px rgba(0,0,0,0.6), 0 0 20px rgba(212,168,47,0.3);
+    border-radius:16px; padding:4px;
+  }
+  .nc-card-inner{
+    border-radius:13px; padding:16px 12px 18px; height:250px;
+    display:flex; flex-direction:column; align-items:center; justify-content:space-between;
+    border:2px solid #d4a82f; position:relative; overflow:hidden;
+  }
+  .nc-card-navy .nc-card-inner{ background:linear-gradient(160deg, #0d2a4a 0%, #0a1e35 50%, #061428 100%); }
+  .nc-card-teal .nc-card-inner{ background:linear-gradient(160deg, #0d7a6b 0%, #095e52 50%, #063d36 100%); }
+  .nc-card-rose .nc-card-inner{ background:linear-gradient(160deg, #8b5463 0%, #6e3e4e 50%, #4a2835 100%); }
+
+  .nc-card-frame{ position:absolute; inset:7px; border:1px solid rgba(212,168,47,0.4); border-radius:8px; pointer-events:none; }
+  .nc-card-frame::before{ content:''; position:absolute; inset:4px; border:1px solid rgba(212,168,47,0.2); border-radius:5px; }
+
+  .nc-card-arch{
+    width:68px; height:46px; border:2px solid #d4a82f; border-bottom:none; border-radius:34px 34px 0 0;
+    position:absolute; top:10px; display:flex; align-items:flex-start; justify-content:center; padding-top:5px;
+  }
+  .nc-card-arch::after{ content:'☽'; color:#ffe084; font-size:15px; text-shadow:0 0 8px #d4a82f; }
+
+  .nc-card-corner{ position:absolute; width:14px; height:14px; border-color:#d4a82f; border-style:solid; opacity:0.7; }
+  .nc-card-corner.tl{ top:9px; left:9px; border-width:2px 0 0 2px; }
+  .nc-card-corner.tr{ top:9px; right:9px; border-width:2px 2px 0 0; }
+  .nc-card-corner.bl{ bottom:9px; left:9px; border-width:0 0 2px 2px; }
+  .nc-card-corner.br{ bottom:9px; right:9px; border-width:0 2px 2px 0; }
+
+  .nc-card-lanterns{ display:flex; gap:22px; margin-top:52px; }
+  .nc-mini-lantern{
+    width:10px; height:15px; background:radial-gradient(ellipse at 40% 30%, #ffe580, #e8a000 70%);
+    border-radius:3px 3px 5px 5px; border:1px solid #d4a82f; box-shadow:0 0 6px 2px rgba(255,200,50,0.5); position:relative;
+  }
+  .nc-mini-lantern::before{ content:''; position:absolute; top:-7px; left:50%; transform:translateX(-50%); width:1px; height:7px; background:#d4a82f; }
+
+  .nc-arabic-text{ font-family:'Amiri',serif; font-size:24px; color:#ffe084; text-shadow:0 0 15px rgba(255,224,132,0.7); direction:rtl; text-align:center; margin-top:-6px; }
+  .nc-eid-en{ font-family:'Manrope',sans-serif; font-size:9px; letter-spacing:2.2px; color:#f5d06e; text-align:center; margin-top:-2px; font-weight:700; }
+  .nc-divider{ width:70%; height:1px; background:linear-gradient(90deg, transparent, #d4a82f, transparent); margin:2px 0; }
+  .nc-name-arabic{ font-family:'Amiri',serif; font-size:11px; color:#f5d06e; direction:rtl; text-align:center; line-height:1.4; }
+  .nc-name-en{ font-family:'Manrope',sans-serif; font-size:8px; color:#ffe084; text-align:center; letter-spacing:0.5px; margin-top:1px; font-weight:700; }
+
+  .nc-sparkle{ position:absolute; color:#ffe084; font-size:9px; animation:ncSparkleFade var(--sd,2s) ease-in-out infinite; }
+  @keyframes ncSparkleFade{ 0%,100%{ opacity:0; transform:scale(0.5); } 50%{ opacity:1; transform:scale(1.2); } }
+
+  /* ---------- Step 4: Family Wishes Wall ---------- */
+  #wishwall-overlay{
+    position:fixed; inset:0; z-index:81; overflow:hidden;
+    display:none; align-items:center; justify-content:center; flex-direction:column;
+    background:
+      radial-gradient(circle at 18% 12%, rgba(127,224,192,0.16), transparent 50%),
+      radial-gradient(circle at 85% 18%, rgba(246,166,178,0.14), transparent 48%),
+      radial-gradient(circle at 50% 100%, rgba(243,207,138,0.12), transparent 55%),
+      linear-gradient(160deg, #0d1120 0%, #191c33 45%, #251a34 100%);
+    background-size:220% 220%, 220% 220%, 220% 220%, 100% 100%;
+    animation:wishBgShift 18s ease-in-out infinite;
+  }
+  @keyframes wishBgShift{
+    0%{ background-position:0% 0%, 100% 0%, 50% 100%, 0 0; }
+    50%{ background-position:100% 100%, 0% 100%, 50% 0%, 0 0; }
+    100%{ background-position:0% 0%, 100% 0%, 50% 100%, 0 0; }
+  }
+  #wishwall-overlay.active{ display:flex; animation:fadeIn 0.6s ease, wishBgShift 18s ease-in-out infinite 0.6s; }
+
+  .wishwall-depth-blur{
+    position:absolute; inset:0; z-index:1; pointer-events:none;
+    backdrop-filter:blur(0px);
+  }
+
+  .wishwall-header{
+    position:relative; z-index:6; text-align:center; margin-bottom:8px; padding:0 24px;
+  }
+  .wishwall-eyebrow{
+    font-size:11px; letter-spacing:0.34em; text-transform:uppercase; font-weight:700;
+    color:var(--mint); opacity:0; margin-bottom:10px;
+    animation:fadeUp 1s ease 0.2s forwards;
+  }
+  .wishwall-title{
+    font-family:'Cormorant Garamond',serif; font-weight:700; font-style:italic;
+    font-size:clamp(2rem,8vw,3.2rem); line-height:1.08;
+    background:linear-gradient(100deg, var(--mint-soft) 0%, var(--cream) 35%, var(--gold) 60%, var(--mint-soft) 100%);
+    background-size:260% 100%;
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    text-shadow:0 6px 40px rgba(127,224,192,0.25);
+    opacity:0; transform:scale(0.94);
+    animation:showTitleIn 1s cubic-bezier(.2,.9,.25,1) 0.4s forwards, shimmerSweep 4.5s linear infinite 1.5s;
+  }
+
+  .wishwall-field{
+    position:relative; z-index:5; width:100%; height:min(62vh, 560px); max-width:640px;
+    margin-top:6px;
+  }
+
+  .wish-orb{
+    position:absolute; border-radius:50%; filter:blur(46px); pointer-events:none; opacity:0.5;
+    animation:orbFloat 10s ease-in-out infinite;
+  }
+  .wish-orb.wo1{ width:200px; height:200px; background:radial-gradient(circle, var(--mint), transparent 70%); top:2%; left:-4%; }
+  .wish-orb.wo2{ width:180px; height:180px; background:radial-gradient(circle, var(--rose), transparent 70%); bottom:6%; right:-2%; animation-delay:3s; }
+  .wish-orb.wo3{ width:150px; height:150px; background:radial-gradient(circle, var(--gold), transparent 70%); top:45%; left:82%; animation-delay:5.5s; }
+
+  /* Individual wish bubble */
+  .wish-bubble{
+    position:absolute; left:50%; top:100%;
+    display:flex; align-items:center; gap:10px;
+    max-width:min(78vw, 300px);
+    padding:12px 18px 12px 12px; border-radius:22px;
+    background:linear-gradient(160deg, rgba(127,224,192,0.14), rgba(255,255,255,0.05));
+    border:1px solid rgba(251,243,230,0.14);
+    box-shadow:0 14px 34px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06);
+    backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+    opacity:0;
+    animation-name:wishRise;
+    animation-timing-function:cubic-bezier(.22,.75,.32,1);
+    animation-fill-mode:forwards;
+  }
+  .wish-bubble.layer-back{ filter:blur(0.6px); box-shadow:0 10px 24px rgba(0,0,0,0.25); }
+  .wish-bubble.layer-front{ box-shadow:0 20px 46px rgba(0,0,0,0.45), 0 0 30px rgba(127,224,192,0.14); }
+
+  @keyframes wishRise{
+    0%{ opacity:0; transform:translate(-50%, 0) translateX(var(--dx0,0px)) scale(0.85); }
+    10%{ opacity:1; }
+    45%{ transform:translate(-50%, calc(-1 * var(--rise, 320px))) translateX(var(--dx1, 10px)) scale(1); }
+    85%{ opacity:1; transform:translate(-50%, calc(-1.6 * var(--rise, 320px))) translateX(var(--dx2, -14px)) scale(1); }
+    100%{ opacity:0; transform:translate(-50%, calc(-2 * var(--rise, 320px))) translateX(var(--dx2, -14px)) scale(0.96); }
+  }
+
+  .wish-avatar{
+    flex-shrink:0; width:34px; height:34px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Cormorant Garamond',serif; font-weight:700; font-size:14px;
+    color:#0d1712;
+    box-shadow:0 4px 14px rgba(0,0,0,0.3);
+  }
+  .wish-text-wrap{ display:flex; flex-direction:column; gap:1px; text-align:left; }
+  .wish-from{
+    font-size:9.5px; letter-spacing:0.12em; text-transform:uppercase; font-weight:700;
+    color:var(--mint-soft); opacity:0.75;
+  }
+  .wish-msg{
+    font-size:13.5px; font-weight:400; color:var(--cream); line-height:1.35;
+    font-family:'Manrope',sans-serif;
+  }
+
+  .wish-glow-trail{
+    position:absolute; left:50%; bottom:0; width:2px; border-radius:2px;
+    background:linear-gradient(to top, rgba(127,224,192,0.35), transparent);
+    opacity:0; pointer-events:none;
+    animation-name:trailRise; animation-timing-function:linear; animation-fill-mode:forwards;
+  }
+  @keyframes trailRise{
+    0%{ opacity:0; height:0; }
+    15%{ opacity:0.6; }
+    70%{ opacity:0.3; }
+    100%{ opacity:0; height:var(--rise, 320px); transform:translateY(calc(-1 * var(--rise, 320px))); }
+  }
+
+  .wishwall-dust{
+    position:absolute; width:3px; height:3px; border-radius:50%; background:var(--gold);
+    opacity:0; pointer-events:none; z-index:4;
+    animation:dustDrift var(--dd,6s) ease-in-out infinite;
+    box-shadow:0 0 6px 1px rgba(243,207,138,0.6);
+  }
+  @keyframes dustDrift{
+    0%{ opacity:0; transform:translateY(0) translateX(0); }
+    12%{ opacity:0.8; }
+    88%{ opacity:0.5; }
+    100%{ opacity:0; transform:translateY(-160px) translateX(var(--dxd,20px)); }
+  }
+
+  .wishwall-caption{
+    position:relative; z-index:6; margin-top:14px;
+    font-size:11px; letter-spacing:0.24em; text-transform:uppercase; opacity:0;
+    color:rgba(251,243,230,0.45); font-weight:700;
+    animation:fadeUp 1s ease 1s forwards;
+  }
+
+  /* ---------- Step 6: Get Your Cards (real life, 1 min timer) ---------- */
+
   #realcards-overlay{
     position:fixed; inset:0; z-index:82; overflow:hidden;
     display:none; align-items:center; justify-content:center; flex-direction:column;
@@ -640,36 +813,117 @@
 </div>
 
 <div id="cards-overlay">
-  <div class="cards-wrap">
-    <div class="cards-title">Your Cards</div>
-    <div class="cards-subtitle">Eid Mubarak, with love</div>
+  <canvas id="nc-fireworks-canvas"></canvas>
+  <div class="nc-container">
+    <div class="nc-eyebrow">Eid Mubarak · With Love</div>
+    <div class="nc-heading">A Little Something For You</div>
 
-    <div class="eid-card">
-      <div class="eid-card-icon">🌙</div>
-      <div class="eid-card-name">Lopa</div>
-      <div class="eid-card-msg">Wishing you a Eid full of warmth, laughter, and every sweet thing you love. Thank you for being such a bright part of every celebration.</div>
-      <div class="eid-card-sign">Eid Mubarak</div>
-    </div>
+    <div class="nc-cards-row">
+      <span class="nc-arrow" style="margin-right:4px;">↖</span>
 
-    <div class="eid-card">
-      <div class="eid-card-icon">✨</div>
-      <div class="eid-card-name">Nipa</div>
-      <div class="eid-card-msg">May this Eid bring you peace, good food, and moments worth remembering. Grateful to share this day with you.</div>
-      <div class="eid-card-sign">Eid Mubarak</div>
-    </div>
+      <div class="nc-card nc-card-navy" id="nc-card-0">
+        <div class="nc-card-inner">
+          <div class="nc-card-frame"></div>
+          <div class="nc-card-corner tl"></div>
+          <div class="nc-card-corner tr"></div>
+          <div class="nc-card-corner bl"></div>
+          <div class="nc-card-corner br"></div>
+          <div class="nc-card-arch"></div>
+          <div class="nc-card-lanterns">
+            <div class="nc-mini-lantern"></div>
+            <div class="nc-mini-lantern" style="animation-delay:0.3s"></div>
+          </div>
+          <div class="nc-arabic-text">عيد مبارك</div>
+          <div class="nc-eid-en">EID MUBARAK</div>
+          <div class="nc-divider"></div>
+          <div class="nc-name-arabic">مرشدة ياسمين لوبا</div>
+          <div class="nc-name-en">Morsheda Yeasmin Lopa</div>
+          <span class="nc-sparkle" style="top:50px;left:12px;--sd:1.8s">✦</span>
+          <span class="nc-sparkle" style="top:66px;right:10px;--sd:2.4s">✧</span>
+          <span class="nc-sparkle" style="bottom:24px;right:16px;--sd:2.1s;font-size:7px">★</span>
+        </div>
+      </div>
 
-    <div class="eid-card">
-      <div class="eid-card-icon">🌸</div>
-      <div class="eid-card-name">Tahia</div>
-      <div class="eid-card-msg">Here's to a beautiful Eid filled with joy, blessings, and everyone you love close by. Eid Mubarak, always.</div>
-      <div class="eid-card-sign">Eid Mubarak</div>
+      <span class="nc-arrow" style="font-size:18px; margin:0 -4px -50px;">→</span>
+
+      <div class="nc-card nc-card-teal" id="nc-card-1" style="z-index:5;">
+        <div class="nc-card-inner">
+          <div class="nc-card-frame"></div>
+          <div class="nc-card-corner tl"></div>
+          <div class="nc-card-corner tr"></div>
+          <div class="nc-card-corner bl"></div>
+          <div class="nc-card-corner br"></div>
+          <div class="nc-card-arch"></div>
+          <div class="nc-card-lanterns">
+            <div class="nc-mini-lantern"></div>
+            <div class="nc-mini-lantern" style="animation-delay:0.4s"></div>
+          </div>
+          <div class="nc-arabic-text">عيد مبارك</div>
+          <div class="nc-eid-en">EID MUBARAK</div>
+          <div class="nc-divider"></div>
+          <div class="nc-name-arabic">طاهية ياسمين</div>
+          <div class="nc-name-en">Tahia Yeasmin</div>
+          <span class="nc-sparkle" style="top:52px;left:14px;--sd:2s">✦</span>
+          <span class="nc-sparkle" style="top:68px;right:12px;--sd:1.6s">✧</span>
+          <span class="nc-sparkle" style="bottom:26px;left:18px;--sd:2.6s;font-size:8px">★</span>
+        </div>
+      </div>
+
+      <span class="nc-arrow" style="font-size:18px; margin:0 -4px -50px;">→</span>
+
+      <div class="nc-card nc-card-rose" id="nc-card-2">
+        <div class="nc-card-inner">
+          <div class="nc-card-frame"></div>
+          <div class="nc-card-corner tl"></div>
+          <div class="nc-card-corner tr"></div>
+          <div class="nc-card-corner bl"></div>
+          <div class="nc-card-corner br"></div>
+          <div class="nc-card-arch"></div>
+          <div class="nc-card-lanterns">
+            <div class="nc-mini-lantern"></div>
+            <div class="nc-mini-lantern" style="animation-delay:0.5s"></div>
+          </div>
+          <div class="nc-arabic-text">عيد مبارك</div>
+          <div class="nc-eid-en">EID MUBARAK</div>
+          <div class="nc-divider"></div>
+          <div class="nc-name-arabic">شاهيدة ياسمين نيبا</div>
+          <div class="nc-name-en">Shahida Yeasmin Nipa</div>
+          <span class="nc-sparkle" style="top:50px;right:12px;--sd:2.2s">✦</span>
+          <span class="nc-sparkle" style="top:66px;left:10px;--sd:1.7s">✧</span>
+          <span class="nc-sparkle" style="bottom:24px;left:16px;--sd:2.5s;font-size:7px">★</span>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- ---------- Step 5: Get Your Cards (real life) ---------- -->
+
+<!-- ---------- Step 4: Family Wishes Wall ---------- -->
+<div id="wishwall-intro" class="step-intro">
+  <div class="step-intro-num">4</div>
+  <div class="step-intro-title">Wishes Wall</div>
+  <p class="step-intro-caption">A few words from the people who love you most</p>
+</div>
+
+<div id="wishwall-overlay">
+  <div class="wishwall-depth-blur"></div>
+  <div class="wish-orb wo1"></div>
+  <div class="wish-orb wo2"></div>
+  <div class="wish-orb wo3"></div>
+
+  <div class="wishwall-header">
+    <div class="wishwall-eyebrow">From The Heart</div>
+    <div class="wishwall-title">Family Wishes Wall</div>
+  </div>
+
+  <div class="wishwall-field" id="wishwall-field"></div>
+
+  <div class="wishwall-caption">Eid Mubarak, from all of us</div>
+</div>
+
+<!-- ---------- Step 6: Get Your Cards (real life) ---------- -->
 <div id="realcards-intro" class="step-intro">
-  <div class="step-intro-num">5</div>
+  <div class="step-intro-num">6</div>
   <div class="step-intro-title">Get Your Cards</div>
   <p class="step-intro-caption">Get your card is real life.</p>
 </div>
@@ -716,7 +970,7 @@
 
 <!-- ---------- Step 5: The Eid Show ---------- -->
 <div id="show-intro" class="step-intro">
-  <div class="step-intro-num">4</div>
+  <div class="step-intro-num">5</div>
   <div class="step-intro-title">Eid Mubarak</div>
   <p class="step-intro-caption">Fireworks, lanterns, and every bit of shine we could fit on one screen</p>
 </div>
@@ -781,6 +1035,10 @@
     prayerVideo: document.getElementById('prayer-video'),
     cardsIntro: document.getElementById('cards-intro'),
     cardsOverlay: document.getElementById('cards-overlay'),
+    ncFwCanvas: document.getElementById('nc-fireworks-canvas'),
+    wishwallIntro: document.getElementById('wishwall-intro'),
+    wishwallOverlay: document.getElementById('wishwall-overlay'),
+    wishwallField: document.getElementById('wishwall-field'),
     realcardsIntro: document.getElementById('realcards-intro'),
     realcardsOverlay: document.getElementById('realcards-overlay'),
     realcardsWaiting: document.getElementById('realcards-waiting'),
@@ -1067,37 +1325,247 @@
 
   function enterCardsOverlay(){
     els.cardsOverlay.classList.add('active');
-    autoScrollCards();
+    revealNameCards();
     bindMiniSkip(()=>{
       clearTimeout(cardsAdvanceTimer);
+      stopNcFireworks();
       els.cardsOverlay.classList.remove('active');
-      openShowPopup();
+      openWishWallPopup();
     });
   }
 
-  // ---------- Step 4: The Eid Show (fireworks + lanterns + sound) ----------
+  // ---------- Name-card reveal + lightweight fireworks (Step 3) ----------
+  let ncCtx = null;
+  let ncParticles = [];
+  let ncActive = false;
+  let ncRafId = null;
+  let ncResizeBound = false;
+  const NC_COLORS = ['#ffe084','#f5d06e','#d4a82f','#ff6b6b','#ff9ff3','#54a0ff','#5f27cd','#00d2d3','#ff9f43','#48dbfb','#ffd700','#ffffff','#c0ffd8'];
 
-  function autoScrollCards(){
-    const cards = Array.from(document.querySelectorAll('.eid-card'));
-    if(!cards.length){ cardsAdvanceTimer = setTimeout(openShowPopup, 1500); return; }
-    const scroller = els.cardsOverlay;
+  function resizeNcCanvas(){
+    els.ncFwCanvas.width = window.innerWidth;
+    els.ncFwCanvas.height = window.innerHeight;
+  }
 
-    const cardDelay = 900;   // time between each card's auto-scroll step
-    const startDelay = 1600; // let the first card float in before scrolling starts
+  function ncCreateBurst(x,y,count){
+    for(let i=0;i<count;i++){
+      const angle = (Math.PI*2/count)*i + Math.random()*0.3;
+      const speed = 2 + Math.random()*5;
+      ncParticles.push({
+        x,y, vx:Math.cos(angle)*speed, vy:Math.sin(angle)*speed,
+        alpha:1, size:2+Math.random()*3, color:NC_COLORS[Math.floor(Math.random()*NC_COLORS.length)],
+        gravity:0.06+Math.random()*0.04, decay:0.015+Math.random()*0.01, trail:[]
+      });
+    }
+  }
 
-    cards.forEach((card, i) => {
+  function ncLoop(){
+    if(!ncCtx) return;
+    ncCtx.clearRect(0,0,els.ncFwCanvas.width, els.ncFwCanvas.height);
+    ncParticles.forEach(p=>{
+      p.trail.push({x:p.x,y:p.y});
+      if(p.trail.length>6) p.trail.shift();
+      p.x += p.vx; p.y += p.vy; p.vy += p.gravity; p.vx *= 0.98; p.alpha -= p.decay;
+      p.trail.forEach((t,ti)=>{
+        ncCtx.globalAlpha = (ti/p.trail.length) * p.alpha * 0.5;
+        ncCtx.fillStyle = p.color;
+        ncCtx.beginPath(); ncCtx.arc(t.x,t.y,p.size*0.4,0,Math.PI*2); ncCtx.fill();
+      });
+      ncCtx.globalAlpha = p.alpha;
+      ncCtx.fillStyle = p.color;
+      ncCtx.beginPath(); ncCtx.arc(p.x,p.y,p.size,0,Math.PI*2); ncCtx.fill();
+    });
+    ncCtx.globalAlpha = 1;
+    ncParticles = ncParticles.filter(p=>p.alpha>0);
+    if(ncParticles.length>0 || ncActive){ ncRafId = requestAnimationFrame(ncLoop); }
+    else{ ncCtx.clearRect(0,0,els.ncFwCanvas.width, els.ncFwCanvas.height); ncRafId = null; }
+  }
+
+  function startNcFireworks(){
+    ncCtx = els.ncFwCanvas.getContext('2d');
+    if(!ncResizeBound){ window.addEventListener('resize', resizeNcCanvas); ncResizeBound = true; }
+    resizeNcCanvas();
+    ncParticles = [];
+    ncActive = true;
+    for(let i=0;i<4;i++){
       setTimeout(()=>{
-        card.scrollIntoView({ behavior:'smooth', block:'center', inline:'nearest' });
-      }, startDelay + i * cardDelay);
+        if(!ncActive) return;
+        ncCreateBurst(100+Math.random()*(els.ncFwCanvas.width-200), 70+Math.random()*(els.ncFwCanvas.height*0.5), 55);
+      }, i*260);
+    }
+    if(!ncRafId) ncLoop();
+  }
+
+  function stopNcFireworks(){
+    ncActive = false;
+  }
+
+  function revealNameCards(){
+    const cards = ['nc-card-0','nc-card-1','nc-card-2'].map(id=>document.getElementById(id));
+    startNcFireworks();
+    cards.forEach((card,i)=>{
+      setTimeout(()=>{ if(card) card.classList.add('zoomed-in'); }, 400 + i*600);
     });
 
-    const totalWait = startDelay + cards.length * cardDelay + 400;
-    setTimeout(()=>{
-      scroller.scrollTo({ top: scroller.scrollHeight, behavior:'smooth' });
+    // Stop the fireworks flurry shortly after the last card lands, then move on — no interaction required
+    const totalWait = 400 + cards.length*600 + 2600;
+    setTimeout(stopNcFireworks, totalWait - 1200);
+    cardsAdvanceTimer = setTimeout(()=>{
+      els.cardsOverlay.classList.remove('active');
+      openWishWallPopup();
     }, totalWait);
+  }
 
-    // Move on to Step 4 (Eid Mubarak show) after the cards have been read
-    cardsAdvanceTimer = setTimeout(openShowPopup, totalWait + 3200);
+  // ---------- Step 4: Family Wishes Wall ----------
+  let wishwallIntroTimer = null;
+  let wishwallAdvanceTimer = null;
+  let wishwallSpawnTimers = [];
+  let wishwallDustInterval = null;
+
+  const WISH_MESSAGES = [
+    { from:'Morsheda', msg:'Eid Mubarak! Sending you all my love today 💛', color:['#f3cf8a','#e8b845'] },
+    { from:'Tahia',    msg:'Missing you already, can\'t wait to celebrate together 🌙', color:['#7fe0c0','#4fc7a0'] },
+    { from:'Nipa',     msg:'So grateful for this family, every single year ✨', color:['#f6a6b2','#e97e93'] },
+    { from:'Morsheda', msg:'May this Eid bring you so much peace and joy', color:['#bff2de','#7fe0c0'] },
+    { from:'Tahia',    msg:'Eid Mubarak from me to you — love you lots 🤍', color:['#f3cf8a','#e8b845'] },
+    { from:'Nipa',     msg:'Here\'s to good food, good laughs, and this family 🎉', color:['#7fe0c0','#4fc7a0'] },
+    { from:'Morsheda', msg:'Thinking of you today and always. Eid Mubarak!', color:['#f6a6b2','#e97e93'] },
+    { from:'Tahia',    msg:'Wishing everyone endless blessings this Eid 🌙', color:['#bff2de','#7fe0c0'] },
+  ];
+
+  function initials(name){
+    return name.trim().slice(0,1).toUpperCase();
+  }
+
+  function spawnWishBubble(data, i){
+    const field = els.wishwallField;
+    const rect = field.getBoundingClientRect();
+    const fieldW = rect.width || window.innerWidth;
+    const fieldH = rect.height || 480;
+
+    const startXPct = 12 + Math.random()*76; // % across the field
+    const rise = fieldH * (0.62 + Math.random()*0.22);
+    const duration = 8 + Math.random()*3.5;
+    const dx0 = (Math.random()-0.5)*30;
+    const dx1 = (Math.random()-0.5)*90;
+    const dx2 = (Math.random()-0.5)*120;
+    const layer = Math.random() < 0.4 ? 'layer-back' : (Math.random() < 0.7 ? '' : 'layer-front');
+    const scaleHint = layer === 'layer-back' ? 0.82 : (layer === 'layer-front' ? 1.08 : 0.96);
+
+    const bubble = document.createElement('div');
+    bubble.className = 'wish-bubble ' + layer;
+    bubble.style.left = startXPct + '%';
+    bubble.style.setProperty('--rise', rise + 'px');
+    bubble.style.setProperty('--dx0', dx0 + 'px');
+    bubble.style.setProperty('--dx1', dx1 + 'px');
+    bubble.style.setProperty('--dx2', dx2 + 'px');
+    bubble.style.animationDuration = duration + 's';
+    bubble.style.transform = 'scale(' + scaleHint + ')';
+    bubble.style.transformOrigin = 'center bottom';
+
+    const avatar = document.createElement('div');
+    avatar.className = 'wish-avatar';
+    avatar.textContent = initials(data.from);
+    avatar.style.background = 'linear-gradient(135deg, ' + data.color[0] + ', ' + data.color[1] + ')';
+
+    const textWrap = document.createElement('div');
+    textWrap.className = 'wish-text-wrap';
+    const fromEl = document.createElement('div');
+    fromEl.className = 'wish-from';
+    fromEl.textContent = data.from;
+    const msgEl = document.createElement('div');
+    msgEl.className = 'wish-msg';
+    msgEl.textContent = data.msg;
+    textWrap.appendChild(fromEl);
+    textWrap.appendChild(msgEl);
+
+    bubble.appendChild(avatar);
+    bubble.appendChild(textWrap);
+
+    const trail = document.createElement('div');
+    trail.className = 'wish-glow-trail';
+    trail.style.left = startXPct + '%';
+    trail.style.setProperty('--rise', rise + 'px');
+    trail.style.animationDuration = duration + 's';
+    trail.style.background = 'linear-gradient(to top, ' + data.color[0] + '55, transparent)';
+
+    field.appendChild(trail);
+    field.appendChild(bubble);
+
+    setTimeout(()=>{ trail.remove(); bubble.remove(); }, duration*1000 + 200);
+  }
+
+  function spawnWishDust(){
+    const field = els.wishwallField;
+    const dust = document.createElement('div');
+    dust.className = 'wishwall-dust';
+    dust.style.left = (Math.random()*100) + '%';
+    dust.style.bottom = (Math.random()*20) + '%';
+    dust.style.setProperty('--dd', (4.5 + Math.random()*3) + 's');
+    dust.style.setProperty('--dxd', ((Math.random()-0.5)*60) + 'px');
+    field.appendChild(dust);
+    setTimeout(()=>dust.remove(), 8000);
+  }
+
+  const WISHWALL_DURATION = 15000; // ms — how long the wall runs before moving on
+
+  function startWishWall(){
+    els.wishwallField.innerHTML = '';
+    wishwallSpawnTimers.forEach(t=>clearTimeout(t));
+    wishwallSpawnTimers = [];
+
+    let delay = 500;
+    WISH_MESSAGES.forEach((data,i)=>{
+      const t = setTimeout(()=>spawnWishBubble(data, i), delay);
+      wishwallSpawnTimers.push(t);
+      delay += 1150 + Math.random()*500;
+    });
+    // keep a light stream of bubbles going for the remainder of the screen's duration
+    const loopTimer = setInterval(()=>{
+      const data = WISH_MESSAGES[Math.floor(Math.random()*WISH_MESSAGES.length)];
+      spawnWishBubble(data);
+    }, 1400);
+    wishwallSpawnTimers.push(loopTimer);
+
+    if(wishwallDustInterval) clearInterval(wishwallDustInterval);
+    wishwallDustInterval = setInterval(spawnWishDust, 450);
+    for(let i=0;i<6;i++){ setTimeout(spawnWishDust, i*180); }
+  }
+
+  function stopWishWall(){
+    wishwallSpawnTimers.forEach(t=>{ clearTimeout(t); clearInterval(t); });
+    wishwallSpawnTimers = [];
+    if(wishwallDustInterval){ clearInterval(wishwallDustInterval); wishwallDustInterval = null; }
+    els.wishwallField.innerHTML = '';
+  }
+
+  function openWishWallPopup(){
+    els.wishwallIntro.classList.add('active');
+    bindMiniSkip(()=>{
+      els.wishwallIntro.classList.remove('active');
+      clearTimeout(wishwallIntroTimer);
+      enterWishWallOverlay();
+    });
+    wishwallIntroTimer = setTimeout(()=>{
+      els.wishwallIntro.classList.remove('active');
+      enterWishWallOverlay();
+    }, INTRO_DURATION);
+  }
+
+  function enterWishWallOverlay(){
+    els.wishwallOverlay.classList.add('active');
+    startWishWall();
+    wishwallAdvanceTimer = setTimeout(()=>{
+      stopWishWall();
+      els.wishwallOverlay.classList.remove('active');
+      openShowPopup();
+    }, WISHWALL_DURATION);
+    bindMiniSkip(()=>{
+      clearTimeout(wishwallAdvanceTimer);
+      stopWishWall();
+      els.wishwallOverlay.classList.remove('active');
+      openShowPopup();
+    });
   }
 
   const REALCARDS_DURATION = 60; // seconds
