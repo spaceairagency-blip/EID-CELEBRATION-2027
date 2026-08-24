@@ -1758,7 +1758,7 @@
 <div id="bview-overlay">
   <div class="bview-card">
     <div class="bview-video-frame">
-      <video id="bview-video" muted autoplay playsinline>
+      <video id="bview-video" autoplay playsinline>
         <source src="https://static.vecteezy.com/system/resources/previews/029/481/070/watermarked/an-aerial-footage-of-muslim-congregation-praying-eid-in-the-field-video.mp4" type="video/mp4">
       </video>
     </div>
@@ -2773,11 +2773,13 @@
   function playBviewIndex(i){
     bviewIndex = i % BVIEW_PLAYLIST.length;
     els.bviewVideo.src = BVIEW_PLAYLIST[bviewIndex];
+    els.bviewVideo.muted = false;
+    els.bviewVideo.volume = 1;
     els.bviewVideo.play().catch(()=>{});
   }
 
   els.bviewVideo.addEventListener('ended', ()=>{
-    playBviewIndex(bviewIndex + 1);
+    els.bviewVideo.pause();
   });
 
   // Exposed entry point — called once the closing poems outro has been
@@ -3175,6 +3177,13 @@
       els.takbeerAudio.pause();
       els.takbeerAudio.currentTime = 0;
       if(audioCtx && audioCtx.state === 'suspended'){ audioCtx.resume().catch(()=>{}); }
+    }).catch(()=>{});
+
+    els.bviewVideo.muted = false;
+    els.bviewVideo.volume = 1;
+    els.bviewVideo.play().then(()=>{
+      els.bviewVideo.pause();
+      els.bviewVideo.currentTime = 0;
     }).catch(()=>{});
 
     try{
