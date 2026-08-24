@@ -2769,8 +2769,10 @@
   const BVIEW_PLAYLIST = ['https://eidct.vercel.app/assets/The%20Celebration%20Ends.mp4'];
   let bviewIndex = 0;
   let bviewIntroTimer = null;
+  let bviewFinished = false;
 
   function playBviewIndex(i){
+    if(bviewFinished) return;
     bviewIndex = i % BVIEW_PLAYLIST.length;
     els.bviewVideo.src = BVIEW_PLAYLIST[bviewIndex];
     els.bviewVideo.muted = false;
@@ -2779,25 +2781,28 @@
   }
 
   els.bviewVideo.addEventListener('ended', ()=>{
+    bviewFinished = true;
     els.bviewVideo.pause();
+    hideMiniSkip();
   });
 
   // Exposed entry point — called once the closing poems outro has been
   // shown, so this video scene plays as the true last screen of the loop.
   window.openBviewFinale = function(){
+    bviewFinished = false;
     els.bviewIntro.classList.add('active');
     bindMiniSkip(()=>{
       els.bviewIntro.classList.remove('active');
       clearTimeout(bviewIntroTimer);
       els.bviewOverlay.classList.add('active');
       playBviewIndex(0);
-      bindMiniSkip(()=>{ playBviewIndex(0); });
+      hideMiniSkip();
     });
     bviewIntroTimer = setTimeout(()=>{
       els.bviewIntro.classList.remove('active');
       els.bviewOverlay.classList.add('active');
       playBviewIndex(0);
-      bindMiniSkip(()=>{ playBviewIndex(0); });
+      hideMiniSkip();
     }, INTRO_DURATION);
   };
 
