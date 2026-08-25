@@ -297,33 +297,6 @@
     font-weight:700; text-shadow:0 2px 10px rgba(0,0,0,0.6);
   }
 
-  /* ---------- Watch Beautiful View (video playlist scene) ---------- */
-  #bview-overlay{
-    position:fixed; inset:0; z-index:80; background:#000;
-    display:none; align-items:center; justify-content:center; padding:0;
-  }
-  #bview-overlay.active{ display:flex; animation:fadeIn 0.5s ease; }
-  .bview-card{
-    width:100%; height:100%; max-width:none;
-    background:#000; border:none; border-radius:0; padding:0;
-    text-align:center; color:var(--cream);
-    position:relative;
-  }
-  .bview-video-frame{
-    position:absolute; inset:0; width:100%; height:100%; overflow:hidden; background:#000;
-  }
-  .bview-video-frame video{ width:100%; height:100%; object-fit:cover; display:block; border:none; }
-  .bview-video-frame::after{
-    content:''; position:absolute; inset:0;
-    background:linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.05) 22%, rgba(0,0,0,0.05) 70%, rgba(0,0,0,0.6) 100%);
-    pointer-events:none;
-  }
-  .bview-badge{
-    position:absolute; bottom:clamp(20px,5vh,40px); left:0; right:0; z-index:3;
-    color:var(--mint-soft); font-size:12px; letter-spacing:0.2em; text-transform:uppercase;
-    font-weight:700; text-shadow:0 2px 10px rgba(0,0,0,0.6);
-  }
-
   /* ---------- Step 3: Your Cards (gold name-card reveal) ---------- */
   #cards-overlay{
     position:fixed; inset:0; z-index:80;
@@ -658,99 +631,6 @@
     font-size:10.5px; letter-spacing:0.22em; text-transform:uppercase; opacity:0;
     color:rgba(251,243,230,0.45); font-weight:700;
     animation:fadeUp 1s ease 1.1s forwards;
-  }
-
-  /* ---------- Step 6: Moon Phase Journey ---------- */
-  #moon-overlay{
-    position:fixed; inset:0; z-index:82; overflow:hidden;
-    display:none; align-items:center; justify-content:center; flex-direction:column;
-    text-align:center; padding:24px;
-    background:
-      radial-gradient(circle at 50% 40%, rgba(243,207,138,0.12), transparent 55%),
-      radial-gradient(circle at 20% 80%, rgba(127,224,192,0.10), transparent 50%),
-      linear-gradient(160deg, #060a18 0%, #0d1120 50%, #14102a 100%);
-  }
-  #moon-overlay.active{ display:flex; animation:fadeIn 0.7s ease; }
-
-  .moon-stars-layer{
-    position:absolute; inset:0; pointer-events:none; overflow:hidden;
-  }
-  .moon-star{
-    position:absolute; border-radius:50%;
-    background:rgba(251,243,230,0.9);
-    animation:moonStarTwinkle var(--dur,3s) ease-in-out infinite var(--del,0s);
-  }
-  @keyframes moonStarTwinkle{ 0%,100%{opacity:0.1;transform:scale(1);} 50%{opacity:1;transform:scale(1.3);} }
-
-  .moon-container{
-    position:relative; z-index:2;
-    display:flex; flex-direction:column; align-items:center; gap:10px;
-  }
-  .moon-eyebrow{
-    font-size:10px; letter-spacing:0.42em; text-transform:uppercase;
-    color:var(--mint-soft); font-weight:700; opacity:0.75; margin-bottom:4px;
-  }
-  .moon-title{
-    font-family:'Cormorant Garamond',serif; font-style:italic; font-weight:700;
-    font-size:clamp(2rem,8vw,3.2rem);
-    background:linear-gradient(180deg,var(--cream) 0%,var(--gold) 100%);
-    -webkit-background-clip:text; background-clip:text; color:transparent;
-    margin-bottom:6px;
-  }
-
-  .moon-stage{
-    position:relative; width:min(68vw,280px); height:min(68vw,280px);
-    display:flex; align-items:center; justify-content:center;
-  }
-  .moon-glow-ring{
-    position:absolute; border-radius:50%;
-    border:1px solid rgba(243,207,138,0.22);
-    animation:moonRingSpin var(--spd,30s) linear infinite var(--dir,normal);
-  }
-  .moon-glow-ring.r1{ width:100%; height:100%; }
-  .moon-glow-ring.r2{ width:80%; height:80%; border-color:rgba(127,224,192,0.16); --spd:20s; --dir:reverse; }
-  @keyframes moonRingSpin{ to{ transform:rotate(360deg); } }
-
-  .moon-svg-wrap{
-    position:relative; z-index:2;
-    width:min(42vw,170px); height:min(42vw,170px);
-    filter:drop-shadow(0 0 28px rgba(243,207,138,0.55)) drop-shadow(0 0 8px rgba(251,243,230,0.3));
-    transition:filter 0.8s ease;
-  }
-  .moon-svg-wrap svg{ width:100%; height:100%; }
-
-  .moon-caption-wrap{
-    min-height:64px; display:flex; flex-direction:column;
-    align-items:center; justify-content:center; gap:4px;
-  }
-  .moon-phase-label{
-    font-size:clamp(12px,3.5vw,15px); letter-spacing:0.25em;
-    text-transform:uppercase; font-weight:700;
-    color:var(--gold); opacity:0;
-    transition:opacity 0.5s ease;
-  }
-  .moon-phase-label.visible{ opacity:1; }
-  .moon-phase-caption{
-    font-size:clamp(11px,3vw,13px); color:var(--mint-soft); opacity:0;
-    font-style:italic; letter-spacing:0.05em;
-    transition:opacity 0.5s ease 0.1s;
-    max-width:300px;
-  }
-  .moon-phase-caption.visible{ opacity:0.75; }
-
-  .moon-progress-row{
-    display:flex; gap:7px; align-items:center; margin-top:8px;
-  }
-  .moon-pip{
-    width:7px; height:7px; border-radius:50%;
-    background:rgba(243,207,138,0.25);
-    border:1px solid rgba(243,207,138,0.35);
-    transition:background 0.4s ease, transform 0.4s ease;
-  }
-  .moon-pip.lit{
-    background:var(--gold);
-    box-shadow:0 0 6px rgba(243,207,138,0.7);
-    transform:scale(1.3);
   }
 
   /* ---------- Step 7: Salami Table ---------- */
@@ -1501,57 +1381,6 @@
   <div class="tree-footer">Eid Mubarak, from our roots to yours</div>
 </div>
 
-<!-- ---------- Step 6: Moon Phase Journey ---------- -->
-<div id="moon-intro" class="step-intro">
-  <div class="step-intro-num">6</div>
-  <div class="step-intro-title">Moon Phase Journey</div>
-  <p class="step-intro-caption">New moon to full — a year in Eids</p>
-</div>
-
-<div id="moon-overlay">
-  <div class="moon-stars-layer" id="moon-stars-layer"></div>
-
-  <div class="moon-container">
-    <div class="moon-eyebrow">NEW MOON TO FULL &mdash; A YEAR IN EIDS</div>
-    <div class="moon-title">Moon Phase Journey</div>
-
-    <div class="moon-stage">
-      <div class="moon-glow-ring r1"></div>
-      <div class="moon-glow-ring r2"></div>
-      <div class="moon-svg-wrap" id="moon-svg-wrap">
-        <svg id="moon-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <radialGradient id="moonGrad" cx="42%" cy="38%" r="55%">
-              <stop offset="0%" stop-color="#fef3c0"/>
-              <stop offset="60%" stop-color="#f3cf8a"/>
-              <stop offset="100%" stop-color="#c8841a"/>
-            </radialGradient>
-            <clipPath id="moonClip">
-              <circle cx="100" cy="100" r="80"/>
-            </clipPath>
-          </defs>
-          <!-- Full moon disk -->
-          <circle cx="100" cy="100" r="80" fill="url(#moonGrad)"/>
-          <!-- Crescent shadow overlay, animated by JS, clipped to the moon disk -->
-          <path id="moon-shadow" fill="#070b1a" opacity="1" clip-path="url(#moonClip)"/>
-          <!-- Subtle surface craters -->
-          <circle cx="75" cy="80" r="8" fill="rgba(200,132,26,0.35)"/>
-          <circle cx="120" cy="60" r="5" fill="rgba(200,132,26,0.28)"/>
-          <circle cx="130" cy="115" r="11" fill="rgba(200,132,26,0.25)"/>
-          <circle cx="80" cy="130" r="6" fill="rgba(200,132,26,0.30)"/>
-        </svg>
-      </div>
-    </div>
-
-    <div class="moon-caption-wrap">
-      <div class="moon-phase-label" id="moon-phase-label"></div>
-      <div class="moon-phase-caption" id="moon-phase-caption"></div>
-    </div>
-
-    <div class="moon-progress-row" id="moon-progress-row"></div>
-  </div>
-</div>
-
 <!-- ---------- Step 7: Eid Salami Table ---------- -->
 <div id="salami-intro" class="step-intro">
   <div class="step-intro-num">7</div>
@@ -1662,7 +1491,6 @@
   <canvas id="show-canvas"></canvas>
   <div class="show-lanterns" id="show-lanterns"></div>
   <div class="show-title-wrap">
-    <div class="show-eyebrow">Grand Finale</div>
     <div class="show-title">Eid Mubarak</div>
     <div class="show-caption">Sit back, turn the sound up, and let the sky celebrate with you.</div>
   </div>
@@ -1723,7 +1551,7 @@
   <p class="step-intro-caption">Eid Mubarak, to each of you</p>
 </div>
 
-<!-- ---------- Step 7: Personalized Eid Poems (Grand Finale closer) ---------- -->
+<!-- ---------- Step 7: Personalized Eid Poems ---------- -->
 <div id="poems-overlay">
   <canvas id="poems-canvas"></canvas>
   <div class="poems-lanterns" id="poems-lanterns"></div>
@@ -1745,24 +1573,6 @@
       <p>Eid Mubarak, to each of you.</p>
       <span>With love, always</span>
     </div>
-  </div>
-</div>
-
-<!-- ---------- Watch Beautiful View (video playlist scene, final screen) ---------- -->
-<div id="bview-intro" class="step-intro">
-  <div class="step-intro-num">11</div>
-  <div class="step-intro-title">Watch Beautiful View</div>
-  <p class="step-intro-caption">One last quiet moment of scenery to close out the celebration</p>
-</div>
-
-<div id="bview-overlay">
-  <div class="bview-card">
-    <div class="bview-video-frame">
-      <video id="bview-video" autoplay playsinline>
-        <source src="https://static.vecteezy.com/system/resources/previews/029/481/070/watermarked/an-aerial-footage-of-muslim-congregation-praying-eid-in-the-field-video.mp4" type="video/mp4">
-      </video>
-    </div>
-    <div class="bview-badge">Watch Beautiful View</div>
   </div>
 </div>
 
@@ -1826,12 +1636,7 @@
     treeLeaves: document.getElementById('tree-leaves'),
     salamiIntro: document.getElementById('salami-intro'),
     salamiOverlay: document.getElementById('salami-overlay'),
-    moonIntro: document.getElementById('moon-intro'),
-    moonOverlay: document.getElementById('moon-overlay'),
     poemsIntro: document.getElementById('poems-intro'),
-    bviewIntro: document.getElementById('bview-intro'),
-    bviewOverlay: document.getElementById('bview-overlay'),
-    bviewVideo: document.getElementById('bview-video'),
     realcardsIntro: document.getElementById('realcards-intro'),
     realcardsOverlay: document.getElementById('realcards-overlay'),
     realcardsWaiting: document.getElementById('realcards-waiting'),
@@ -2532,147 +2337,12 @@
     treeAdvanceTimer = setTimeout(()=>{
       stopFamilyTree();
       els.treeOverlay.classList.remove('active');
-      openMoonPhasePopup();
+      openSalamiPopup();
     }, TREE_DURATION);
     bindMiniSkip(()=>{
       clearTimeout(treeAdvanceTimer);
       stopFamilyTree();
       els.treeOverlay.classList.remove('active');
-      openMoonPhasePopup();
-    });
-  }
-
-  // ---------- Step 6: Moon Phase Journey ----------
-  let moonIntroTimer = null;
-  let moonAdvanceTimer = null;
-  let moonPhaseInterval = null;
-  const MOON_DURATION = 13000; // ms — cycles through phases before advancing to salami
-
-  // k ranges from -1 (new moon, fully dark) to +1 (full moon, fully lit).
-  // 0 = quarter (half lit). Positive k = terminator bulges left (more lit);
-  // negative k = terminator bulges right (more shadow). Waxing = lit grows
-  // from the right side; waning = lit shrinks back toward the right.
-  const MOON_PHASES = [
-    { label: 'New Moon',        caption: 'The night begins — a new Hijri month is born',        k: -1.00, glow: 0.15 },
-    { label: 'Waxing Crescent', caption: 'A sliver of hope rises in the Eid sky',               k: -0.55, glow: 0.30 },
-    { label: 'First Quarter',   caption: 'Half the journey toward the blessed night',            k:  0.00, glow: 0.50 },
-    { label: 'Waxing Gibbous',  caption: 'Almost there — anticipation fills the air',           k:  0.55, glow: 0.70 },
-    { label: 'Full Moon',       caption: '🌕 Eid ul-Fitr — the moon shines in full glory',      k:  1.00, glow: 1.00 },
-    { label: 'Waning Gibbous',  caption: 'The celebration lingers like the moon\'s glow',      k:  0.55, glow: 0.70 },
-    { label: 'Last Quarter',    caption: 'Memories of Eid carry us forward',                    k:  0.00, glow: 0.50 },
-    { label: 'Waning Crescent', caption: 'Gratitude fades to silence — until next year',        k: -0.55, glow: 0.30 },
-  ];
-
-  // Builds an SVG path for the dark (shadow) region of the moon disk given
-  // k in [-1, 1]. Two half-ellipse arcs meeting at top/bottom form a proper
-  // curved terminator, always clipped to the moon's circle.
-  function moonShadowPath(k, side){
-    const cx = 100, cy = 100, r = 80;
-    const top = { x: cx, y: cy - r };
-    const bottom = { x: cx, y: cy + r };
-    const rx = Math.abs(k) * r;
-    const outerSweep = side === 'right' ? 0 : 1;
-    const innerSweep = k >= 0 ? (1 - outerSweep) : outerSweep;
-    return [
-      `M ${top.x} ${top.y}`,
-      `A ${r} ${r} 0 0 ${outerSweep} ${bottom.x} ${bottom.y}`,
-      `A ${rx} ${r} 0 0 ${innerSweep} ${top.x} ${top.y}`,
-      'Z'
-    ].join(' ');
-  }
-
-  function buildMoonStars(){
-    const layer = document.getElementById('moon-stars-layer');
-    if(!layer || layer.children.length) return;
-    const frag = document.createDocumentFragment();
-    for(let i=0;i<55;i++){
-      const s = document.createElement('div');
-      s.className = 'moon-star';
-      const size = (Math.random()*2.5+0.8).toFixed(1);
-      s.style.cssText = `width:${size}px;height:${size}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--dur:${(Math.random()*4+2).toFixed(1)}s;--del:-${(Math.random()*4).toFixed(1)}s;`;
-      frag.appendChild(s);
-    }
-    layer.appendChild(frag);
-
-    // Build progress pips
-    const row = document.getElementById('moon-progress-row');
-    if(row && !row.children.length){
-      MOON_PHASES.forEach(()=>{ const p=document.createElement('div'); p.className='moon-pip'; row.appendChild(p); });
-    }
-  }
-
-  function setMoonPhase(idx){
-    const phase = MOON_PHASES[idx];
-    const shadow = document.getElementById('moon-shadow');
-    const label = document.getElementById('moon-phase-label');
-    const caption = document.getElementById('moon-phase-caption');
-    const wrap = document.getElementById('moon-svg-wrap');
-
-    // Update shadow path for phase (dark region on the right, shrinking as it waxes)
-    if(shadow){
-      shadow.setAttribute('d', moonShadowPath(phase.k, 'right'));
-    }
-
-    // Glow intensity
-    if(wrap){
-      const gInt = Math.round(phase.glow * 28);
-      wrap.style.filter = `drop-shadow(0 0 ${gInt}px rgba(243,207,138,${(phase.glow*0.65).toFixed(2)})) drop-shadow(0 0 6px rgba(251,243,230,0.28))`;
-    }
-
-    // Caption fade
-    if(label){ label.classList.remove('visible'); label.textContent = phase.label; }
-    if(caption){ caption.classList.remove('visible'); caption.textContent = phase.caption; }
-    setTimeout(()=>{
-      if(label) label.classList.add('visible');
-      if(caption) caption.classList.add('visible');
-    }, 60);
-
-    // Progress pips
-    const pips = document.querySelectorAll('.moon-pip');
-    pips.forEach((p,i)=> p.classList.toggle('lit', i<=idx));
-  }
-
-  function startMoonAnimation(){
-    buildMoonStars();
-    let idx = 0;
-    setMoonPhase(idx);
-    moonPhaseInterval = setInterval(()=>{
-      idx = (idx+1) % MOON_PHASES.length;
-      setMoonPhase(idx);
-    }, MOON_DURATION / MOON_PHASES.length);
-  }
-
-  function stopMoonAnimation(){
-    clearInterval(moonPhaseInterval);
-    moonPhaseInterval = null;
-  }
-
-  function openMoonPhasePopup(){
-    els.treeOverlay.classList.remove('active');
-    els.moonIntro.classList.add('active');
-    bindMiniSkip(()=>{
-      els.moonIntro.classList.remove('active');
-      clearTimeout(moonIntroTimer);
-      enterMoonOverlay();
-    });
-    moonIntroTimer = setTimeout(()=>{
-      els.moonIntro.classList.remove('active');
-      enterMoonOverlay();
-    }, INTRO_DURATION);
-  }
-
-  function enterMoonOverlay(){
-    els.moonOverlay.classList.add('active');
-    startMoonAnimation();
-    moonAdvanceTimer = setTimeout(()=>{
-      stopMoonAnimation();
-      els.moonOverlay.classList.remove('active');
-      openSalamiPopup();
-    }, MOON_DURATION);
-    bindMiniSkip(()=>{
-      clearTimeout(moonAdvanceTimer);
-      stopMoonAnimation();
-      els.moonOverlay.classList.remove('active');
       openSalamiPopup();
     });
   }
@@ -2682,10 +2352,9 @@
   let salamiAdvanceTimer = null;
   let salamiCoinInterval = null;
 
-  const SALAMI_DURATION = 14000; // ms — runs for 14 seconds before opening Grand Finale Eid Show
+  const SALAMI_DURATION = 14000; // ms — runs for 14 seconds before opening Eid Show
 
   function openSalamiPopup(){
-    els.moonOverlay.classList.remove('active');
     els.salamiIntro.classList.add('active');
     bindMiniSkip(()=>{
       els.salamiIntro.classList.remove('active');
@@ -2764,48 +2433,6 @@
     const coinContainer = document.getElementById('salami-coins-ambient');
     if(coinContainer) coinContainer.innerHTML = '';
   }
-
-  /* ---------- Watch Beautiful View: continuous video playlist (final screen) ---------- */
-  const BVIEW_PLAYLIST = ['https://eidct.vercel.app/assets/The%20Celebration%20Ends.mp4'];
-  let bviewIndex = 0;
-  let bviewIntroTimer = null;
-  let bviewFinished = false;
-
-  function playBviewIndex(i){
-    if(bviewFinished) return;
-    bviewIndex = i % BVIEW_PLAYLIST.length;
-    els.bviewVideo.src = BVIEW_PLAYLIST[bviewIndex];
-    els.bviewVideo.muted = false;
-    els.bviewVideo.volume = 1;
-    els.bviewVideo.play().catch(()=>{});
-  }
-
-  els.bviewVideo.addEventListener('ended', ()=>{
-    bviewFinished = true;
-    els.bviewVideo.pause();
-    hideMiniSkip();
-    window.location.replace('em.html');
-  });
-
-  // Exposed entry point — called once the closing poems outro has been
-  // shown, so this video scene plays as the true last screen of the loop.
-  window.openBviewFinale = function(){
-    bviewFinished = false;
-    els.bviewIntro.classList.add('active');
-    bindMiniSkip(()=>{
-      els.bviewIntro.classList.remove('active');
-      clearTimeout(bviewIntroTimer);
-      els.bviewOverlay.classList.add('active');
-      playBviewIndex(0);
-      hideMiniSkip();
-    });
-    bviewIntroTimer = setTimeout(()=>{
-      els.bviewIntro.classList.remove('active');
-      els.bviewOverlay.classList.add('active');
-      playBviewIndex(0);
-      hideMiniSkip();
-    }, INTRO_DURATION);
-  };
 
   const REALCARDS_DURATION = 60; // seconds
   const RING_CIRCUMFERENCE = 276.46; // 2 * PI * 44
@@ -3185,13 +2812,6 @@
       if(audioCtx && audioCtx.state === 'suspended'){ audioCtx.resume().catch(()=>{}); }
     }).catch(()=>{});
 
-    els.bviewVideo.muted = false;
-    els.bviewVideo.volume = 1;
-    els.bviewVideo.play().then(()=>{
-      els.bviewVideo.pause();
-      els.bviewVideo.currentTime = 0;
-    }).catch(()=>{});
-
     try{
       const primer = new SpeechSynthesisUtterance(' ');
       primer.volume = 0;
@@ -3429,7 +3049,7 @@
         pwOutro.classList.add('active');
         setTimeout(()=>{
           pwOverlay.classList.remove('active');
-          if(window.openBviewFinale) window.openBviewFinale();
+          window.location.replace('em.html');
         }, 3500);
       }, 1000);
       return;
@@ -3477,7 +3097,7 @@
 
   // Exposed entry point — called by the main countdown script once the
   // "Get Your Cards" real-life step finishes, so the poems play as the
-  // closing act right after the Eid Mubarak grand finale celebration.
+  // closing act right after the Eid Mubarak celebration.
   window.openPoemsFinale = function(){
     pwStage.style.display = '';
     pwEyebrow.style.display = '';
@@ -3488,7 +3108,7 @@
     if(window.bindMiniSkip){
       window.bindMiniSkip(()=>{
         pwOverlay.classList.remove('active');
-        if(window.openBviewFinale) window.openBviewFinale();
+        window.location.replace('em.html');
       });
     }
   };
