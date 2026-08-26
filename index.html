@@ -1224,7 +1224,7 @@
 <div id="prayer-overlay">
   <div class="prayer-card">
     <div class="prayer-video-frame">
-      <video id="prayer-video" autoplay muted playsinline loop>
+      <video id="prayer-video" autoplay muted playsinline>
         <source src="https://eidct.vercel.app/assets/The%20Celebration%20Ends.mp4" type="video/mp4">
       </video>
     </div>
@@ -1892,16 +1892,36 @@
 
   let prayerIntroTimer = null;
   let prayerAdvanceTimer = null;
+  let prayerEndedHandler = null;
 
   function enterPrayerOverlay(){
     els.prayerOverlay.classList.add('active');
     els.prayerVideo.currentTime = 0;
+
+    if(prayerEndedHandler){
+      els.prayerVideo.removeEventListener('ended', prayerEndedHandler);
+    }
+
+    function advance(){
+      clearTimeout(prayerAdvanceTimer);
+      if(prayerEndedHandler){
+        els.prayerVideo.removeEventListener('ended', prayerEndedHandler);
+        prayerEndedHandler = null;
+      }
+      openCardsPopup();
+    }
+
+    prayerEndedHandler = advance;
+    els.prayerVideo.addEventListener('ended', prayerEndedHandler, { once: true });
+
     const p = els.prayerVideo.play();
     if(p && p.catch){ p.catch(()=>{}); }
-    prayerAdvanceTimer = setTimeout(openCardsPopup, 12000);
+
+    // Safety-net: video is 48s — force advance if 'ended' never fires
+    prayerAdvanceTimer = setTimeout(advance, 48000);
+
     bindMiniSkip(()=>{
-      clearTimeout(prayerAdvanceTimer);
-      openCardsPopup();
+      advance();
     });
   }
 
