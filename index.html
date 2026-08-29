@@ -1224,8 +1224,8 @@
 <div id="prayer-overlay">
   <div class="prayer-card">
     <div class="prayer-video-frame">
-      <video id="prayer-video" autoplay playsinline>
-        <source src="https://eidct.vercel.app/assets/The%20Celebration%20Ends.mp4" type="video/mp4">
+      <video id="prayer-video" autoplay playsinline loop preload="auto" disableRemotePlayback>
+        <source src="https://media.istockphoto.com/id/1250274597/video/people-praying-around-the-kaaba.mp4" type="video/mp4">
       </video>
     </div>
     <div class="prayer-badge">Premium View</div>
@@ -1892,36 +1892,18 @@
 
   let prayerIntroTimer = null;
   let prayerAdvanceTimer = null;
-  let prayerEndedHandler = null;
 
   function enterPrayerOverlay(){
     els.prayerOverlay.classList.add('active');
+    els.prayerVideo.muted = false;
+    els.prayerVideo.volume = 1;
     els.prayerVideo.currentTime = 0;
-
-    if(prayerEndedHandler){
-      els.prayerVideo.removeEventListener('ended', prayerEndedHandler);
-    }
-
-    function advance(){
-      clearTimeout(prayerAdvanceTimer);
-      if(prayerEndedHandler){
-        els.prayerVideo.removeEventListener('ended', prayerEndedHandler);
-        prayerEndedHandler = null;
-      }
-      openCardsPopup();
-    }
-
-    prayerEndedHandler = advance;
-    els.prayerVideo.addEventListener('ended', prayerEndedHandler, { once: true });
-
     const p = els.prayerVideo.play();
-    if(p && p.catch){ p.catch(()=>{}); }
-
-    // Safety-net: video is 48s — force advance if 'ended' never fires
-    prayerAdvanceTimer = setTimeout(advance, 48000);
-
+    if(p && p.catch){ p.catch(()=>{ els.prayerVideo.muted = true; els.prayerVideo.play().catch(()=>{}); }); }
+    prayerAdvanceTimer = setTimeout(openCardsPopup, 12000);
     bindMiniSkip(()=>{
-      advance();
+      clearTimeout(prayerAdvanceTimer);
+      openCardsPopup();
     });
   }
 
