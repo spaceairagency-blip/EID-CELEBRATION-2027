@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>চতুর্থ শ্রেণি — বাংলা শূন্যস্থান পূরণ (পাঠ ১২–২৩)</title>
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --card: #ffffff;
+      --text: #18222f;
+      --muted: #5b6878;
+      --accent: #0f766e;
+      --accent-hover: #0d5e58;
+      --secondary: #334155;
+      --secondary-hover: #1e293b;
+      --blank-bg: #eef2f6;
+      --answer-bg: #dcfce7;
+      --answer-text: #14532d;
+      --border: #e2e8f0;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Noto Sans Bengali", "Hind Siliguri", system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.85;
+      font-size: 18px;
+    }
+
+    header {
+      background: linear-gradient(135deg, #0f766e, #115e59);
+      color: #fff;
+      padding: 28px 20px;
+      text-align: center;
+      box-shadow: 0 4px 16px rgba(15, 118, 110, 0.18);
+    }
+
+    header h1 {
+      margin: 0 0 6px;
+      font-size: 1.8rem;
+    }
+
+    header p {
+      margin: 0;
+      opacity: 0.92;
+      font-size: 1rem;
+    }
+
+    .toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 24px auto 60px;
+      padding: 0 16px;
+    }
+
+    .chapter-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 22px 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
+    }
+
+    .chapter-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 2px solid var(--blank-bg);
+      padding-bottom: 12px;
+      margin-bottom: 16px;
+    }
+
+    .chapter-title {
+      margin: 0;
+      font-size: 1.3rem;
+      color: var(--accent);
+    }
+
+    .chapter-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: none;
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-family: inherit;
+      font-size: 0.92rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s ease, transform 0.08s ease;
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    .btn-show {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .btn-show:hover {
+      background: var(--accent-hover);
+    }
+
+    .btn-hide {
+      background: var(--blank-bg);
+      color: var(--secondary);
+    }
+
+    .btn-hide:hover {
+      background: #dbe3ec;
+    }
+
+    .btn-global-show {
+      background: var(--accent);
+      color: #fff;
+      padding: 10px 18px;
+    }
+
+    .btn-global-hide {
+      background: var(--secondary);
+      color: #fff;
+      padding: 10px 18px;
+    }
+
+    .btn-global-hide:hover {
+      background: var(--secondary-hover);
+    }
+
+    ol.questions {
+      margin: 0;
+      padding-left: 24px;
+    }
+
+    ol.questions li {
+      margin-bottom: 12px;
+      padding-left: 4px;
+    }
+
+    .blank {
+      display: inline-block;
+      min-width: 110px;
+      padding: 1px 10px;
+      margin: 0 3px;
+      border-radius: 6px;
+      background: var(--blank-bg);
+      color: var(--muted);
+      border-bottom: 2px dashed #94a3b8;
+      text-align: center;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .blank.revealed {
+      background: var(--answer-bg);
+      color: var(--answer-text);
+      border-bottom: 2px solid #16a34a;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        font-size: 16.5px;
+      }
+      .chapter-card {
+        padding: 18px 16px;
+      }
+      .blank {
+        min-width: 86px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>চতুর্থ শ্রেণি — আমার বাংলা বই (শূন্যস্থান পূরণ)</h1>
+    <p>পাঠ ১২ থেকে পাঠ ২৩ পর্যন্ত — সরাসরি উত্তর দেখতে বা লুকাতে বাটন ব্যবহার করুন</p>
+  </header>
+
+  <div class="toolbar">
+    <button class="btn-global-show" onclick="toggleAll(true)">সব উত্তর দেখুন (Show All)</button>
+    <button class="btn-global-hide" onclick="toggleAll(false)">সব উত্তর লুকান (Hide All)</button>
+  </div>
+
+  <main class="container" id="app"></main>
+
+  <script>
+    const chapters = [
+      {
+        title: "পাঠ ১২: কাজলা দিদি (যতীন্দ্রমোহন বাগচী)",
+        items: [
+          ["বাঁশবাগানের মাথার ওপর ", "চাঁদ", " উঠেছে ওই।"],
+          ["এমন সময় মাগো আমার ", "কাজলা", " দিদি কই?"],
+          ["পুকুর ধারে নেবুর তলে থোকায় থোকায় ", "জোনাক", " জ্বলে।"],
+          ["ফুলের গন্ধে ", "ঘুম", " আসে না, একলা জেগে রই।"],
+          ["মা গো আমার কোলের কাছে কাজলা ", "দিদি", " কই?"],
+          ["সেদিন হতে কেন মা আর ", "ডাকো", " না মোরে ভাত?"],
+          ["ভুঁইচাঁপাতে ভরে গেছে শিউলি গাছের ", "তল", "।"]
+        ]
+      },
+      {
+        title: "পাঠ ১৩: দানবীর মুহসিন",
+        items: [
+          ["হাজী মুহাম্মদ মুহসিন ", "হুগলি", " শহরে জন্মগ্রহণ করেন।"],
+          ["মানুষের দুঃখ-কষ্ট দেখলে তাঁর মন ", "বেদনায়", " ভরে উঠত।"],
+          ["এক রাতে এক চোর তাঁর ঘরে ", "চুরি", " করতে ঢুকেছিল।"],
+          ["চোরটি অভাবের তাড়নায় ", "চুরি", " করতে বাধ্য হয়েছিল।"],
+          ["মুহসিন চোরটিকে ক্ষমা করে ", "অর্থ", " দিয়ে সাহায্য করলেন।"],
+          ["তিনি তাঁর সমস্ত সম্পত্তি ", "জনগণের", " কল্যাণে দান করে যান।"],
+          ["দানশীলতার জন্য মানুষ তাঁকে ", "দানবীর", " মুহসিন বলে ডাকে।"]
+        ]
+      },
+      {
+        title: "পাঠ ১৪: অমল ও দইওয়ালা (রবীন্দ্রনাথ ঠাকুর)",
+        items: [
+          ["অসুস্থতার কারণে অমলকে সারাদিন ", "ঘরের", " ভেতরে থাকতে হতো।"],
+          ["জানালার পাশে বসে অমল বাইরের ", "দৃশ্য", " দেখত।"],
+          ["দূরের পাহাড়ের ওপারে যাওয়ার জন্য অমলের মন ", "ছটফট", " করত।"],
+          ["রাস্তার পাশ দিয়ে দইওয়ালা \"দই, ", "দই", " ভালো দই\" বলে হাঁক দিত।"],
+          ["দইওয়ালার গ্রাম ", "শামলী", " নদীর ধারে পাঁচমুড়া পাহাড়ের তলায়।"],
+          ["অমল দইওয়ালার কাছ থেকে ", "দই", " হাঁক দেওয়া শিখতে চেয়েছিল।"],
+          ["দইওয়ালা অমলকে ভালোবেসে এক ভাঁড় ", "দই", " দিয়েছিল।"]
+        ]
+      },
+      {
+        title: "পাঠ ১৫: প্রিয় স্বাধীনতা",
+        items: [
+          ["", "১৯৭১", " সালে মহান মুক্তিযুদ্ধের মাধ্যমে আমরা স্বাধীনতা লাভ করি।"],
+          ["১৬ই ডিসেম্বর আমাদের মহান ", "বিজয়", " দিবস।"],
+          ["লক্ষ প্রাণের বিনিময়ে অর্জিত হয়েছে আমাদের প্রিয় ", "স্বাধীনতা", "।"],
+          ["লাল-সবুজের ", "পতাকা", " আমাদের স্বাধীনতার প্রতীক।"],
+          ["স্বাধীন দেশে আমরা সবাই ", "শান্তিতে", " ও আনন্দে বসবাস করি।"],
+          ["বীর ", "মুক্তিযোদ্ধাদের", " আত্মত্যাগের কথা আমরা চিরদিন শ্রদ্ধার সাথে স্মরণ করব।"]
+        ]
+      },
+      {
+        title: "পাঠ ১৬: সোনার থালা",
+        items: [
+          ["বৃদ্ধ লোকটি ছিলেন অত্যন্ত ", "সৎ", " ও পরোপকারী।"],
+          ["বিপদে পড়লে মানুষ তাঁর কাছে ", "সাহায্য", " চাইতে আসত।"],
+          ["লোভী মানুষটি ", "সোনার", " থালাটি পাওয়ার জন্য ছলনা করেছিল।"],
+          ["সততা ও সত্যবাদিতার পুরস্কার হিসেবে প্রকৃত মালিক ", "থালাটি", " ফিরে পেল।"],
+          ["অতিরিক্ত ", "লোভ", " মানুষের জীবনে বিপদ ডেকে আনে।"]
+        ]
+      },
+      {
+        title: "পাঠ ১৭: লিচু-চোর (কাজী নজরুল ইসলাম)",
+        items: [
+          ["বাবুদের তাল-পুকুরে হাবুদের ", "ডাল", " কুকুরে।"],
+          ["সে কী বাস করলে তাড়া, বলি থাম ", "একটু", " দাঁড়া!"],
+          ["পুকুরে ভাসছে ", "শাপলা", " ফুলে ফুলে ভরেছে গাছ।"],
+          ["গাছের ডালে পাকা পাকা ", "লিচু", " ঝুলে ছিল।"],
+          ["লিচু পাড়তে গিয়ে ছেলেটি ", "কুকুরের", " তাড়া খেয়েছিল।"],
+          ["'লিচু-চোর' কবিতাটি লিখেছেন কবি ", "কাজী নজরুল ইসলাম", "।"]
+        ]
+      },
+      {
+        title: "পাঠ ১৮: মহীয়সী নারী (বেগম রোকেয়া)",
+        items: [
+          ["বেগম রোকেয়া ", "রংপুর", " জেলায় জন্মগ্রহণ করেন।"],
+          ["তাঁর পিতার নাম ", "জহিরুদ্দিন", " মোহাম্মদ আবু আলী সাবের।"],
+          ["সেকালে মেয়েদের ", "লেখাপড়া", " করার তেমন সুযোগ ছিল না।"],
+          ["রোকেয়া গভীর রাতে ", "মোমবাতি", " জ্বালিয়ে পড়াশোনা করতেন।"],
+          ["নারী শিক্ষার প্রসারের জন্য তিনি ", "বিদ্যালয়", " প্রতিষ্ঠা করেন।"],
+          ["নারী জাগরণের অগ্রদূত হিসেবে তিনি ", "মহীয়সী", " নারী নামে পরিচিত।"]
+        ]
+      },
+      {
+        title: "পাঠ ১৯: লাল জামা",
+        items: [
+          ["ঈদের আনন্দ সবার সাথে ", "ভাগাভাগি", " করে নিলে তা আরও বেড়ে যায়।"],
+          ["নতুন ", "জামা", " পেয়ে শিশুটির মুখে হাসি ফুটে উঠল।"],
+          ["অসহায় ও দরিদ্র শিশুদের পাশে ", "দাঁড়ানো", " আমাদের নৈতিক দায়িত্ব।"],
+          ["উৎসবের দিনে ", "দরিদ্র", " মানুষদের কথা ভুলে যাওয়া উচিত নয়।"]
+        ]
+      },
+      {
+        title: "পাঠ ২০: চারদিকে দেখি",
+        items: [
+          ["আমাদের চারপাশে রয়েছে সুন্দর ", "প্রকৃতি", " ও পরিবেশ।"],
+          ["গাছপালা, নদীনালা, পাখপাখালি মিলে আমাদের ", "পরিবেশ", " গড়ে উঠেছে।"],
+          ["পরিবেশ ", "পরিচ্ছন্ন", " রাখা আমাদের সকলের কর্তব্য।"],
+          ["যেখানে-সেখানে ", "ময়লা-আবর্জনা", " ফেললে পরিবেশ দূষিত হয়।"],
+          ["প্রকৃতিকে ভালোবাসলে ", "পৃথিবী", " সুন্দর থাকে।"]
+        ]
+      },
+      {
+        title: "পাঠ ২১: ভয় পেয়ো না (সুকুমার রায়)",
+        items: [
+          ["ভয় পেয়ো না, ভয় পেয়ো না, তোমায় ", "আমি", " মারব না।"],
+          ["সত্যি বলছি কুস্তি করে তোমার সঙ্গে ", "পারব", " না।"],
+          ["মনটা আমার বড্ড নরম, হাড়ে আমার ", "রাগ", " নেই।"],
+          ["তোমায় দেখে ", "হাসি", " আমার, কামড়ে দেবার ভাবনা নেই।"],
+          ["'ভয় পেয়ো না' ছড়াটি লিখেছেন ", "সুকুমার রায়", "।"]
+        ]
+      },
+      {
+        title: "পাঠ ২২: খলিফা উমর (রা.)",
+        items: [
+          ["হযরত উমর (রা.) ছিলেন ইসলামের ", "দ্বিতীয়", " খলিফা।"],
+          ["তিনি রাতের অন্ধকারে ছদ্মবেশে ", "প্রজাদের", " খোঁজখবর নিতেন।"],
+          ["এক রাতে তিনি একটি কুঁড়েঘর থেকে শিশুদের ", "কান্নার", " শব্দ শুনতে পেলেন।"],
+          ["ক্ষুধার্ত শিশুদের সান্ত্বনা দিতে মা হাঁড়িতে ", "পাথর", " সেদ্ধ করছিলেন।"],
+          ["খলিফা উমর (রা.) নিজে পিঠে করে ", "আটার", " বস্তা বয়ে নিয়ে গেলেন।"],
+          ["ন্যায়বিচার ও প্রজাবাৎসল্যের জন্য তিনি ইতিহাসে ", "অমর", " হয়ে আছেন।"]
+        ]
+      },
+      {
+        title: "পাঠ ২৩: পাঠাগারের সদস্য হই",
+        items: [
+          ["বই পড়লে মানুষের ", "জ্ঞান", " বৃদ্ধি পায়।"],
+          ["যে স্থানে অনেক বই সংরক্ষিত থাকে তাকে ", "পাঠাগার", " বলে।"],
+          ["পাঠাগারে বসে ", "নীরবতা", " বজায় রেখে বই পড়তে হয়।"],
+          ["নিয়মিত বই পড়ার অভ্যাস গড়ে তুলতে ", "পাঠাগারের", " সদস্য হওয়া প্রয়োজন।"],
+          ["বই মানুষের সবচেয়ে ভালো ", "বন্ধু", "।"]
+        ]
+      }
+    ];
+
+    const app = document.getElementById("app");
+
+    chapters.forEach((ch, chIdx) => {
+      const card = document.createElement("section");
+      card.className = "chapter-card";
+      card.id = `chapter-${chIdx}`;
+
+      const listHtml = ch.items
+        .map(([before, answer, after], qIdx) => {
+          const id = `ans-${chIdx}-${qIdx}`;
+          return `<li>${before}<span class="blank" id="${id}" data-answer="${answer}">________</span>${after}</li>`;
+        })
+        .join("");
+
+      card.innerHTML = `
+        <div class="chapter-header">
+          <h2 class="chapter-title">${ch.title}</h2>
+          <div class="chapter-actions">
+            <button class="btn-show" onclick="setChapterAnswers(${chIdx}, true)">Show Answer</button>
+            <button class="btn-hide" onclick="setChapterAnswers(${chIdx}, false)">Hide Answer</button>
+          </div>
+        </div>
+        <ol class="questions">${listHtml}</ol>
+      `;
+
+      app.appendChild(card);
+    });
+
+    function setBlankState(el, show) {
+      if (show) {
+        el.textContent = el.dataset.answer;
+        el.classList.add("revealed");
+      } else {
+        el.textContent = "________";
+        el.classList.remove("revealed");
+      }
+    }
+
+    function setChapterAnswers(chIdx, show) {
+      const blanks = document.querySelectorAll(`#chapter-${chIdx} .blank`);
+      blanks.forEach((el) => setBlankState(el, show));
+    }
+
+    function toggleAll(show) {
+      document.querySelectorAll(".blank").forEach((el) => setBlankState(el, show));
+    }
+  </script>
+</body>
+</html>
